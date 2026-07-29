@@ -3,10 +3,15 @@
   "theme": "mint",
   "name": "AgentBank",
   "description": "Connect AI agents to supported fiat and crypto payment routes through AgentBank MCP.",
+  "logo": {
+    "light": "/logo/agentbank-wordmark-light.png",
+    "dark": "/logo/agentbank-wordmark-dark.png"
+  },
+  "favicon": "/logo/agentbank-mark.png",
   "colors": {
-    "primary": "#0F766E",
-    "light": "#14B8A6",
-    "dark": "#115E59"
+    "primary": "#0062FF",
+    "light": "#3381FF",
+    "dark": "#0050D4"
   },
   "navigation": {
     "groups": [
@@ -189,7 +194,7 @@
       },
       {
         "label": "GitHub",
-        "href": "https://github.com/trunghuynh-humanfx/agentbank-doc"
+        "href": "https://github.com/trunghuynh-humanfx/agentbank-docs"
       }
     ],
     "primary": {
