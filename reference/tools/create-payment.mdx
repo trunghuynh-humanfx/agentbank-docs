@@ -1,0 +1,51 @@
+---
+title: "create_payment"
+description: "Persist a payment, independently validate its route, and create its authorization state."
+---
+
+**Authentication:** `settlement:prepare`  
+**Mutates state:** Yes  
+**Idempotency:** Stable `request_id`  
+**Confirmation:** `confirmed_by_user=true` under the active authorization policy
+
+```json
+{
+  "request_id": "client-generated stable ID",
+  "confirmed_by_user": true,
+  "source": { "asset": {}, "amount": "..." },
+  "destination": { "asset": {}, "amount": "...", "recipient_id": "..." },
+  "amount_mode": "exact_source",
+  "routing_preference": "balanced",
+  "intermediate_asset": {},
+  "hops": [
+    {
+      "hop_index": 0,
+      "intent_id": "...",
+      "direction": "on_ramp",
+      "source": "quote_accept",
+      "client_quote_id": "...",
+      "recipient_ref": { "hop_index": 1 }
+    },
+    {
+      "hop_index": 1,
+      "intent_id": "...",
+      "direction": "off_ramp",
+      "source": "quote_accept",
+      "client_quote_id": "...",
+      "recipient_fields": {}
+    }
+  ]
+}
+```
+
+One or two hops are allowed. Directions are `on_ramp`, `off_ramp`, and
+`on_chain_swap`; sources are `quote_accept` and `auto_selected`. Two hops
+require top-level `intermediate_asset`.
+
+Core independently validates quote references, amount continuity, readiness,
+and the route. If the fiat rail is not ready, it returns `need_review` with
+`payment_created=false` and `reason=rail_not_ready`; no payment or authorization
+was created.
+
+A successful result is the durable payment view. Above-threshold payments may
+include an expiring first-party `approval_url` for World ID authorization.

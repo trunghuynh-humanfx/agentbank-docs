@@ -1,0 +1,31 @@
+---
+title: "Manage recipients"
+description: "Select, create, and replace validated bank or crypto recipients."
+---
+
+## Select a saved recipient
+
+Use `list_recipients` and `get_recipient`. If several records match the user's
+description, ask the user to choose; never guess.
+
+## Create a recipient
+
+`create_recipient` accepts one or more supported input forms:
+
+- canonical fields;
+- structured bank information;
+- labeled pasted text;
+- raw QR content;
+- a QR image.
+
+Local stdio clients may provide an absolute image path. Remote clients provide
+base64 image data. The image must contain machine-readable QR content; AgentBank
+does not OCR text-only screenshots.
+
+If the tool returns missing or invalid fields, ask only for those fields. When
+the payload changes, use a new request ID.
+
+## Replace a recipient
+
+`update_recipient` registers a replacement record. It does not mutate or revoke
+the old record. Obtain explicit user confirmation before replacement.

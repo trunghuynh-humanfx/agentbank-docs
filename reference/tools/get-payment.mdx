@@ -1,0 +1,25 @@
+---
+title: "get_payment"
+description: "Read the authoritative durable aggregate for one payment."
+---
+
+**Authentication:** `settlement:prepare`  
+**Mutates state:** No
+
+```json
+{ "payment_id": "pay_...", "include_debug": false }
+```
+
+`include_debug=true` requires `debug:read` or wildcard scope.
+
+Returns status, terminal and success flags, summary, retryability, canonical
+source, redacted destination, amount mode, routing, authorization, current
+instruction, `funds_moved`, failure, next action, public step summaries, and
+timestamps.
+
+Public statuses are `approval_required`, `approval_ready`, `funding_required`,
+`funding_detecting`, `need_review`, `recipient_correction_required`,
+`completed`, `cancelled`, and `failed`.
+
+This is the authoritative payment state. Internal orchestration identifiers and
+sensitive recipient fields are omitted.

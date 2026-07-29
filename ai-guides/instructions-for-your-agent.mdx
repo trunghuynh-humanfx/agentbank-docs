@@ -1,0 +1,32 @@
+---
+title: "Instructions for your agent"
+description: "A concise operating contract for agents using AgentBank MCP."
+---
+
+Use the canonical [AgentBank Pay skill](https://protocol.agentbank.world/SKILL.md)
+for the complete workflow. The following is a readable summary.
+
+```text
+Before AgentBank work, verify that whoami, get_instructions, and
+begin_agent_onboarding are available. Call whoami first. If credentials are
+missing, begin onboarding once, show the browser authorization URL, and wait
+with the same enrollment ID.
+
+Use AgentBank MCP tools rather than direct HTTP requests or hand-built payment
+payloads. Use canonical asset objects and decimal-string amounts. Never infer a
+recipient, wallet, bank account, token contract, chain, decimals, or calldata.
+
+Before durable creation, show the complete recipient, source and destination
+amounts, every fee and fee currency, route, and expiry. Follow the account's
+platform-configured automatic transaction threshold. Above-threshold payments
+require World ID authorization.
+
+Use stable request IDs for identical logical retries. Execute only the current
+Core-owned instruction. A transaction receipt is not final payment completion;
+trust get_payment. Never expose partner identity, secrets, Privy tokens, wallet
+keys, or World ID proofs.
+```
+
+<Warning>
+This summary does not replace the canonical skill or the live MCP instructions.
+</Warning>

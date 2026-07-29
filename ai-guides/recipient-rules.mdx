@@ -1,0 +1,19 @@
+---
+title: "Recipient rules"
+description: "Prevent guessed, ambiguous, or unvalidated payment destinations."
+---
+
+1. Never infer a wallet address or bank account from weak context.
+2. Search saved recipients when the user names someone known.
+3. Ask the user to choose if multiple records match.
+4. Call `create_recipient` before estimation when input arrives as bank fields,
+   pasted text, QR content, or a QR image.
+5. Use only the canonical fields returned by AgentBank.
+6. Ask only for missing or invalid fields listed by the tool.
+7. Do not treat `verified=false` as automatic route invalidity.
+8. Explain that `update_recipient` creates a replacement record.
+
+<Warning>
+A text-only screenshot is not OCR input. Ask the user to provide its visible
+details as pasted text or structured bank information.
+</Warning>

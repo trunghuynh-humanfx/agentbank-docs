@@ -1,0 +1,18 @@
+---
+title: "Responsible agent use"
+description: "Operate AgentBank agents with clear permissions, bounded autonomy, and safe recovery."
+---
+
+1. Use a separate connected-agent profile where operational isolation matters.
+2. Set the automatic transaction threshold deliberately.
+3. Validate recipients before granting an agent payment autonomy.
+4. Keep production and staging configurations visibly separate.
+5. Never instruct the model to bypass MCP, Core instructions, KYC, World ID, or
+   route validation.
+6. Monitor durable payments and revoke unused agents.
+7. Escalate partial failures instead of improvising a recovery transfer.
+
+<Warning>
+Agent autonomy does not remove user responsibility for instructions,
+recipients, permissions, and account security.
+</Warning>

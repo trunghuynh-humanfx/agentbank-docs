@@ -1,0 +1,18 @@
+---
+title: "get_account_status"
+description: "Read combined installation, scope, verification, wallet, blocker, and next-action readiness."
+---
+
+**Authentication:** Valid connected-agent credential  
+**Mutates state:** No
+
+```json
+{}
+```
+
+Returns installation state, scopes and mode, owner verification, public wallet
+readiness, blockers, and next action.
+
+`ready=true` is account-level readiness, not proof that every fiat market is
+approved. Check `check_verification_status` for a fiat rail and use wallet tools
+for wallet-funded journeys.

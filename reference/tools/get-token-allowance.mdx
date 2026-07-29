@@ -1,0 +1,20 @@
+---
+title: "get_token_allowance"
+description: "Read an ERC-20 allowance for the bound wallet, token, and spender."
+---
+
+**Authentication:** `agent_wallet:use`  
+**Mutates state:** No
+
+```json
+{
+  "chain_id": 480,
+  "token_address": "0x...",
+  "spender": "0x...",
+  "decimals": 6
+}
+```
+
+Returns the owner wallet, token, spender, raw allowance, formatted allowance,
+and resolved decimals. Prefer execution tools that derive these values from a
+current payment instruction rather than asking the user to supply them.

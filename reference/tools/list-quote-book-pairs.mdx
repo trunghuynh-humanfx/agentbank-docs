@@ -1,0 +1,15 @@
+---
+title: "list_quote_book_pairs"
+description: "List live direct on-ramp and off-ramp currency pairs without creating an intent."
+---
+
+**Authentication:** `quote:read`  
+**Mutates state:** No
+
+```json
+{ "direction": "optional on_ramp or off_ramp" }
+```
+
+Returns `{total, pairs[]}` with canonical `base_ccy`, `quote_ccy`, and
+direction. Use it to discover direct corridors or join one on-ramp and one
+off-ramp pair on the same crypto asset for an explicit two-step route.

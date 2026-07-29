@@ -1,0 +1,127 @@
+---
+title: "Connect your agent"
+description: "Configure AgentBank MCP for Codex, Claude Code, Claude Desktop, OpenClaw, or Hermes."
+---
+
+AgentBank uses a local stdio MCP server for personal agents. Choose staging or
+production explicitly.
+
+<Tabs>
+  <Tab title="Codex">
+    **Staging**
+
+    ```bash
+    codex mcp add agentbank \
+      --env PROTOCOL_BASE_URL=https://protocol.agentbank.world \
+      --env APP_BASE_URL=https://staging.agentbank.world \
+      -- npx -y agent-bank-mcp@latest
+    ```
+
+    **Production**
+
+    ```bash
+    codex mcp add agentbank \
+      --env PROTOCOL_BASE_URL=https://protocol.agentbank.world \
+      --env APP_BASE_URL=https://app.agentbank.world \
+      -- npx -y agent-bank-mcp@latest
+    ```
+  </Tab>
+  <Tab title="Claude Code">
+    **Staging**
+
+    ```bash
+    claude mcp add -s user agentbank \
+      -e PROTOCOL_BASE_URL=https://protocol.agentbank.world \
+      -e APP_BASE_URL=https://staging.agentbank.world \
+      -- npx -y agent-bank-mcp@latest
+    ```
+
+    **Production**
+
+    ```bash
+    claude mcp add -s user agentbank \
+      -e PROTOCOL_BASE_URL=https://protocol.agentbank.world \
+      -e APP_BASE_URL=https://app.agentbank.world \
+      -- npx -y agent-bank-mcp@latest
+    ```
+  </Tab>
+  <Tab title="Claude Desktop">
+    On macOS, edit:
+
+    ```text
+    ~/Library/Application Support/Claude/claude_desktop_config.json
+    ```
+
+    ```json
+    {
+      "mcpServers": {
+        "agentbank": {
+          "command": "npx",
+          "args": ["-y", "agent-bank-mcp@latest"],
+          "env": {
+            "PROTOCOL_BASE_URL": "https://protocol.agentbank.world",
+            "APP_BASE_URL": "https://staging.agentbank.world"
+          }
+        }
+      }
+    }
+    ```
+
+    Change `APP_BASE_URL` to `https://app.agentbank.world` for production.
+    Preserve other `mcpServers` entries, fully quit Claude Desktop, and reopen
+    it.
+  </Tab>
+  <Tab title="OpenClaw">
+    Add the server under `mcp.servers` in `~/.openclaw/openclaw.json`:
+
+    ```json5
+    {
+      mcp: {
+        servers: {
+          agentbank: {
+            command: "npx",
+            args: ["-y", "agent-bank-mcp@latest"],
+            env: {
+              PROTOCOL_BASE_URL: "https://protocol.agentbank.world",
+              APP_BASE_URL: "https://staging.agentbank.world",
+            },
+          },
+        },
+      },
+    }
+    ```
+
+    Use the production app URL when needed, then verify:
+
+    ```bash
+    openclaw mcp doctor agentbank --probe
+    ```
+  </Tab>
+  <Tab title="Hermes">
+    Add the server under `mcp_servers` in `~/.hermes/config.yaml`:
+
+    ```yaml
+    mcp_servers:
+      agentbank:
+        command: "npx"
+        args: ["-y", "agent-bank-mcp@latest"]
+        env:
+          PROTOCOL_BASE_URL: "https://protocol.agentbank.world"
+          APP_BASE_URL: "https://staging.agentbank.world"
+    ```
+
+    Change `APP_BASE_URL` for production and restart Hermes. Hermes registers
+    tools using names such as `mcp_agentbank_whoami`.
+  </Tab>
+</Tabs>
+
+## Verify the connection
+
+Restart or reload the client, then ask:
+
+```text
+Check whether the AgentBank MCP exposes whoami, get_instructions, and begin_agent_onboarding. Do not start a payment.
+```
+
+If the tools are missing, check Node.js, `npx`, configuration syntax, and the
+selected app URL.

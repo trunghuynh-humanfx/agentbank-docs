@@ -1,0 +1,32 @@
+---
+title: "Send a bank payout"
+description: "Convert supported crypto into fiat for a validated bank recipient."
+---
+
+<Steps>
+  <Step title="Resolve the recipient">
+    Search saved recipients or create one using the live rail's required bank
+    fields. Use the canonical result returned by AgentBank.
+  </Step>
+  <Step title="Find a direct off-ramp">
+    Check live quote-book pairs for the source crypto and destination fiat.
+  </Step>
+  <Step title="Estimate the outcome">
+    Show the source amount, destination amount, all fees, full recipient,
+    route, and expiry.
+  </Step>
+  <Step title="Create and authorize">
+    Apply the configured platform threshold. Above-threshold payments require
+    World ID authorization.
+  </Step>
+  <Step title="Execute the current instruction">
+    Call `continue_payment`, check the wallet balance, and use
+    `execute_payment_instruction` with its stable request ID.
+  </Step>
+  <Step title="Track delivery">
+    Poll `get_payment`. A transaction receipt alone is not bank delivery.
+  </Step>
+</Steps>
+
+Never construct calldata, choose a different spender, or substitute a recipient
+after payment creation.

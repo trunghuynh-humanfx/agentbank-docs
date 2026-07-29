@@ -1,0 +1,37 @@
+---
+title: "Add money to your wallet"
+description: "Use a supported fiat on-ramp to fund the AgentBank wallet."
+---
+
+Use this journey when the account owner wants to convert supported fiat into a
+crypto asset held by the bound AgentBank wallet.
+
+<Steps>
+  <Step title="Check the wallet and account">
+    Call `get_account_status` and `list_wallets`. Use the wallet returned by
+    AgentBank; never infer or request a private key.
+  </Step>
+  <Step title="Find a live on-ramp">
+    Use `list_currencies` and `list_quote_book_pairs` to select a supported
+    fiat-to-crypto pair.
+  </Step>
+  <Step title="Estimate the payment">
+    Call `estimate_payment` with the bound wallet as the crypto recipient.
+  </Step>
+  <Step title="Create and authorize">
+    Apply the configured threshold policy, then call `create_payment` with the
+    reviewed route and stable request ID.
+  </Step>
+  <Step title="Continue and fund">
+    In production, give the payer the returned order-specific bank or QR
+    instruction. In staging, the supported on-ramp completes automatically.
+  </Step>
+  <Step title="Track and verify balance">
+    Poll `get_payment` until terminal, then call `get_wallet_balances`.
+  </Step>
+</Steps>
+
+<Warning>
+Do not create another on-ramp merely because payment detection is pending.
+Resume the existing durable payment.
+</Warning>

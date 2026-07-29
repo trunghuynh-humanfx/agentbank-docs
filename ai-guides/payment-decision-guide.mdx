@@ -1,0 +1,29 @@
+---
+title: "Payment decision guide"
+description: "Choose the correct AgentBank journey from the user's source, destination, and recipient."
+---
+
+```mermaid
+flowchart TD
+    S{"Source asset"}
+    S -->|"Fiat"| D{"Destination"}
+    S -->|"Crypto"| C{"Destination"}
+    D -->|"Crypto"| ON["Direct on-ramp"]
+    D -->|"Fiat"| FF["Explicit fiat-to-fiat route"]
+    C -->|"Same-chain crypto"| SW["Same-chain swap"]
+    C -->|"Fiat with direct pair"| OFF["Direct off-ramp"]
+    C -->|"Fiat without direct pair"| TF["Explicit token-to-fiat route"]
+```
+
+Before routing, collect:
+
+- source asset and chain, or source fiat;
+- exact-source or exact-destination mode;
+- amount;
+- destination asset or fiat currency;
+- destination country;
+- concrete recipient;
+- optional routing preference.
+
+If no live route exists, explain that it is currently unavailable. Do not
+invent a corridor, split the payment, or silently change chains.

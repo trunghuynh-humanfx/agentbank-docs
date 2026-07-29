@@ -1,0 +1,21 @@
+---
+title: "Limitations"
+description: "Understand the explicit non-capabilities of the current AgentBank MCP surface."
+---
+
+- No automatic Core planner selects a settlement asset for two-step routes.
+- Estimates are ephemeral, have no ID, and are not matched by
+  `create_payment`.
+- Expired or rejected payment authorization cannot be refreshed in place.
+- Partial two-step failure has no dedicated automated recovery action.
+- QR images are decoded, but text-only screenshot OCR is not implemented.
+- Recipient updates create replacements and do not revoke the old record.
+- No generic arbitrary EVM transaction tool is exposed.
+- The payment status model does not emit `expired`.
+- Wallet chain reads use one configured RPC endpoint.
+- Partner identity and partner-query APIs are hidden.
+- Legacy low-level settlement workflows are outside the production surface.
+- A pending AgentKit verification session may need to be recreated after MCP
+  restart.
+- Shareable single-payment links are coming soon.
+- The agent can track whether a collection was paid, not who paid it.

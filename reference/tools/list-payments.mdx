@@ -1,0 +1,20 @@
+---
+title: "list_payments"
+description: "List durable payments scoped to the current owner and connected agent."
+---
+
+**Authentication:** `settlement:prepare`  
+**Mutates state:** No
+
+```json
+{
+  "status": ["completed"],
+  "created_after": "2026-07-26T00:00:00Z",
+  "limit": 50,
+  "offset": 0
+}
+```
+
+Returns `{payments, next_cursor}` from durable Core records. Results survive
+MCP restarts and are scoped to both the owner and connected installation.
+Pagination uses `offset` and `limit`; `next_cursor` is currently `null`.

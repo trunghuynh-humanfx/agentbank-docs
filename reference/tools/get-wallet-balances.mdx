@@ -1,0 +1,21 @@
+---
+title: "get_wallet_balances"
+description: "Read native and ERC-20 balances for the bound AgentBank wallet."
+---
+
+**Authentication:** `agent_wallet:use`  
+**Mutates state:** No
+
+```json
+{
+  "chain_id": 480,
+  "tokens": [{ "address": "0x...", "symbol": "USDC", "decimals": 6 }]
+}
+```
+
+Returns the wallet address plus native and token balances in raw and formatted
+units. When `tokens` is omitted on chain 480, reads active Worldchain token
+contracts from `list_currencies`.
+
+The service uses one configured EVM RPC endpoint. Do not assume an arbitrary
+`chain_id` selects another network.

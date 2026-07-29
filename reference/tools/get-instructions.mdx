@@ -1,0 +1,18 @@
+---
+title: "get_instructions"
+description: "Read current server guidance for an AgentBank journey."
+---
+
+**Authentication:** None  
+**Mutates state:** No
+
+```json
+{ "journey": "pay", "client_version": "optional" }
+```
+
+Valid journeys are `setup`, `pay`, `track`, `recover`,
+`manage_recipients`, and `manage_wallets`.
+
+Returns a version, required tools, ordered steps, human actions, safety rules,
+retry rules, and terminal statuses. Follow newer runtime guidance when it does
+not conflict with the AgentBank Pay skill's safety rules.

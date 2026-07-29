@@ -1,0 +1,27 @@
+---
+title: "get_transaction_receipt"
+description: "Resolve a sponsored send or read the on-chain receipt for a wallet transaction."
+---
+
+**Authentication:** Valid credential; reported as `agent_wallet:use`  
+**Mutates state:** No
+
+```json
+{ "chain_id": 480, "tx_hash": "0x32-byte-hash" }
+```
+
+For a sponsored send without a chain hash:
+
+```json
+{ "chain_id": 480, "request_id": "original wallet mutation request ID" }
+```
+
+With `request_id`, Core verifies that the transaction belongs to the bound
+wallet and returns the final hash when available. Receipt results include
+`pending`, `confirmed`, or `failed`, confirmation count, block, status,
+from/to, gas, contract address, and logs.
+
+<Warning>
+A successful receipt is chain evidence only. `get_payment` is authoritative for
+payment completion.
+</Warning>

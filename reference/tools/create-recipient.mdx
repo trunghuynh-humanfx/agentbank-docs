@@ -1,0 +1,41 @@
+---
+title: "create_recipient"
+description: "Parse, validate, and register a fiat or crypto recipient from supported input forms."
+---
+
+**Authentication:** `recipient:write`  
+**Mutates state:** Yes when validation succeeds  
+**Idempotency:** Stable `request_id`
+
+```json
+{
+  "request_id": "stable retry ID",
+  "rail": "VND",
+  "type": "fiat",
+  "fields": {},
+  "bank_info": {
+    "bank_code": "970407",
+    "bank_name": "optional",
+    "account_number": "19030936530017",
+    "holder_name": "optional",
+    "country": "VN",
+    "key": "optional",
+    "address": "optional"
+  },
+  "pasted_text": "optional labeled bank details or raw QR content",
+  "qr_content": "optional raw QR payload",
+  "image": {
+    "path": "absolute local path for stdio only",
+    "data_base64": "base64 or data URI for remote transport",
+    "mime_type": "image/png"
+  },
+  "is_default_wallet": false
+}
+```
+
+`request_id`, `rail`, `type`, and at least one input source are required. Use
+exactly one of `image.path` or `image.data_base64`. Images are limited to 10 MB
+decoded data and must contain machine-readable QR content; OCR is not provided.
+
+The tool either returns `information_required` without writing, or registers
+canonical fields and returns the recipient plus a reusable payment destination.

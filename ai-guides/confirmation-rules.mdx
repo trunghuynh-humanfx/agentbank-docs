@@ -1,0 +1,25 @@
+---
+title: "Confirmation and authorization rules"
+description: "Distinguish standing authorization, user confirmation, World ID, wallet execution, and fiat funding."
+---
+
+| Boundary | Meaning |
+| --- | --- |
+| Platform threshold | Standing authorization for automatic below-threshold transactions |
+| Payment summary confirmation | User approves the recipient, amounts, fees, route, and expiry when required |
+| World ID authorization | Payment-specific approval above the platform threshold |
+| Wallet execution confirmation | Authorization to execute a current on-chain instruction when the active policy requires it |
+| Browser fiat funding | A payer manually completes the current production bank or QR instruction |
+
+The deployed tool reference is authoritative for exact fields:
+
+- `create_payment`: `confirmed_by_user=true`
+- `execute_payment_instruction`: `confirmed_by_user=true`
+- `approve_token`: confirmation when a transaction is required
+- `correct_payment_recipient`: explicit confirmation
+- `update_recipient`: explicit confirmation
+- `revoke_agent`: `confirm=true`
+- `cancel_payment`: caller obtains confirmation before calling
+
+An agent must set a confirmation field only when a current user confirmation or
+the platform's active standing authorization permits it.

@@ -1,0 +1,20 @@
+---
+title: "check_my_scopes"
+description: "Compare granted scopes with the MCP server's configured tool-scope map."
+---
+
+**Authentication:** Valid connected-agent credential  
+**Mutates state:** No
+
+```json
+{}
+```
+
+Returns granted scopes, wildcard state, and the configured
+`required_scope`/`usable` view.
+
+<Note>
+The backend is authoritative. The displayed map may include legacy hidden tools
+or omit high-level payment tools, so do not treat it as the production
+`tools/list` inventory.
+</Note>

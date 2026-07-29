@@ -1,0 +1,28 @@
+---
+title: "Same-chain swaps"
+description: "Swap supported crypto assets on one chain through a Core-generated instruction."
+---
+
+Both assets must be supported on the same chain. Use canonical asset objects
+and `estimate_payment`; do not use `get_ramp_quote` for crypto-to-crypto swaps.
+
+<Steps>
+  <Step title="Estimate">
+    Confirm the source amount or source ceiling, destination amount, fees,
+    chain, and recipient.
+  </Step>
+  <Step title="Create and continue">
+    Create one durable payment, satisfy the active authorization policy, and
+    request its current instruction.
+  </Step>
+  <Step title="Execute">
+    Use `execute_payment_instruction`. Core checks allowance and submits an
+    exact token approval only when required.
+  </Step>
+  <Step title="Track">
+    Retry an ambiguous execution with the same request ID, then poll
+    `get_payment` until terminal.
+  </Step>
+</Steps>
+
+Never construct calldata or select an arbitrary token contract or spender.

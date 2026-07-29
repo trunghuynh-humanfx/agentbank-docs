@@ -1,0 +1,38 @@
+---
+title: "FAQ"
+description: "Answers about custody, wallets, identity, autonomy, staging, collections, and payment status."
+---
+
+<AccordionGroup>
+  <Accordion title="Does AgentBank custody my funds?">
+    AgentBank does not take custody of the user's AgentBank wallet funds. Privy
+    provides wallet infrastructure. Payment partners may process funds during a
+    supported route.
+  </Accordion>
+  <Accordion title="Who controls the wallet?">
+    The wallet is tied to the user's login. The user and a connected agent
+    authorized by that user can operate it through granted AgentBank workflows.
+  </Accordion>
+  <Accordion title="Can my agent transact automatically?">
+    Yes, below the threshold configured at `app.agentbank.world` and within the
+    agent's granted permissions. Above-threshold payments require World ID.
+  </Accordion>
+  <Accordion title="How does staging work?">
+    Create a supported staging on-ramp. It automatically succeeds and credits
+    mock tokens; no faucet or real bank action is required.
+  </Accordion>
+  <Accordion title="Can another person pay a collection?">
+    Yes. Give the payer the order-specific bank account or QR instructions.
+  </Accordion>
+  <Accordion title="Can the agent see who paid?">
+    No. The current agent-facing state shows whether the order was paid, not
+    payer identity.
+  </Accordion>
+  <Accordion title="Are payment links available?">
+    Shareable single-payment links are coming soon. They are not currently part
+    of the public tool surface.
+  </Accordion>
+  <Accordion title="Is a transaction hash final completion?">
+    No. Use `get_payment` for the authoritative aggregate payment state.
+  </Accordion>
+</AccordionGroup>

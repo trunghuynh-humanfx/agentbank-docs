@@ -1,0 +1,15 @@
+---
+title: "get_verification_guidance"
+description: "Get first-party guidance for KYC and World ID requirements."
+---
+
+**Authentication:** Valid connected-agent credential  
+**Mutates state:** No
+
+```json
+{}
+```
+
+Returns KYC and World ID needs, a first-party AgentBank profile URL, and
+guidance. The agent may start KYC but cannot complete KYC, grant user consent,
+or perform World ID verification for the user.

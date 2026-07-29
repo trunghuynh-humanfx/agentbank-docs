@@ -1,0 +1,34 @@
+---
+title: "Safety and recovery"
+description: "Apply the non-negotiable safeguards for AgentBank payment workflows."
+---
+
+## Secret handling
+
+Never request or reveal private keys, seed phrases, AgentBank JWTs, Privy
+tokens, authorization keys, or World ID proofs.
+
+## Recipient and amount integrity
+
+Use canonical recipient and asset data. Show the complete recipient, amounts,
+fees, route, and expiry at the authorization boundary.
+
+## Instruction integrity
+
+Execute only the current Core-owned payment instruction. Never construct
+calldata or substitute the wallet, chain, token, amount, target, or spender.
+
+## Idempotent recovery
+
+Reuse a request ID only for the same logical request and payload. Preserve the
+same execution request ID after an ambiguous submission.
+
+## Durable completion
+
+A transaction receipt is not final payment completion. Trust `get_payment`.
+Never fund the downstream step of a linked two-step payment separately.
+
+## Escalation
+
+If funds moved and automated recovery is unavailable, contact
+[AgentBank support](/support/contact) with safe diagnostic identifiers.

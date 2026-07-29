@@ -1,0 +1,25 @@
+---
+title: "begin_agent_onboarding"
+description: "Start or resume browser authorization for a local AgentBank connected agent."
+---
+
+**Authentication:** None  
+**Mutates state:** Yes  
+**Request ID:** Not required
+
+```json
+{ "agent_name": "optional display name" }
+```
+
+The MCP reuses an unexpired local pending device flow when possible. Otherwise
+it generates the installation key locally, starts Privy device authorization,
+creates a pending AgentBank enrollment, and stores private material outside
+model content.
+
+Returns an `enrollment_id`, `agent_installation_id`, status,
+`authorization_url`, requested scopes, expiry, and instructions.
+
+<Warning>
+Show the single returned URL and do not start a second flow while it remains
+pending. Continue with `wait_for_agent_onboarding`.
+</Warning>

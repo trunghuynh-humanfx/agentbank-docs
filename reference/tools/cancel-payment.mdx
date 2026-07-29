@@ -1,0 +1,25 @@
+---
+title: "cancel_payment"
+description: "Cancel a durable payment while cancellation remains valid."
+---
+
+**Authentication:** `settlement:prepare`  
+**Mutates state:** Yes  
+**Idempotency:** Stable `request_id`  
+**Confirmation:** Obtain explicit user confirmation before calling
+
+```json
+{
+  "request_id": "stable retry ID",
+  "payment_id": "pay_...",
+  "reason": "optional"
+}
+```
+
+Call only after reading `get_payment`. Core requests cancellation of opened
+non-terminal settlements, expires unopened route agreements, and returns the
+unified view.
+
+If funds moved, do not report cancellation from intent alone. Trust the
+returned payment and failure state. A pending World ID challenge may remain
+visible until expiry but cannot resume a cancelled payment.

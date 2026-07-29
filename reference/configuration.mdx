@@ -1,0 +1,25 @@
+---
+title: "MCP configuration"
+description: "Configure AgentBank endpoints, transport, credentials, and local profiles."
+---
+
+| Variable | Meaning | Default |
+| --- | --- | --- |
+| `PROTOCOL_BASE_URL` | Protocol Core API base URL | `https://protocol.agentbank.world/` |
+| `APP_BASE_URL` | First-party AgentBank app base URL | `https://staging.agentbank.world/` |
+| `MCP_TRANSPORT` | MCP transport mode | stdio unless set to `http` |
+| `HFX_AGENT_CREDENTIAL` | Legacy-compatible connected-agent credential override | none |
+| `HFX_MCP_PROFILE` | Legacy-compatible local profile selector | `default` |
+
+Trailing slashes are removed before use. Explicit environment values override
+defaults.
+
+The normal personal setup does not require manually supplying
+`HFX_AGENT_CREDENTIAL`; browser authorization and the local credential store
+manage it. Use `HFX_MCP_PROFILE` only when isolating multiple local connected
+agents.
+
+<Warning>
+Never commit credentials to the documentation repository or paste them into
+support messages.
+</Warning>

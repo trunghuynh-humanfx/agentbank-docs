@@ -1,0 +1,23 @@
+---
+title: "Cancel or correct a payment"
+description: "Use the supported intervention path for a cancellable or recipient-paused payment."
+---
+
+## Cancel a payment
+
+Obtain explicit user confirmation before `cancel_payment`, even though the tool
+does not include a separate confirmation boolean. Cancellation is valid only
+in supported states; do not promise that an executing or irreversible transfer
+can be stopped.
+
+## Correct a recipient
+
+Use `correct_payment_recipient` only when the durable payment is paused in
+`recipient_correction_required`. Collect canonical replacement details, show
+them to the user, obtain confirmation, and resume from the returned state.
+
+<Warning>
+Do not create a second payment as a substitute for correcting a paused
+recipient unless the original payment has reached a terminal state and a new
+route is explicitly required.
+</Warning>

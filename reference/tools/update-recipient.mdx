@@ -1,0 +1,22 @@
+---
+title: "update_recipient"
+description: "Register a confirmed replacement for an existing recipient."
+---
+
+**Authentication:** `recipient:write`  
+**Mutates state:** Yes  
+**Idempotency:** Stable `request_id`  
+**Confirmation:** `confirmed_by_user=true`
+
+```json
+{
+  "request_id": "stable retry ID",
+  "recipient_id": "recipient_...",
+  "fields": {},
+  "confirmed_by_user": true
+}
+```
+
+Core has no in-place recipient update endpoint. This tool registers a
+replacement and returns `replaced_recipient_id`; it does not automatically
+revoke the old record.

@@ -1,0 +1,44 @@
+---
+title: "Browser authorization"
+description: "Connect an agent installation to your AgentBank account and bound Privy wallet."
+---
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Agent
+    participant MCP
+    participant Browser
+    participant Core
+    Agent->>MCP: whoami
+    MCP-->>Agent: MISSING_CREDENTIAL
+    Agent->>MCP: begin_agent_onboarding
+    MCP-->>Agent: authorization_url + enrollment_id
+    Agent-->>User: Connect to your AgentBank Account
+    User->>Browser: Sign in and authorize
+    Browser->>Core: Complete account and Privy authorization
+    Agent->>MCP: wait_for_agent_onboarding(enrollment_id)
+    MCP->>Core: Poll and finalize
+    MCP-->>Agent: authenticated + wallet bound
+```
+
+## What your agent should do
+
+1. Call `whoami` when AgentBank work begins.
+2. If it receives `MISSING_CREDENTIAL`, call `begin_agent_onboarding` once.
+3. Show the returned authorization URL.
+4. Immediately call `wait_for_agent_onboarding` with the same enrollment ID.
+5. If polling times out while still pending, reuse that enrollment ID.
+6. Verify `agentbank_claimed`, `privy_authorized`, `wallet_bound`, and
+   `authenticated`.
+7. Check identity, scopes, account readiness, and wallets.
+
+<Warning>
+Never paste a private key, seed phrase, AgentBank token, Privy token,
+authorization key, or World ID proof into chat or support.
+</Warning>
+
+## Disconnect an agent
+
+`revoke_agent` invalidates the connected installation and clears its local
+credential. It requires explicit user confirmation.

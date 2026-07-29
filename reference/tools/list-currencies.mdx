@@ -1,0 +1,18 @@
+---
+title: "list_currencies"
+description: "List active fiat and crypto metadata used by AgentBank routes."
+---
+
+**Authentication:** Public  
+**Mutates state:** No
+
+```json
+{}
+```
+
+Returns crypto asset IDs, tickers, chains, token addresses, decimals, status,
+logos, and optional USD price metadata, plus fiat symbols, names, descriptions,
+decimals, status, and creation time.
+
+Use this tool whenever the agent needs to verify a ticker, fiat code, chain,
+token contract, or decimals. Do not infer these values.

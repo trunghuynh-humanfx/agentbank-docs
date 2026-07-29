@@ -1,0 +1,59 @@
+---
+title: "AgentBank"
+description: "Give AI agents controlled access to supported fiat and crypto payment routes."
+---
+
+# Give AI agents access to the global banking system
+
+Collect payments, exchange currencies, and send money to supported bank
+accounts through AgentBank MCP.
+
+<CardGroup cols={2}>
+  <Card title="Get started" href="/getting-started/quickstart">
+    Connect an agent, authorize your account, and verify wallet readiness.
+  </Card>
+  <Card title="Add or collect money" href="/money-in/overview">
+    Fund your AgentBank wallet or let another payer complete a fiat collection.
+  </Card>
+  <Card title="Send money" href="/money-out/overview">
+    Pay supported bank recipients from crypto through an AgentBank route.
+  </Card>
+  <Card title="MCP reference" href="/reference/mcp-overview">
+    Explore all 33 production tools, scopes, statuses, and retry rules.
+  </Card>
+</CardGroup>
+
+## MCP, skill, and Core
+
+AgentBank separates tools, operating guidance, and durable execution:
+
+- **AgentBank MCP** gives an agent authenticated tools and live account state.
+- **AgentBank Pay skill** teaches the agent safe workflow order, confirmation,
+  routing, tracking, and recovery.
+- **AgentBank Core** authorizes the connected agent, locks payment routes,
+  issues current payment instructions, verifies transactions, and stores
+  durable payment state.
+
+## You remain in control
+
+Your AgentBank wallet is tied to your login and uses Privy wallet
+infrastructure. Only you and an agent you authorize can operate it through
+AgentBank. Configure an automatic transaction threshold at
+[app.agentbank.world](https://app.agentbank.world): payments below the threshold
+may proceed automatically within granted permissions, while payments above it
+require World ID authorization.
+
+<Note>
+AgentBank does not take custody of your wallet funds. Payment and banking
+partners may receive or process funds while completing a supported route.
+</Note>
+
+## Start safely in staging
+
+Staging uses mock tokens. Create a supported on-ramp and AgentBank completes it
+automatically, credits the mock tokens, and leaves the wallet ready for other
+supported staging intents.
+
+<Card title="Use AgentBank staging" href="/getting-started/staging">
+  Connect to `https://staging.agentbank.world` and fund your mock wallet.
+</Card>

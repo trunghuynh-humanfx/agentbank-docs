@@ -1,0 +1,15 @@
+---
+title: "get_recipient"
+description: "Read one saved recipient by ID."
+---
+
+**Authentication:** `recipient:read`  
+**Mutates state:** No
+
+```json
+{ "recipient_id": "recipient_..." }
+```
+
+Returns the matching saved recipient. An unknown ID produces a not-found input
+error. Use the canonical returned fields rather than reconstructing recipient
+details from conversation history.

@@ -1,0 +1,42 @@
+---
+title: "Troubleshooting"
+description: "Resolve AgentBank connection, authorization, recipient, payment, and recovery issues."
+---
+
+<AccordionGroup>
+  <Accordion title="AgentBank tools are not visible">
+    Confirm Node.js and `npx` are available, validate the client configuration,
+    restart or reload the client, and verify `APP_BASE_URL`. OpenClaw users can
+    run `openclaw mcp doctor agentbank --probe`.
+  </Accordion>
+  <Accordion title="whoami returns MISSING_CREDENTIAL">
+    Call `begin_agent_onboarding` once, open the returned browser authorization
+    URL, and poll with the same enrollment ID.
+  </Accordion>
+  <Accordion title="Browser authorization is still pending">
+    Keep the same enrollment ID. Do not start a second onboarding flow.
+  </Accordion>
+  <Accordion title="KYC or the market is not ready">
+    Complete the hosted KYC flow and recheck readiness. For `rail_not_ready`, no
+    payment was created and no funds moved.
+  </Accordion>
+  <Accordion title="The quote or authorization expired">
+    Obtain a new estimate and create a new payment after any required user
+    confirmation. In-place authorization refresh is not exposed.
+  </Accordion>
+  <Accordion title="Recipient fields are missing">
+    Ask only for the fields listed by `create_recipient`. Use a new request ID
+    after changing the payload.
+  </Accordion>
+  <Accordion title="A transaction submitted but payment is incomplete">
+    Read `get_payment`. The on-chain receipt is not final aggregate completion.
+  </Accordion>
+  <Accordion title="Execution result is ambiguous">
+    Retry `execute_payment_instruction` with the same request ID. Do not submit
+    a replacement transaction.
+  </Accordion>
+  <Accordion title="Funds moved and the payment failed">
+    Do not improvise a recovery transfer. Contact support with the payment ID,
+    status, request ID, and transaction hash when available.
+  </Accordion>
+</AccordionGroup>

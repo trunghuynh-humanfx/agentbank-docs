@@ -1,0 +1,17 @@
+---
+title: "get_installation_status"
+description: "Read safe enrollment and scope metadata for a known installation."
+---
+
+**Authentication:** None  
+**Mutates state:** No
+
+```json
+{ "agent_installation_id": "agi_..." }
+```
+
+Returns safe enrollment, claim, and scope metadata. It does not return claim
+codes, installation keys, sessions, Privy tokens, or wallet secrets.
+
+Use this for setup diagnostics when an installation ID is known. Use `whoami`
+for the currently authenticated connected agent.

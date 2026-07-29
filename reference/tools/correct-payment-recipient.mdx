@@ -1,0 +1,24 @@
+---
+title: "correct_payment_recipient"
+description: "Correct recipient fields for a payment paused on an invalid recipient."
+---
+
+**Authentication:** `settlement:prepare`  
+**Mutates state:** Yes  
+**Idempotency:** Stable `request_id`  
+**Confirmation:** `confirmed_by_user=true`
+
+```json
+{
+  "request_id": "stable retry ID",
+  "payment_id": "pay_...",
+  "recipient_fields": {},
+  "confirmed_by_user": true
+}
+```
+
+Valid only when the payment has a settlement in
+`recipient_correction_required` with an `invalid_recipient` step. Core
+resubmits the canonical fields and returns the updated aggregate.
+
+It is rejected when the payment is merely in `need_review`.

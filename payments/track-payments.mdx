@@ -1,0 +1,21 @@
+---
+title: "Track payments"
+description: "Resume durable payments safely and report the authoritative state."
+---
+
+Use `get_payment` for one known payment and `list_payments` to find earlier
+payments owned by the current connected agent.
+
+## Tracking rules
+
+- Honor `next_action.poll_after_seconds` when returned.
+- Show the user the current status and required action.
+- Reuse the existing browser action while it remains current.
+- Do not create a replacement payment because funding or authorization is
+  pending.
+- A completed wallet transaction is not final completion.
+- For two-step routes, one completed step is not the completed payment.
+
+Current payment statuses include `approval_required`, `approval_ready`,
+`funding_required`, `funding_detecting`, `need_review`,
+`recipient_correction_required`, `completed`, `cancelled`, and `failed`.

@@ -1,0 +1,22 @@
+---
+title: "MCP resources and prompt"
+description: "Read AgentBank runtime routing and journey instructions through standard MCP discovery."
+---
+
+AgentBank exposes:
+
+- prompt: `agentbank_routing_guide`
+- fixed resource: `agentbank://guides/routing`
+- resource template: `agentbank://instructions/{journey}`
+- journeys: `setup`, `pay`, `track`, `recover`, `manage_recipients`, and
+  `manage_wallets`
+
+Clients access these through standard MCP prompt and resource discovery,
+including resource listing, template listing, and resource reading. They are
+not callable tools.
+
+<Note>
+During the naming migration, a deployed server may still return a legacy
+`humanfx` identifier. Treat it as a compatibility alias and follow the same
+runtime guidance.
+</Note>

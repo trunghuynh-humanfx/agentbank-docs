@@ -1,0 +1,25 @@
+---
+title: "Scopes"
+description: "Understand the normal permissions requested by an AgentBank connected agent."
+---
+
+The normal onboarding scope request is:
+
+```text
+quote:read
+intent:create
+route:create
+settlement:prepare
+settlement:initiate
+recipient:read
+recipient:write
+agent_wallet:use
+agent:revoke
+```
+
+Quote discovery uses `quote:read`; payment creation and tracking use settlement
+scopes; recipient tools use read or write scopes; wallet execution uses
+`agent_wallet:use`; revocation uses `agent:revoke`.
+
+Use `check_my_scopes` as a diagnostic, but note that its displayed map may still
+contain legacy compatibility entries even when backend enforcement is correct.

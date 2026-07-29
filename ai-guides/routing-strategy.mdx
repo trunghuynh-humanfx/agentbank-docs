@@ -1,0 +1,20 @@
+---
+title: "Routing strategy"
+description: "Select direct or two-step routes using live pairs and complete executable outcomes."
+---
+
+- Use `list_quote_book_pairs` for live direct corridors.
+- Use `browse_quote_book` for anonymous rough bands.
+- Use `estimate_payment` for the complete executable outcome.
+- Compare destination output, all fees and fee currencies, expiry, eligibility,
+  route steps, and user preference.
+- Use an explicit settlement asset for two-step routes.
+- Preserve the requested amount exactness, chain, and recipient.
+
+Partner identity is intentionally hidden. Route selection must use economic and
+execution properties rather than partner names.
+
+<Warning>
+There is no automatic Core route planner for two-step journeys. The agent must
+select a common active settlement asset from live pairs.
+</Warning>

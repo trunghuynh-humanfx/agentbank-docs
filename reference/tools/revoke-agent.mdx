@@ -1,0 +1,21 @@
+---
+title: "revoke_agent"
+description: "Revoke the current connected agent and clear its local credentials."
+---
+
+**Authentication:** Valid credential with `agent:revoke`  
+**Mutates state:** Yes  
+**Confirmation:** `confirm=true`
+
+```json
+{ "confirm": true }
+```
+
+The connected agent can revoke only itself. Core invalidates the installation,
+sessions, and bound wallet authorization. The MCP removes the local
+installation key, session, active marker, Privy device state, and Privy tokens.
+
+<Warning>
+This disconnects the agent. Explain the impact and obtain explicit user
+confirmation before calling.
+</Warning>

@@ -1,0 +1,19 @@
+---
+title: "list_recipients"
+description: "List active saved payout destinations for the current account."
+---
+
+**Authentication:** `recipient:read`  
+**Mutates state:** No
+
+```json
+{}
+```
+
+Returns recipient ID, rail, type, canonical fields, schema version,
+holder-verification metadata, default-wallet flag, status, and registration
+time.
+
+`verified:false` means verified holder metadata has not been established. It
+does not by itself make the recipient malformed or unusable; the live route
+remains authoritative.

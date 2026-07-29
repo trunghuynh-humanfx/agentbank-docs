@@ -1,0 +1,39 @@
+---
+title: "estimate_payment"
+description: "Preview a complete direct, swap, or explicit two-step payment route."
+---
+
+**Authentication:** `quote:read`, `intent:create`  
+**Mutates state:** May create quote intents; does not create a payment
+
+```json
+{
+  "source": {
+    "asset": { "type": "fiat", "symbol": "PHP" },
+    "amount": "23729.64"
+  },
+  "destination": {
+    "asset": { "type": "fiat", "symbol": "VND" },
+    "amount": "10000000",
+    "country": "VN",
+    "recipient_id": "recipient_..."
+  },
+  "amount_mode": "exact_destination",
+  "routing_preference": "lowest_total_cost",
+  "route": {
+    "intermediate_asset": {
+      "type": "crypto",
+      "ticker": "USDC",
+      "chain": "worldchain"
+    }
+  }
+}
+```
+
+Supports direct on/off-ramp, same-chain swap, fiat-to-fiat, and
+token-to-fiat routes. Two-step estimates require a concrete recipient and an
+explicit intermediate asset selected from live pairs.
+
+The result is ephemeral: it has no estimate ID, creates no payment or
+executable calldata, and may contain expiring quote references. Pass the
+returned `hops` to `create_payment` after authorization review.

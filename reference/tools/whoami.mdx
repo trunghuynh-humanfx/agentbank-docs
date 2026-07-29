@@ -1,0 +1,19 @@
+---
+title: "whoami"
+description: "Identify the current connected agent, account owner, scopes, mode, and owner badges."
+---
+
+**Authentication:** Valid connected-agent credential  
+**Mutates state:** No
+
+```json
+{}
+```
+
+Returns `agent_installation_id`, `owner_subject_id`, granted scopes, mode,
+actor type, and the linked account owner's live badges. The badges belong to
+the owner, not the agent.
+
+Call this first when beginning AgentBank work. If it returns
+`MISSING_CREDENTIAL`, start browser authorization with
+`begin_agent_onboarding`.

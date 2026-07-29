@@ -1,0 +1,25 @@
+---
+title: "continue_payment"
+description: "Open approved settlement steps and return the payment's current instruction."
+---
+
+**Authentication:** `settlement:initiate`  
+**Mutates state:** Yes  
+**Idempotency:** Stable `request_id`
+
+```json
+{ "request_id": "stable retry ID", "payment_id": "pay_..." }
+```
+
+Before authorization is ready, returns the payment view without opening
+settlements. After authorization, Core opens unopened steps in descending
+order so a downstream off-ramp can produce its deposit destination before the
+upstream step funds it.
+
+The result may include `instruction_id`, type, amount, asset, destination,
+expiry, a first-party presentation URL, and swap execution metadata.
+
+<Warning>
+In a linked two-step payment, never fund the downstream deposit separately.
+The upstream route is already bound to it.
+</Warning>

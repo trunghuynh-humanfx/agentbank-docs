@@ -1,0 +1,201 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "AgentBank",
+  "description": "Connect AI agents to supported fiat and crypto payment routes through AgentBank MCP.",
+  "colors": {
+    "primary": "#0F766E",
+    "light": "#14B8A6",
+    "dark": "#115E59"
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Overview",
+        "pages": [
+          "index",
+          "introduction/overview",
+          "introduction/why-agentbank",
+          "introduction/architecture",
+          "introduction/core-concepts"
+        ]
+      },
+      {
+        "group": "Getting started",
+        "pages": [
+          "getting-started/quickstart",
+          "getting-started/staging",
+          "getting-started/production",
+          "getting-started/connect-your-agent",
+          "getting-started/authentication",
+          "getting-started/install-the-skill",
+          "getting-started/first-payment"
+        ]
+      },
+      {
+        "group": "Money in",
+        "pages": [
+          "money-in/overview",
+          "money-in/add-money",
+          "money-in/collect-from-a-payer",
+          "money-in/receive-fiat-as-crypto"
+        ]
+      },
+      {
+        "group": "Money out",
+        "pages": [
+          "money-out/overview",
+          "money-out/bank-payout",
+          "money-out/crypto-to-fiat",
+          "money-out/manage-recipients"
+        ]
+      },
+      {
+        "group": "Exchange",
+        "pages": [
+          "exchange/overview",
+          "exchange/quotes-and-rates",
+          "exchange/same-chain-swaps",
+          "exchange/fiat-to-fiat"
+        ]
+      },
+      {
+        "group": "Payments",
+        "pages": [
+          "payments/payment-lifecycle",
+          "payments/track-payments",
+          "payments/cancel-or-correct",
+          "payments/recover-failures"
+        ]
+      },
+      {
+        "group": "Autonomy and verification",
+        "pages": [
+          "autonomy/overview",
+          "autonomy/configure-thresholds",
+          "autonomy/world-id-approval",
+          "autonomy/kyc",
+          "autonomy/agentkit-and-gas"
+        ]
+      },
+      {
+        "group": "AI guides",
+        "pages": [
+          "ai-guides/instructions-for-your-agent",
+          "ai-guides/payment-decision-guide",
+          "ai-guides/confirmation-rules",
+          "ai-guides/recipient-rules",
+          "ai-guides/routing-strategy",
+          "ai-guides/conversation-patterns",
+          "ai-guides/safety-and-recovery"
+        ]
+      },
+      {
+        "group": "MCP reference",
+        "pages": [
+          "reference/mcp-overview",
+          "reference/configuration",
+          "reference/resources",
+          "reference/tools/overview",
+          {
+            "group": "Setup and identity tools",
+            "pages": [
+              "reference/tools/begin-agent-onboarding",
+              "reference/tools/wait-for-agent-onboarding",
+              "reference/tools/get-installation-status",
+              "reference/tools/revoke-agent",
+              "reference/tools/whoami",
+              "reference/tools/check-verification-status",
+              "reference/tools/do-kyc",
+              "reference/tools/get-verification-guidance",
+              "reference/tools/check-my-scopes"
+            ]
+          },
+          {
+            "group": "Currency and quote tools",
+            "pages": [
+              "reference/tools/list-currencies",
+              "reference/tools/list-quote-book-pairs",
+              "reference/tools/browse-quote-book",
+              "reference/tools/get-ramp-quote"
+            ]
+          },
+          {
+            "group": "Payment tools",
+            "pages": [
+              "reference/tools/get-instructions",
+              "reference/tools/get-account-status",
+              "reference/tools/estimate-payment",
+              "reference/tools/create-payment",
+              "reference/tools/continue-payment",
+              "reference/tools/get-payment",
+              "reference/tools/list-payments",
+              "reference/tools/cancel-payment",
+              "reference/tools/correct-payment-recipient"
+            ]
+          },
+          {
+            "group": "Recipient tools",
+            "pages": [
+              "reference/tools/list-recipients",
+              "reference/tools/get-recipient",
+              "reference/tools/create-recipient",
+              "reference/tools/update-recipient"
+            ]
+          },
+          {
+            "group": "Wallet and EVM tools",
+            "pages": [
+              "reference/tools/list-wallets",
+              "reference/tools/verify-agent-kit",
+              "reference/tools/get-wallet-balances",
+              "reference/tools/get-token-allowance",
+              "reference/tools/approve-token",
+              "reference/tools/execute-payment-instruction",
+              "reference/tools/get-transaction-receipt"
+            ]
+          },
+          "reference/scopes",
+          "reference/statuses",
+          "reference/errors",
+          "reference/idempotency",
+          "reference/limitations"
+        ]
+      },
+      {
+        "group": "Security",
+        "pages": [
+          "security/security-model",
+          "security/account-revocation",
+          "security/responsible-agent-use"
+        ]
+      },
+      {
+        "group": "Support",
+        "pages": [
+          "support/troubleshooting",
+          "support/faq",
+          "support/contact",
+          "changelog"
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Skill",
+        "href": "https://protocol.agentbank.world/SKILL.md"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/trunghuynh-humanfx/agentbank-doc"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Open AgentBank",
+      "href": "https://app.agentbank.world"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+---
+title: "approve_token"
+description: "Submit an exact ERC-20 approval only when the requested allowance is insufficient."
+---
+
+**Authentication:** `agent_wallet:use`  
+**Mutates state:** Maybe; on-chain when needed  
+**Idempotency:** Stable `request_id`  
+**Confirmation:** `confirmed_by_user=true`
+
+```json
+{
+  "request_id": "stable transaction retry ID",
+  "confirmed_by_user": true,
+  "chain_id": 480,
+  "token_address": "0x...",
+  "spender": "0x...",
+  "amount_atomic": "100000000"
+}
+```
+
+If allowance is already sufficient, returns `already_sufficient` and sends
+nothing. Otherwise it submits exact `approve(spender, amount_atomic)` through
+the bound Privy wallet.
+
+Never infer or request an unlimited amount. Use the exact amount required by a
+current supported action.

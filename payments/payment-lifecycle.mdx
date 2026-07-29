@@ -1,0 +1,31 @@
+---
+title: "Payment lifecycle"
+description: "Understand ephemeral estimates, durable payments, instructions, execution, and final status."
+---
+
+```mermaid
+flowchart TD
+    E["Estimate ready"] --> C["Create durable payment"]
+    C --> A{"Authorization required?"}
+    A -->|"Yes"| W["World ID authorization"]
+    A -->|"No"| R["Approval ready"]
+    W --> R
+    R --> N["Continue payment"]
+    N --> F{"Funding type"}
+    F -->|"Fiat"| H["Payer completes instruction"]
+    F -->|"Wallet"| X["Execute current instruction"]
+    H --> P["Core tracks payment"]
+    X --> P
+    P --> T{"Terminal state"}
+    T --> D["Completed"]
+    T --> K["Cancelled"]
+    T --> L["Failed"]
+```
+
+An estimate is temporary and has no ID. `create_payment` persists the request,
+locks its route, and creates the authorization state. `continue_payment` opens
+approved settlement steps and returns the current instruction.
+
+`execute_payment_instruction` can execute only that current instruction through
+the pinned wallet. `get_transaction_receipt` reports on-chain state, while
+`get_payment` reports the authoritative aggregate payment state.

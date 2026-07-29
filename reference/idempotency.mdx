@@ -1,0 +1,19 @@
+---
+title: "Idempotency and request IDs"
+description: "Retry AgentBank mutations without creating duplicate logical actions."
+---
+
+Every exposed mutation except onboarding uses a client-generated request ID
+where its schema includes one.
+
+- Reuse an ID only for the same logical request and identical payload.
+- Use a new ID when any material field changes.
+- The same ID and body replay the original result.
+- The same ID with a different body returns `IDEMPOTENCY_CONFLICT`.
+
+Payment-instruction execution binds idempotency to the owner, connected agent,
+payment, instruction, pinned wallet, instruction hash, execution plan, and
+stable request ID. An ambiguous retry reuses the same signed body and key.
+
+Unresolved aged submissions enter manual review and must not be rebroadcast
+with a replacement key.

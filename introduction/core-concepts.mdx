@@ -1,0 +1,60 @@
+---
+title: "Core concepts"
+description: "Learn AgentBank accounts, wallets, assets, routes, payments, identity, scopes, and idempotency."
+---
+
+## Account owner and connected agent
+
+The **account owner** signs in to AgentBank and authorizes one or more local
+agent installations. Each **connected agent** has its own credential, scopes,
+and installation-scoped payment history.
+
+## AgentBank wallet
+
+Successful browser authorization binds the user's Privy Ethereum wallet to the
+connected agent. Wallet tools return public wallet information and balances;
+they never expose a private key or seed phrase.
+
+## Assets and amounts
+
+Crypto assets use a ticker and chain:
+
+```json
+{ "type": "crypto", "ticker": "USDC", "chain": "worldchain" }
+```
+
+Fiat assets use a currency symbol and no chain:
+
+```json
+{ "type": "fiat", "symbol": "VND" }
+```
+
+Human-facing amounts are decimal strings. `exact_source` fixes the amount sent;
+`exact_destination` fixes the amount received and may return a source ceiling.
+
+## Quote, estimate, and durable payment
+
+- A **quote-book offer** is anonymous route discovery.
+- An **estimate** previews a complete route but is ephemeral and has no ID.
+- A **durable payment** begins at `create_payment` and survives MCP restarts.
+- A **payment instruction** is the current Core-owned action for that payment.
+
+## Routes and settlement assets
+
+A direct route has one step. Fiat-to-fiat and some token-to-fiat routes use two
+steps joined by an explicit crypto **settlement asset**. The agent must choose
+that common asset from live pairs; Core does not currently auto-plan it.
+
+## Identity mechanisms
+
+- **Browser authorization** connects the agent and wallet.
+- **KYC** determines eligibility for supported fiat markets.
+- **World ID payment authorization** approves a payment above the configured
+  autonomy threshold.
+- **AgentKit verification** verifies the agent wallet and may enable sponsored
+  gas where supported.
+
+## Request IDs
+
+Mutating tools use stable request IDs for idempotency. Reuse an ID only for the
+same logical request and identical payload. Changed details require a new ID.

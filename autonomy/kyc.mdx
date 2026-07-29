@@ -1,0 +1,18 @@
+---
+title: "KYC and market readiness"
+description: "Complete identity verification when a supported fiat market requires it."
+---
+
+Use `check_verification_status` to read KYC state and owner badges. Its market
+result describes provider readiness; use quote-book tools separately for live
+corridors.
+
+`do_kyc` either reports that verification is already complete or starts a
+hosted Didit session. Open the returned URL, complete verification in the
+browser, and call `check_verification_status` again before retrying a gated
+payment.
+
+If `create_payment` returns `need_review` with `reason=rail_not_ready`, no
+payment was created and no funds moved. Wait for approved readiness. Retry the
+same request ID only if the payload remains identical; refresh and reconfirm an
+expired quote.

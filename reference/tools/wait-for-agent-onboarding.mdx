@@ -1,0 +1,24 @@
+---
+title: "wait_for_agent_onboarding"
+description: "Poll browser authorization and finalize the connected agent and wallet binding."
+---
+
+**Authentication:** None  
+**Mutates state:** Yes  
+**Request ID:** Not required
+
+```json
+{ "enrollment_id": "optional pending ID", "timeout_ms": 600000 }
+```
+
+`timeout_ms` defaults to ten minutes and is capped at fifteen minutes. The MCP
+polls Privy and AgentBank, authenticates the selected Ethereum-compatible
+wallet, signs the binding with the local installation key, finalizes
+enrollment, and stores the connected-agent session locally.
+
+Safe result fields include `agentbank_claimed`, `privy_authorized`,
+`wallet_bound`, public wallet details, and `authenticated`. A server still in
+the naming migration may return `humanfx_claimed` as a compatibility field.
+
+Reuse the same enrollment ID after a pending timeout. No credential, private
+key, or signing key is returned.

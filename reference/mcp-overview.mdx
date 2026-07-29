@@ -1,0 +1,23 @@
+---
+title: "MCP overview"
+description: "Understand the AgentBank production MCP transport, package, tools, resources, and authority boundaries."
+---
+
+- npm package: `agent-bank-mcp`
+- binary: `agent-bank-mcp`
+- intended personal-agent transport: `stdio`
+- hosted transport option: `MCP_TRANSPORT=http`
+- public production surface: exactly 33 tools
+
+The published server exposes high-level setup, quote, payment, recipient,
+wallet, tracking, and recovery tools. Legacy low-level intent,
+route-agreement, approval, settlement, partner, and raw-swap mutations are not
+part of the external contract.
+
+AgentBank Core remains authoritative for scopes, route locking, payment
+instructions, transaction verification, idempotency, and durable payment state.
+
+<Note>
+MCP prompts and resources provide runtime guidance. They are separate from
+callable tools.
+</Note>

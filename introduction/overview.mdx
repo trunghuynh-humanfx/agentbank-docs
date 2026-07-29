@@ -1,0 +1,40 @@
+---
+title: "Overview"
+description: "Understand what AgentBank provides to users, builders, and AI agents."
+---
+
+AgentBank connects authorized AI agents to supported fiat payment rails and
+on-chain settlement through MCP.
+
+An agent can discover currencies and live pairs, estimate a complete payment,
+resolve recipients, create a durable payment, follow Core-generated
+instructions, and track final status. Supported journeys include direct
+on-ramps, direct off-ramps, same-chain swaps, fiat-to-fiat routes, and
+token-to-fiat routes.
+
+<CardGroup cols={3}>
+  <Card title="For users">
+    Authorize an agent, configure its automatic transaction threshold, and
+    complete browser actions when required.
+  </Card>
+  <Card title="For builders">
+    Connect the local AgentBank MCP to Codex, Claude, OpenClaw, or Hermes.
+  </Card>
+  <Card title="For agents">
+    Use the AgentBank Pay skill to follow safe payment and recovery rules.
+  </Card>
+</CardGroup>
+
+## Control boundaries
+
+- The account and AgentBank wallet are tied to the user's login.
+- Privy provides wallet infrastructure.
+- AgentBank Core remains authoritative for authorization, route locking,
+  payment instructions, transaction verification, and durable status.
+- KYC, World ID payment authorization, and AgentKit verification are separate
+  mechanisms with different purposes.
+
+<Tip>
+Begin with the [quickstart](/getting-started/quickstart), then review
+[core concepts](/introduction/core-concepts) before moving real value.
+</Tip>

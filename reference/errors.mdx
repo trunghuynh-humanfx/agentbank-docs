@@ -1,0 +1,20 @@
+---
+title: "Errors and reason codes"
+description: "Recover safely from common AgentBank MCP errors without duplicate payments."
+---
+
+| Error or reason | Meaning | Safe response |
+| --- | --- | --- |
+| `MISSING_CREDENTIAL` | No connected-agent credential is available | Begin browser authorization once |
+| `IDEMPOTENCY_CONFLICT` | A request ID was reused with a different payload | Use the original payload or create a new ID for the changed action |
+| `need_review` | The payment cannot advance automatically | Read the reason and current payment state |
+| `rail_not_ready` | KYC or market readiness is incomplete | No payment was created and no funds moved; wait and retry safely |
+
+Also handle expired quotes, insufficient balance, unsupported assets, missing
+recipient fields, ambiguous transaction submission, recipient correction, and
+terminal failure after funds moved.
+
+<Warning>
+Do not present this page as an exhaustive backend error catalog. Tool responses
+and `get_payment` remain authoritative.
+</Warning>

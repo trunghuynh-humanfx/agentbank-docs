@@ -1,0 +1,35 @@
+---
+title: "Tool overview"
+description: "Browse all 33 production AgentBank MCP tools by capability."
+---
+
+## Setup and identity
+
+`begin_agent_onboarding`, `wait_for_agent_onboarding`,
+`get_installation_status`, `revoke_agent`, `whoami`,
+`check_verification_status`, `do_kyc`, `get_verification_guidance`,
+`check_my_scopes`
+
+## Currency and quotes
+
+`list_currencies`, `list_quote_book_pairs`, `browse_quote_book`,
+`get_ramp_quote`
+
+## Payments
+
+`get_instructions`, `get_account_status`, `estimate_payment`, `create_payment`,
+`continue_payment`, `get_payment`, `list_payments`, `cancel_payment`,
+`correct_payment_recipient`
+
+## Recipients
+
+`list_recipients`, `get_recipient`, `create_recipient`, `update_recipient`
+
+## Wallet and EVM
+
+`list_wallets`, `verify_agent_kit`, `get_wallet_balances`,
+`get_token_allowance`, `approve_token`, `execute_payment_instruction`,
+`get_transaction_receipt`
+
+Each tool page describes required authentication, mutation behavior,
+confirmation, idempotency, safe retries, and related workflows.

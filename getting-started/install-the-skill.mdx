@@ -1,0 +1,49 @@
+---
+title: "Install the AgentBank Pay skill"
+description: "Give your agent the workflow and safety guidance that complements AgentBank MCP."
+---
+
+The MCP is the **what**: tools, authentication, and current server state. The
+skill is the **how**: setup order, routing, confirmation, wallet execution,
+tracking, and recovery.
+
+## Install with skills.sh
+
+<Tabs>
+  <Tab title="Codex">
+    ```bash
+    npx skills add trunghuynh-humanfx/agentbank-doc --skill agentbank-pay -g -a codex -y
+    ```
+  </Tab>
+  <Tab title="Claude Code">
+    ```bash
+    npx skills add trunghuynh-humanfx/agentbank-doc --skill agentbank-pay -g -a claude-code -y
+    ```
+  </Tab>
+  <Tab title="OpenClaw">
+    ```bash
+    npx skills add trunghuynh-humanfx/agentbank-doc --skill agentbank-pay -g -a openclaw -y
+    ```
+  </Tab>
+  <Tab title="Hermes">
+    ```bash
+    npx skills add trunghuynh-humanfx/agentbank-doc --skill agentbank-pay -g -a hermes-agent -y
+    ```
+  </Tab>
+</Tabs>
+
+## Load the canonical URL
+
+Agents that can read a remote skill may use:
+
+```text
+Read https://protocol.agentbank.world/SKILL.md and use it for AgentBank payment workflows.
+```
+
+Remote reading may be temporary unless the client persists the skill.
+
+## Verify both parts
+
+Ask the agent to summarize the skill's safety rules, then verify that
+`whoami`, `get_instructions`, and `begin_agent_onboarding` are available. The
+recommended experience requires both the skill and MCP.

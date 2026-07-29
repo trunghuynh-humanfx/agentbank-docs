@@ -1,0 +1,18 @@
+---
+title: "list_wallets"
+description: "List the public onboarding-bound AgentBank wallet."
+---
+
+**Authentication:** `agent_wallet:use`  
+**Mutates state:** No
+
+```json
+{}
+```
+
+Returns public wallet records for the current connected agent. Combined browser
+authorization automatically registers the shared Privy user wallet; a separate
+wallet-registration scope is not required.
+
+Use the returned wallet rather than asking the user to paste or infer an
+address.

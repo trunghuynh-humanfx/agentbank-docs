@@ -1,0 +1,26 @@
+---
+title: "Quotes and rates"
+description: "Compare anonymous offers using complete executable outcomes, not headline rates alone."
+---
+
+Use `list_quote_book_pairs` as the live source of direct corridors and
+`browse_quote_book` for rough anonymous bands.
+
+When comparing routes, evaluate:
+
+- source and destination amounts;
+- percentage and flat fees;
+- each fee currency;
+- effective output;
+- expiry;
+- rail and eligibility requirements;
+- route steps;
+- the user's routing preference.
+
+Partner identity is intentionally omitted. Do not ask the agent to expose or
+choose a partner by name.
+
+<Note>
+Use `get_ramp_quote` only for direct on-ramp or off-ramp discovery. Use
+`estimate_payment` for complete payments and crypto swaps.
+</Note>

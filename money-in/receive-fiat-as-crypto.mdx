@@ -1,0 +1,26 @@
+---
+title: "Receive fiat as crypto"
+description: "Convert a supported fiat payment into crypto in the AgentBank wallet."
+---
+
+This is a direct on-ramp where fiat is the source and crypto is the destination.
+
+## Information your agent needs
+
+- source fiat currency;
+- exact-source or exact-destination amount;
+- destination crypto ticker and chain;
+- destination AgentBank wallet;
+- optional routing preference.
+
+The agent must verify the asset using `list_currencies`, find a live pair, and
+call `estimate_payment`. Before creation, it presents both amounts, every fee
+and fee currency, the wallet, route, and expiry.
+
+In production, give the payer the order-specific bank or QR instruction. In
+staging, a supported on-ramp automatically credits mock tokens.
+
+<Note>
+The payer may be someone other than the wallet owner, but the agent can track
+only the paid state—not payer identity.
+</Note>

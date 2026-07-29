@@ -1,0 +1,19 @@
+---
+title: "Payment statuses"
+description: "Interpret AgentBank durable payment states and choose the next safe action."
+---
+
+| Status | Meaning | Next action |
+| --- | --- | --- |
+| `approval_required` | World ID payment authorization is pending | Open the returned first-party action and keep the same payment |
+| `approval_ready` | Authorization is satisfied | Call `continue_payment` |
+| `funding_required` | A fiat or wallet funding instruction is ready | Follow the current instruction |
+| `funding_detecting` | AgentBank is detecting or verifying funding | Poll `get_payment` |
+| `need_review` | A readiness or manual review condition blocks progress | Read the reason and do not duplicate the payment |
+| `recipient_correction_required` | Settlement is paused for corrected recipient details | Confirm and call `correct_payment_recipient` |
+| `completed` | The aggregate payment completed | Report completion |
+| `cancelled` | The durable payment was cancelled | Stop |
+| `failed` | The payment reached a terminal failure | Show failure details and whether funds moved |
+
+The public payment model does not currently emit `expired`; an expired or
+rejected authorization may appear as `failed`.

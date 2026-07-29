@@ -1,0 +1,21 @@
+---
+title: "check_verification_status"
+description: "Read the account owner's KYC state, badges, and fiat-market readiness."
+---
+
+**Authentication:** Valid connected-agent credential  
+**Mutates state:** No
+
+```json
+{}
+```
+
+KYC states include `none`, `pending`, `in_review`, `verified`, `rejected`,
+`expired`, and `abandoned`.
+
+Market readiness is keyed by country and uses `APPROVED`, `PENDING`,
+`NOT_STARTED`, or `REJECTED`. Current market mappings include ARS, BRL, IDR,
+NGN, PEN, PHP, THB, and VND.
+
+This readiness view does not prove that a live quote exists. Use
+`list_quote_book_pairs` and `browse_quote_book` for live availability.

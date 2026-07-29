@@ -1,0 +1,19 @@
+---
+title: "verify_agent_kit"
+description: "Start or refresh AgentKit verification for the single bound AgentBank wallet."
+---
+
+**Authentication:** `agent_wallet:use`  
+**Mutates state:** May start a verification session
+
+```json
+{}
+```
+
+If verification is required, returns `verification_url`, expiry, and
+`next_action.type=verify_in_world_app`. The user opens or scans the URL in
+World App, then the agent calls this tool again until
+`agentkit_verified=true`.
+
+This is separate from KYC, the owner's World ID badge, and payment-specific
+World ID authorization. The local subprocess exposes no wallet secret.

@@ -1,0 +1,23 @@
+---
+title: "Why AgentBank"
+description: "See how AgentBank turns fragmented payment requirements into agent-ready workflows."
+---
+
+Stablecoins make digital value transferable, but an AI agent still needs a
+safe way to collect local fiat, convert assets, and pay bank recipients.
+
+Local rails differ by currency, country, recipient fields, KYC requirements,
+eligibility, fees, expiry, and settlement behavior. A model should not guess
+those rules or assemble an arbitrary transaction.
+
+AgentBank exposes high-level payment journeys through MCP:
+
+1. Discover the live currencies and route pairs.
+2. Validate the recipient and requested amount.
+3. Estimate the complete executable outcome.
+4. Apply the user's configured authorization policy.
+5. Create one durable payment and follow its current instruction.
+6. Track the aggregate payment until AgentBank reports a terminal state.
+
+This gives agents useful payment capability while keeping authorization,
+route selection, wallet execution, and recovery inside defined boundaries.

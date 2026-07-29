@@ -1,0 +1,18 @@
+---
+title: "Security model"
+description: "Understand AgentBank credential, wallet, scope, instruction, and payment-state boundaries."
+---
+
+- Browser authorization binds one connected agent to the user's account.
+- Scopes restrict the operations available to that installation.
+- Privy supplies wallet infrastructure without exposing keys through MCP.
+- Core pins the wallet and route for payment execution.
+- Only a current Core-owned instruction can be executed.
+- Exact token approval is submitted only when required.
+- Stable request IDs protect against duplicate logical actions.
+- Sensitive credentials and World ID proofs are omitted from tool results.
+- Partner identity is intentionally hidden.
+- `get_payment` is the durable source of truth.
+
+AgentBank does not take custody of the user's wallet funds. Payment and banking
+partners may process funds while completing supported routes.

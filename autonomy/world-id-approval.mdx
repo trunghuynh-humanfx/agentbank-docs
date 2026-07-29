@@ -1,0 +1,24 @@
+---
+title: "World ID payment authorization"
+description: "Authorize an above-threshold payment without sharing a World ID proof with the agent."
+---
+
+When an above-threshold payment requires authorization, `create_payment`
+returns a first-party AgentBank action URL.
+
+<Steps>
+  <Step title="Open the AgentBank action">
+    Sign in as the payment owner. The page reveals the World ID request only
+    after owner authentication.
+  </Step>
+  <Step title="Authorize in World App">
+    Complete the payment-specific authorization before its expiry.
+  </Step>
+  <Step title="Resume the same payment">
+    The agent polls `get_payment` and continues when it reaches
+    `approval_ready`.
+  </Step>
+</Steps>
+
+Never paste, print, reconstruct, or send a World ID proof or raw verification
+request in chat. A World ID badge check does not replace payment authorization.

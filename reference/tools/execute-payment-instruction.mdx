@@ -1,0 +1,29 @@
+---
+title: "execute_payment_instruction"
+description: "Execute only the current Core-owned payment instruction through the pinned wallet."
+---
+
+**Authentication:** `settlement:initiate`, `agent_wallet:use`  
+**Mutates state:** Yes; on-chain  
+**Idempotency:** Stable execution `request_id`  
+**Confirmation:** `confirmed_by_user=true` under the active authorization policy
+
+```json
+{
+  "request_id": "stable execution retry ID",
+  "payment_id": "pay_...",
+  "instruction_id": "ins_...",
+  "confirmed_by_user": true
+}
+```
+
+The caller cannot choose the wallet, chain, token, spender, amount, target,
+value, calldata, or execution order. Core validates the current instruction,
+pins the payment route and wallet, and derives an exact transfer or swap plan.
+
+For swaps, Core checks allowance, submits an exact approval only when needed,
+rechecks allowance, and sends the final hash for verification. Retry ambiguous
+submissions with the same request ID.
+
+The result omits wallet IDs, RPC bodies, Privy authorization material, and
+Privy transaction IDs. Continue tracking with `get_payment`.

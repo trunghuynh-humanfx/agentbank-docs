@@ -1,0 +1,37 @@
+---
+title: "Conversation patterns"
+description: "Use clear task prompts for common AgentBank workflows."
+---
+
+## Check connection
+
+```text
+Check whether AgentBank is connected, show account and wallet readiness, and do not create a payment.
+```
+
+## Fund staging
+
+```text
+Find a supported staging on-ramp, complete it for mock tokens, and show my resulting wallet balance.
+```
+
+## Collect fiat from another payer
+
+```text
+Create a one-time fiat collection into my AgentBank wallet. Show me the complete amount, fees, and expiry before creation, then give me the order-specific bank or QR instructions to share with the payer.
+```
+
+## Pay a bank recipient
+
+```text
+Pay my saved recipient in VND from supported crypto. Estimate the route, show all material details, apply my authorization threshold, and track final delivery.
+```
+
+## Track or recover
+
+```text
+Read the current durable state of payment pay_..., tell me the next safe action, and do not create a duplicate payment.
+```
+
+These patterns show observable goals and actions. They do not expose or request
+hidden chain-of-thought.

@@ -1,0 +1,21 @@
+---
+title: "Autonomy and human control"
+description: "Understand connected-agent permissions, automatic transaction thresholds, and World ID authorization."
+---
+
+```mermaid
+flowchart TD
+    R["Agent prepares payment"] --> V["Evaluate configured threshold"]
+    V -->|"Below threshold"| A["May continue within granted permissions"]
+    V -->|"Above threshold"| W["World ID payment authorization"]
+    W --> H["User authorizes"]
+    H --> C["Agent continues the same payment"]
+```
+
+Connected-agent authorization grants capabilities. The account owner's
+platform threshold controls whether a payment may proceed automatically or
+requires payment-specific World ID authorization.
+
+KYC controls market eligibility. AgentKit verifies the agent wallet and may
+enable sponsored gas. Neither replaces the payment threshold or World ID
+authorization.

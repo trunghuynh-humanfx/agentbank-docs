@@ -1,0 +1,42 @@
+---
+title: "Quickstart"
+description: "Connect AgentBank MCP, authorize your account, install the skill, and verify readiness."
+---
+
+<Steps>
+  <Step title="Choose an environment">
+    Use [staging](/getting-started/staging) for mock tokens or
+    [production](/getting-started/production) for live routes.
+  </Step>
+  <Step title="Connect the AgentBank MCP">
+    Follow the configuration for your client in
+    [Connect your agent](/getting-started/connect-your-agent).
+  </Step>
+  <Step title="Install the AgentBank Pay skill">
+    Install from `trunghuynh-humanfx/agentbank-doc` or load the canonical skill
+    URL.
+  </Step>
+  <Step title="Check readiness">
+    Ask your agent:
+
+    ```text
+    Check my AgentBank connection, account readiness, and wallet. Do not create a payment.
+    ```
+  </Step>
+  <Step title="Complete browser authorization">
+    If credentials are missing, your agent returns a URL titled **Connect to
+    your AgentBank Account**. Sign in and approve the connected agent.
+  </Step>
+  <Step title="Verify the account">
+    Your agent checks `whoami`, scopes, account status, and `list_wallets`.
+  </Step>
+</Steps>
+
+<CardGroup cols={2}>
+  <Card title="Fund staging" href="/getting-started/staging">
+    Run a supported on-ramp that automatically credits mock tokens.
+  </Card>
+  <Card title="Prepare production" href="/getting-started/production">
+    Review live-value safeguards before creating a payment.
+  </Card>
+</CardGroup>

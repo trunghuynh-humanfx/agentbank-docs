@@ -1,0 +1,21 @@
+---
+title: "browse_quote_book"
+description: "Browse anonymous quote groups and amount bands without creating an intent."
+---
+
+**Authentication:** `quote:read`  
+**Mutates state:** No
+
+```json
+{
+  "base_ccy": { "type": "crypto", "ticker": "USDC", "chain": "worldchain" },
+  "quote_ccy": { "type": "fiat", "symbol": "VND" },
+  "direction": "off_ramp",
+  "rail": "optional payment-method filter",
+  "include_expired": false
+}
+```
+
+Returns anonymous, unranked groups and bands. The raw `rate` excludes fees;
+always evaluate `fee_pct`, `flat_fee`, and `fee_ccy` together. This tool does
+not select an amount band or create an intent.

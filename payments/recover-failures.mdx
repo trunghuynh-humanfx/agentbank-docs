@@ -1,0 +1,29 @@
+---
+title: "Recover a payment"
+description: "Resume interrupted payments without duplicate funding or duplicate wallet execution."
+---
+
+<Steps>
+  <Step title="Read durable state">
+    Call `get_payment` and inspect the current status, active instruction, and
+    next action.
+  </Step>
+  <Step title="Resume the current action">
+    Reuse the existing browser action, authorization, funding instruction, or
+    execution request when still valid.
+  </Step>
+  <Step title="Retry idempotently">
+    Reuse the same request ID only for the identical logical request and
+    payload. Changed details require a new ID.
+  </Step>
+  <Step title="Correct or cancel when supported">
+    Obtain explicit user intent before either action.
+  </Step>
+  <Step title="Escalate after funds moved">
+    If automated recovery is unavailable, report `funds_moved`, payment ID,
+    status, and failure details to support.
+  </Step>
+</Steps>
+
+Never rotate the request ID after an ambiguous on-chain submission. Never
+rebroadcast an unresolved aged submission with a replacement idempotency key.

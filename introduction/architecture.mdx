@@ -1,0 +1,34 @@
+---
+title: "Architecture"
+description: "Understand the responsibility boundaries between the user, agent, MCP, Core, wallet, and payment rails."
+---
+
+```mermaid
+flowchart LR
+    U["User"] --> A["AI agent"]
+    A --> M["AgentBank MCP"]
+    M --> C["AgentBank Protocol Core"]
+    C --> Q["Quote and payment services"]
+    C --> W["Privy wallet infrastructure"]
+    C --> R["Payment rails and settlement partners"]
+    R --> B["Bank or local payment destination"]
+    U --> P["AgentBank browser action"]
+    P --> C
+    P --> I["Privy, World ID, KYC, or fiat action"]
+```
+
+| Layer | Responsibility |
+| --- | --- |
+| User | Connect the account, set the autonomy threshold, and complete required browser actions |
+| AI agent | Understand the request, call MCP tools, present material details, and track status |
+| AgentBank MCP | Restore the local connected-agent credential and expose high-level tools and resources |
+| Protocol Core | Enforce authorization, lock routes, issue instructions, verify execution, and store durable state |
+| Privy | Provide the AgentBank wallet infrastructure |
+| World ID / AgentKit | Provide payment-specific human authorization and verified-agent capabilities |
+| KYC provider | Verify eligibility for gated fiat markets |
+| Payment rails | Collect or deliver fiat for supported routes |
+
+<Warning>
+A successful on-chain receipt is not necessarily final payment completion.
+Always use `get_payment` as the authoritative durable status.
+</Warning>

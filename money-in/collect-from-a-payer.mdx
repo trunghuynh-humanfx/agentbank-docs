@@ -1,0 +1,27 @@
+---
+title: "Collect from another payer"
+description: "Create and track a one-time collection that someone else can pay."
+---
+
+The payer may be different from the AgentBank account owner. The connected
+agent creates and tracks the payment for the owner, while the payer completes
+the fiat instruction.
+
+## Current flow
+
+1. Select the destination AgentBank wallet and crypto asset.
+2. Estimate the fiat-to-crypto amount and fees.
+3. Create one durable payment.
+4. Continue it to obtain the current fiat instruction.
+5. Share only the order-specific bank account or QR instructions with the payer.
+6. Poll `get_payment` and report whether it was paid.
+
+<Warning>
+Paid status does not verify payer identity. Do not claim to know who paid, and
+do not treat the result as customer identity verification.
+</Warning>
+
+## Coming soon
+
+AgentBank plans shareable, single-payment links. Until they are released, do
+not promise reusable links, invoices, payer analytics, or public payment pages.

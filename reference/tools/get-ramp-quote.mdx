@@ -1,0 +1,26 @@
+---
+title: "get_ramp_quote"
+description: "Create and quote one direct on-ramp or off-ramp intent."
+---
+
+**Authentication:** `quote:read`  
+**Mutates state:** Creates an intent
+
+```json
+{
+  "direction": "off_ramp",
+  "token_in": { "type": "crypto", "ticker": "USDC", "chain": "worldchain" },
+  "token_out": { "type": "fiat", "symbol": "VND" },
+  "amount_in": "100",
+  "preferred_rails": ["VND"],
+  "description": "optional"
+}
+```
+
+Provide exactly one of `amount_in` or `amount_out`. Optional filters include
+expected amounts, badges, reputation, and deadline. Only `on_ramp` and
+`off_ramp` are valid; `on_chain_swap` is rejected.
+
+Returns `intent_id`, `best`, and `all_quotes[]`. Quotes include canonical
+assets, amounts, fees, limits, expiry, rail, and eligibility. Partner identity
+is redacted.

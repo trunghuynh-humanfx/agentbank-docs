@@ -1,0 +1,18 @@
+---
+title: "do_kyc"
+description: "Start hosted KYC when the account owner is not already verified."
+---
+
+**Authentication:** Valid connected-agent credential  
+**Mutates state:** May start a KYC session
+
+```json
+{}
+```
+
+If the owner already has the KYC badge, returns `already_verified` without
+starting a session. Otherwise it creates a Didit session and returns `kyc_url`
+with human-only completion instructions.
+
+The agent shows the URL but cannot complete KYC or grant consent for the user.
+Recheck with `check_verification_status` afterward.
