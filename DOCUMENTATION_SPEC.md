@@ -884,21 +884,10 @@ skills/agentbank-pay/SKILL.md
 Install from the public documentation repository:
 
 ```bash
-npx skills add trunghuynh-humanfx/agentbank-docs --skill agentbank-pay -g -a codex -y
+npx skills add trunghuynh-humanfx/agentbank-docs --skill agentbank-pay -g -y
 ```
 
-Client variants:
-
-```bash
-npx skills add trunghuynh-humanfx/agentbank-docs --skill agentbank-pay -g -a claude-code -y
-npx skills add trunghuynh-humanfx/agentbank-docs --skill agentbank-pay -g -a openclaw -y
-npx skills add trunghuynh-humanfx/agentbank-docs --skill agentbank-pay -g -a hermes-agent -y
-```
-
-Claude Desktop does not have the same standalone skills directory workflow as
-the listed coding/agent clients. Its page should prioritize MCP connection and
-give only a verified Claude Desktop instruction mechanism if one is supported
-at publication time.
+Use one installation command rather than provider-specific variants.
 
 ### 10.3 Skill verification
 
