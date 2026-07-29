@@ -86,7 +86,17 @@ The staging funding flow is:
 Do not describe a faucet, test-mode switch, fake bank account, or manual
 simulation control. The normal on-ramp flow is the staging funding mechanism.
 
-### 3.3 Supported agent clients
+### 3.3 Hosted AgentBank agent
+
+- Users can open `https://app.agentbank.world`, sign in, and chat directly with
+  the AgentBank-hosted agent.
+- The hosted flow does not require the user to connect an external AI agent,
+  configure MCP, or install the AgentBank Pay skill.
+- The Introduction page must present the hosted agent as a direct way to use
+  AgentBank, while the getting-started guides cover connecting the user's own
+  agent.
+
+### 3.4 Supported agent clients
 
 The initial docs must cover:
 
@@ -96,7 +106,7 @@ The initial docs must cover:
 - OpenClaw
 - Hermes Agent
 
-### 3.4 Authentication and account control
+### 3.5 Authentication and account control
 
 - The normal onboarding flow opens browser authorization.
 - The account is tied to the user's login.
@@ -108,7 +118,7 @@ The initial docs must cover:
 - The agent must never request a private key, seed phrase, AgentBank session
   token, Privy token, authorization key, or World ID proof.
 
-### 3.5 Current collection behavior
+### 3.6 Current collection behavior
 
 "Collect money" may mean any of the following:
 
@@ -124,7 +134,7 @@ track whether the order was paid, but cannot identify who paid it.
 Shareable, single-payment payment links must be labeled "Coming soon." Do not
 describe them as an available tool or current workflow.
 
-### 3.6 Support
+### 3.7 Support
 
 - Email: `support@agentbank.world`
 - Telegram: `https://t.me/+MxUewVNlzSplY2Y1`
