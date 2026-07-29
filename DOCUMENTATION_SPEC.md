@@ -2,8 +2,8 @@
 
 Status: Final implementation brief for documentation and engineering review  
 Target platform: Mintlify  
-Target repository: `trunghuynh-humanfx/agentbank-doc`  
-Public repository URL: `https://github.com/trunghuynh-humanfx/agentbank-doc`  
+Target repository: `trunghuynh-humanfx/agentbank-docs`
+Public repository URL: `https://github.com/trunghuynh-humanfx/agentbank-docs`
 Last updated: 2026-07-29
 
 ## 1. Purpose
@@ -52,7 +52,7 @@ amount conventions, tool names, or custody language into AgentBank docs.
 - Public description: "Banking-like services for AI agents. Connect AI to the
   global banking system."
 - Replace public HumanFX and HFX product branding with AgentBank. The confirmed
-  `trunghuynh-humanfx/agentbank-doc` GitHub coordinate is a repository
+  `trunghuynh-humanfx/agentbank-docs` GitHub coordinate is a repository
   identifier, not product
   branding.
 - Retain the following compatibility environment variable names exactly:
@@ -288,7 +288,7 @@ threshold and granted permissions.
 
 ## 7. Mintlify repository structure
 
-Create the documentation in `trunghuynh-humanfx/agentbank-doc` with this layout:
+Create the documentation in `trunghuynh-humanfx/agentbank-docs` with this layout:
 
 ```text
 .
@@ -302,8 +302,7 @@ Create the documentation in `trunghuynh-humanfx/agentbank-doc` with this layout:
 |   |-- core-concepts.mdx
 |-- getting-started/
 |   |-- quickstart.mdx
-|   |-- staging.mdx
-|   |-- production.mdx
+|   |-- environment.mdx
 |   |-- connect-your-agent.mdx
 |   |-- authentication.mdx
 |   |-- install-the-skill.mdx
@@ -432,7 +431,7 @@ tooling. It must include:
 - staging link `https://staging.agentbank.world`;
 - production link `https://app.agentbank.world`;
 - skill link `https://protocol.agentbank.world/SKILL.md`;
-- GitHub link `https://github.com/trunghuynh-humanfx/agentbank-doc`;
+- GitHub link `https://github.com/trunghuynh-humanfx/agentbank-docs`;
 - email and Telegram support links;
 - search and code-copy behavior where supported;
 - light and dark theme support;
@@ -883,15 +882,15 @@ skills/agentbank-pay/SKILL.md
 Install from the public documentation repository:
 
 ```bash
-npx skills add trunghuynh-humanfx/agentbank-doc --skill agentbank-pay -g -a codex -y
+npx skills add trunghuynh-humanfx/agentbank-docs --skill agentbank-pay -g -a codex -y
 ```
 
 Client variants:
 
 ```bash
-npx skills add trunghuynh-humanfx/agentbank-doc --skill agentbank-pay -g -a claude-code -y
-npx skills add trunghuynh-humanfx/agentbank-doc --skill agentbank-pay -g -a openclaw -y
-npx skills add trunghuynh-humanfx/agentbank-doc --skill agentbank-pay -g -a hermes-agent -y
+npx skills add trunghuynh-humanfx/agentbank-docs --skill agentbank-pay -g -a claude-code -y
+npx skills add trunghuynh-humanfx/agentbank-docs --skill agentbank-pay -g -a openclaw -y
+npx skills add trunghuynh-humanfx/agentbank-docs --skill agentbank-pay -g -a hermes-agent -y
 ```
 
 Claude Desktop does not have the same standalone skills directory workflow as
@@ -1505,6 +1504,6 @@ alignments rather than changing the documented product model:
    with the exact boundary behavior matching the platform UI.
 4. A supported staging on-ramp automatically succeeds, credits mock tokens,
    and leaves the wallet ready for other supported staging intents.
-5. `trunghuynh-humanfx/agentbank-doc` contains
+5. `trunghuynh-humanfx/agentbank-docs` contains
    `skills/agentbank-pay/SKILL.md` before publishing the documented `skills.sh`
    commands.

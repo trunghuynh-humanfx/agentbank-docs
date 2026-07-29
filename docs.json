@@ -34,8 +34,7 @@
         "group": "Getting started",
         "pages": [
           "getting-started/quickstart",
-          "getting-started/staging",
-          "getting-started/production",
+          "getting-started/environment",
           "getting-started/connect-your-agent",
           "getting-started/authentication",
           "getting-started/install-the-skill",
