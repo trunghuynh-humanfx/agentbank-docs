@@ -16,9 +16,14 @@
   "navigation": {
     "groups": [
       {
+        "group": "Introduction",
+        "pages": [
+          "index"
+        ]
+      },
+      {
         "group": "Overview",
         "pages": [
-          "index",
           "introduction/overview",
           "introduction/why-agentbank",
           "introduction/architecture",
