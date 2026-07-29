@@ -1,0 +1,30 @@
+---
+title: "Overview"
+description: "Understand durable AgentBank payments, tracking, corrections, and recovery."
+---
+
+An AgentBank payment is a durable record that connects route selection,
+authorization, current execution instructions, and final status. The payment
+record remains authoritative across browser actions, fiat settlement, and
+on-chain execution.
+
+<CardGroup cols={2}>
+  <Card title="Payment lifecycle" href="/payments/payment-lifecycle">
+    Follow a payment from estimate through authorization, execution, and final
+    status.
+  </Card>
+  <Card title="Track payments" href="/payments/track-payments">
+    Read one payment or list recent payments without creating a new action.
+  </Card>
+  <Card title="Cancel or correct" href="/payments/cancel-or-correct">
+    Cancel when allowed or correct an eligible recipient before execution.
+  </Card>
+  <Card title="Recover failures" href="/payments/recover-failures">
+    Handle expired, rejected, ambiguous, or failed payment states safely.
+  </Card>
+</CardGroup>
+
+<Note>
+An on-chain transaction receipt does not replace aggregate payment status.
+Use `get_payment` to confirm whether the complete AgentBank payment finished.
+</Note>

@@ -71,6 +71,7 @@
       {
         "group": "Payments",
         "pages": [
+          "payments/overview",
           "payments/payment-lifecycle",
           "payments/track-payments",
           "payments/cancel-or-correct",
@@ -78,7 +79,7 @@
         ]
       },
       {
-        "group": "Autonomy and verification",
+        "group": "Autonomy and human control",
         "pages": [
           "autonomy/overview",
           "autonomy/configure-thresholds",

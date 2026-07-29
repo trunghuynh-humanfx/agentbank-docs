@@ -323,6 +323,7 @@ Create the documentation in `trunghuynh-humanfx/agentbank-docs` with this layout
 |   |-- same-chain-swaps.mdx
 |   |-- fiat-to-fiat.mdx
 |-- payments/
+|   |-- overview.mdx
 |   |-- payment-lifecycle.mdx
 |   |-- track-payments.mdx
 |   |-- cancel-or-correct.mdx
@@ -408,17 +409,18 @@ The public AgentBank skill is distributed from this repository through
 
 Recommended Mintlify navigation:
 
-1. Overview
-2. Getting started
-3. Money in
-4. Money out
-5. Exchange
-6. Payments
-7. Autonomy and verification
-8. AI guides
-9. MCP reference
-10. Security
-11. Support
+1. Introduction
+2. Overview
+3. Getting started
+4. Money in
+5. Money out
+6. Exchange
+7. Payments
+8. Autonomy and human control
+9. AI guides
+10. MCP reference
+11. Security
+12. Support
 
 ### 7.2 `docs.json` requirements
 
@@ -1401,20 +1403,19 @@ Build the Mintlify site in this order.
 ### 17.2 Getting started
 
 1. Quickstart
-2. Staging
-3. Production
-4. Connect your agent with all five verified client configurations
-5. Browser authorization
-6. Install the skill
-7. First payment
+2. Environment
+3. Connect your agent with all five verified client configurations
+4. Browser authorization
+5. Install the skill
+6. First payment
 
 ### 17.3 Product journeys
 
 1. Money in
 2. Money out
 3. Exchange
-4. Payment lifecycle and tracking
-5. Autonomy and verification
+4. Payments
+5. Autonomy and human control
 6. Security and revocation
 
 ### 17.4 Agent guidance
