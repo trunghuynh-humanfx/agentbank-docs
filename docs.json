@@ -7,7 +7,7 @@
     "light": "/logo/agentbank-wordmark-light.png",
     "dark": "/logo/agentbank-wordmark-dark.png"
   },
-  "favicon": "/logo/agentbank-mark.png",
+  "favicon": "/favicon.png",
   "colors": {
     "primary": "#0062FF",
     "light": "#3381FF",
