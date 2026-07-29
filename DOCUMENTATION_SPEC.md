@@ -1401,12 +1401,13 @@ Build the Mintlify site in this order.
 
 ### 17.2 Getting started
 
-1. Quickstart
-2. Environment
-3. Connect your agent with all five verified client configurations
-4. Browser authorization
-5. Install the skill
-6. First payment
+Keep `Quickstart` and `Environment` as orientation pages. Follow them with this
+numbered setup sequence in the sidebar:
+
+1. `1. Connect your agent`
+2. `2. Browser authorization`
+3. `3. Install the AgentBank Pay skill`
+4. `4. Your first payment`
 
 ### 17.3 Product journeys
 
