@@ -412,8 +412,8 @@ Create the documentation in `trunghuynh-humanfx/agentbank-docs` with this layout
 |-- images/
 ```
 
-The public AgentBank skill is distributed from this repository through
-`skills/agentbank-pay/SKILL.md` and from the stable protocol URL.
+The public AgentBank skill is distributed from
+`https://github.com/theagentbank/skills` and from the stable protocol URL.
 
 ### 7.1 Navigation groups
 
@@ -443,7 +443,7 @@ tooling. It must include:
 - staging link `https://staging.agentbank.world`;
 - production link `https://app.agentbank.world`;
 - skill link `https://protocol.agentbank.world/SKILL.md`;
-- GitHub link `https://github.com/trunghuynh-humanfx/agentbank-docs`;
+- GitHub link `https://github.com/theagentbank/skills`;
 - email and Telegram support links;
 - search and code-copy behavior where supported;
 - light and dark theme support;
@@ -882,19 +882,19 @@ The docs must warn that reading a remote skill is temporary unless the client
 persists it. A skill loaded from a URL must still be paired with the AgentBank
 MCP.
 
-### 10.2 skills.sh repository layout
+### 10.2 Skill repository
 
 `skills.sh` installs from a Git or repository source, not an arbitrary standalone
-`SKILL.md` URL. Publish the skill at:
+`SKILL.md` URL. The canonical skill repository is:
 
 ```text
-skills/agentbank-pay/SKILL.md
+https://github.com/theagentbank/skills
 ```
 
-Install from the public documentation repository:
+Install the skill with:
 
 ```bash
-npx skills add trunghuynh-humanfx/agentbank-docs --skill agentbank-pay -g -y
+npx skills add theagentbank/skills
 ```
 
 Use one installation command rather than provider-specific variants.
@@ -1505,6 +1505,5 @@ alignments rather than changing the documented product model:
    with the exact boundary behavior matching the platform UI.
 4. A supported staging on-ramp automatically succeeds, credits mock tokens,
    and leaves the wallet ready for other supported staging intents.
-5. `trunghuynh-humanfx/agentbank-docs` contains
-   `skills/agentbank-pay/SKILL.md` before publishing the documented `skills.sh`
-   commands.
+5. `theagentbank/skills` is publicly available before publishing the documented
+   `skills.sh` command.
