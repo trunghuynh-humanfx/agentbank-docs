@@ -875,7 +875,7 @@ https://agentbank.world/SKILL.md
 For clients that can read a skill from a URL, users may instruct the agent:
 
 ```text
-Read https://agentbank.world/SKILL.md and use it for AgentBank payment workflows.
+Read https://agentbank.world/SKILL.md and follow instructions to setup and use AgentBank
 ```
 
 The docs must warn that reading a remote skill is temporary unless the client
