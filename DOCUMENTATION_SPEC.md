@@ -442,7 +442,7 @@ tooling. It must include:
 - navigation in the order above;
 - staging link `https://staging.agentbank.world`;
 - production link `https://app.agentbank.world`;
-- skill link `https://protocol.agentbank.world/SKILL.md`;
+- skill link `https://agentbank.world/SKILL.md`;
 - GitHub link `https://github.com/theagentbank/skills`;
 - email and Telegram support links;
 - search and code-copy behavior where supported;
@@ -869,13 +869,13 @@ Do not suggest changing these variables for ordinary single-agent setup.
 Public skill URL:
 
 ```text
-https://protocol.agentbank.world/SKILL.md
+https://agentbank.world/SKILL.md
 ```
 
 For clients that can read a skill from a URL, users may instruct the agent:
 
 ```text
-Read https://protocol.agentbank.world/SKILL.md and use it for AgentBank payment workflows.
+Read https://agentbank.world/SKILL.md and use it for AgentBank payment workflows.
 ```
 
 The docs must warn that reading a remote skill is temporary unless the client

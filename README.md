@@ -16,7 +16,7 @@ journeys, autonomy controls, security, and all 33 public MCP tools.
 - Staging: `https://staging.agentbank.world`
 - Production: `https://app.agentbank.world`
 - Protocol: `https://protocol.agentbank.world`
-- Skill: `https://protocol.agentbank.world/SKILL.md`
+- Skill: `https://agentbank.world/SKILL.md`
 
 ## Content sources
 
