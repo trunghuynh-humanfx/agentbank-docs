@@ -1,0 +1,74 @@
+---
+title: "Errors and idempotency"
+description: "Make safe retries, resolve conflicts, and avoid duplicate merchant payments."
+---
+
+Design every caller for retries. Network uncertainty does not mean a payment or
+KYC write did not reach AgentBank.
+
+## Error response
+
+Application errors include a machine-readable error object. Integrations should
+branch on `error.code`, not on the prose message:
+
+```json
+{
+  "error": {
+    "code": "LIMIT_EXCEEDED",
+    "message": "This end user already has an active payment (pay_..., funding_required)",
+    "retryable": false,
+    "correlation_id": "merchant-correlation-id"
+  }
+}
+```
+
+Log the HTTP status, error code, and correlation ID. Redact KYC, passwords,
+signature headers, private keys, and webhook secrets.
+
+## Common integration failures
+
+| Condition                                                        | Typical outcome                                        | Correct action                                                                               |
+| ---------------------------------------------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| Missing/expired timestamp, duplicate nonce, or invalid signature | Authentication/signature error                         | Create a new signed request with a fresh nonce after fixing clock/key/body handling          |
+| KYC schema or artifact hash failure                              | KYC schema error                                       | Correct the exact field or artifact. Do not retry unchanged invalid data                     |
+| Stale `base_kyc_version`                                         | Conflict                                               | Fetch the end user, merge against the latest allowed fields, and submit a new patch          |
+| Unready rail                                                     | Validation/eligibility failure or unavailable estimate | Wait for readiness or use an available corridor                                              |
+| Active payment for the end user                                  | `LIMIT_EXCEEDED`                                       | Inspect, complete, cancel, or wait for the active payment; do not create a second order      |
+| Same payment reference, different body                           | Idempotency conflict                                   | Keep one reference per economic order. Create a new reference only for a genuinely new order |
+| Provider failure after funds moved                               | Terminal failed payment with `funds_moved: true`       | Stop automatic retries and follow your recovery/support procedure                            |
+
+## Payment idempotency
+
+`merchant_payment_reference` is the durable idempotency key for
+`POST /v1/partner/payments`, scoped to the merchant.
+
+* Reuse the same reference with the **same** normalized payment request to get
+  the original payment view.
+* Reuse it with a different payload to receive an idempotency conflict.
+* Generate a different reference for a new commercial order, never for a
+  transport retry of the old one.
+* `request_id` is useful merchant correlation metadata but does not replace
+  `merchant_payment_reference` for payment idempotency.
+
+If a create request times out, first retry the exact same request with the same
+merchant payment reference or list/read your merchant payment history. Do not
+change the recipient, amount, or reference merely because the first response
+was lost.
+
+## KYC retries and versions
+
+Create requires a complete KYC record. The same verified document identity is
+not a license to create an unrelated second end user. Keep the returned
+`end_user_id`, then use `PUT` with its `base_kyc_version` for updates. On a
+version conflict, fetch the latest redacted record and have your verified KYC
+source provide a fresh, allowed patch.
+
+## Webhook retries
+
+Webhook delivery is at least once and separate from the API response. A `2xx`
+acknowledges the specific delivery. Network errors, `429`, and `5xx` can cause
+the same `x-agentbank-delivery-id` to arrive again. Persist that ID before
+processing and make downstream state updates idempotent.
+
+Use the payment read endpoint as recovery authority if a webhook is delayed,
+unknown, or received after a service restart.

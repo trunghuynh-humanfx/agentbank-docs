@@ -1,0 +1,38 @@
+---
+title: "List supported bank names"
+description: "Read the Core-curated direct bank-transfer name directory for a fiat rail."
+---
+
+```text
+GET /api/rails/:rail/supported-bank-names
+```
+
+**Authentication:** none. This directory is usable by personal and partner
+clients for direct bank-transfer recipient forms.
+
+## Path parameters
+
+| Parameter | Required | Description                             |
+| --------- | -------- | --------------------------------------- |
+| `rail`    | Yes      | Uppercase fiat rail, for example `NGN`. |
+
+```bash
+curl -sS "$AGENTBANK_BASE_URL/api/rails/NGN/supported-bank-names"
+```
+
+## Response
+
+```json
+{
+  "rail": "NGN",
+  "supported_bank_names": [
+    "GTBank Plc",
+    "StanbicIBTC Bank",
+    "PalmPay Limited"
+  ]
+}
+```
+
+Send the canonical string returned here as `bank_name`. This is a
+Core-curated direct-bank directory, not a provider's complete bank list and
+not a substitute for [Verify bank recipient](../partner/verify-bank-recipient).

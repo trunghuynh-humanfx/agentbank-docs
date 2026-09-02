@@ -1,0 +1,37 @@
+---
+title: "List webhooks"
+description: "List active and disabled webhook endpoints for the portal merchant."
+---
+
+```text
+GET /v1/merchant/webhooks
+```
+
+**Authentication:** `Authorization: Bearer <portal_jwt>`.
+
+## Request
+
+This endpoint has no path, query, or body parameters.
+
+```bash
+curl -sS "$AGENTBANK_BASE_URL/v1/merchant/webhooks" \
+  -H "Authorization: Bearer $PORTAL_JWT"
+```
+
+## Response
+
+```json
+[
+  {
+    "endpoint_id": "mwe_...",
+    "url": "https://merchant.example/webhooks/agentbank",
+    "status": "active",
+    "signing_scheme": "hmac_sha256_v1",
+    "created_at": "2026-08-19T08:00:00.000Z",
+    "updated_at": "2026-08-19T08:00:00.000Z",
+    "disabled_at": null
+  }
+]
+```
+
+The one-time `signing_secret` is never included in a list or read response.

@@ -1,0 +1,119 @@
+---
+title: "End-user KYC"
+description: "Create a Core-issued end user with full KYC, then submit versioned partial updates."
+---
+
+All KYC routes use the signed Partner API. KYC belongs to the authenticated
+merchant: one merchant cannot read or update another merchant's end users.
+
+## Create an end user
+
+```text
+POST /v1/partner/end-users
+```
+
+The body is `{ "kyc": <complete partner_end_user_kyc_v1 record> }`. A create
+is complete, not a patch. AgentBank generates and returns `end_user_id`.
+Never send an `end_user_id`, `merchant_kyc_reference`, or provider user ID.
+
+### Required KYC structure
+
+| Section               | Required fields                                                                                                                                     |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `schema_version`      | Exactly `partner_end_user_kyc_v1`                                                                                                                   |
+| `attestation`         | `collected_at`, `verified_at` as ISO 8601 timestamps                                                                                                |
+| `person`              | `first_name`, `last_name`, `date_of_birth`, `gender`, `nationality`, `country_of_residence`, `occupation`                                           |
+| `contact`             | `email`, `phone_e164`                                                                                                                               |
+| `residential_address` | `line1`; `line2`, `city`, `state_or_province`, `postal_code`, and `country` are optional                                                            |
+| `identity_document`   | `type`, `number`, `issuing_country`, `issued_on`, `expires_on`                                                                                      |
+| `artifacts`           | `document_front`, `selfie_with_document`, `kyc_report_pdf`, and `document_back_not_applicable`; supply `document_back` when that boolean is `false` |
+
+Allowed values:
+
+* `person.gender`: `male`, `female`, `other`, or `unspecified`
+* `identity_document.type`: `national_id`, `passport`, or `work_permit`
+* country fields: ISO 3166-1 alpha-2 uppercase codes
+* phone: E.164 format
+
+Each inline artifact is supplied in the same registration request:
+
+```json
+{
+  "content_type": "image/jpeg",
+  "sha256": "lowercase-hex-sha256-of-decoded-bytes",
+  "data_base64": "base64-encoded-bytes"
+}
+```
+
+`document_front`, `document_back`, and `selfie_with_document` accept
+supported image formats; `kyc_report_pdf` is `application/pdf`. AgentBank
+verifies the content hash, stores the bytes privately, binds them atomically to
+the immutable KYC version, and forwards provider-ready KYC downstream as
+needed. There is no separate artifact-upload API.
+
+<Warning>
+  Do not omit documents merely because the base JSON has all biographical fields.
+  KYC reports and images are accepted in the same signed request so the KYC
+  version is auditable and complete.
+</Warning>
+
+## Create response
+
+```json
+{
+  "end_user_id": "peu_...",
+  "status": "provider_processing",
+  "kyc_version": "1",
+  "kyc_summary": {
+    "schema_version": "partner_end_user_kyc_v1",
+    "nationality": "VN",
+    "country_of_residence": "VN",
+    "identity_document_type": "national_id"
+  },
+  "rail_readiness": [],
+  "updated_at": "..."
+}
+```
+
+Raw KYC, document numbers, and artifact bytes are never returned. Save the
+Core-issued end-user ID and use it for all subsequent operations.
+
+## Update KYC
+
+```text
+PUT /v1/partner/end-users/:endUserId/kyc
+```
+
+Updates are partial and optimistic-versioned:
+
+```json
+{
+  "base_kyc_version": "1",
+  "kyc": {
+    "contact": {"phone_e164": "+84999999999"}
+  }
+}
+```
+
+Omitted fields retain their base-version values; `null` and unknown fields are
+rejected. An artifact update uses the same inline artifact object as create.
+Read the latest end-user record before updating and use its `kyc_version` as
+`base_kyc_version`. A successful change produces a new immutable version and
+may return the end user to provider processing while rail readiness is refreshed.
+
+## Read KYC and readiness
+
+```text
+GET /v1/partner/end-users/:endUserId
+```
+
+The response is a redacted summary, status, KYC version, and rail readiness.
+Use it rather than keeping a local copy of raw KYC data.
+
+## Identity and provider handling
+
+AgentBank identifies a merchant-scoped real person from the verified identity
+document and connects provider records through canonical provider-user links.
+If a provider reports an already registered customer, AgentBank resolves that
+canonical provider user before linking it to the merchant end user. The
+merchant never submits provider identity keys or provider customer IDs.

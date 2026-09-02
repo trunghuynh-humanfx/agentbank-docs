@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "AgentBank",
-  "description": "Connect AI agents to supported fiat and crypto payment routes through AgentBank MCP.",
+  "description": "Use AgentBank through its hosted agent, MCP integration, or Partner API for fiat and crypto payment routes.",
   "logo": {
     "light": "/logo/agentbank-wordmark-light.png",
     "dark": "/logo/agentbank-wordmark-dark.png"
@@ -14,179 +14,258 @@
     "dark": "#0050D4"
   },
   "navigation": {
-    "groups": [
+    "tabs": [
       {
-        "group": "Introduction",
-        "pages": [
-          "index"
-        ]
-      },
-      {
-        "group": "Overview",
-        "pages": [
-          "introduction/overview",
-          "introduction/why-agentbank",
-          "introduction/architecture",
-          "introduction/core-concepts"
-        ]
-      },
-      {
-        "group": "Getting started",
-        "pages": [
-          "getting-started/quickstart",
-          "getting-started/environment",
-          "getting-started/connect-your-agent",
-          "getting-started/authentication",
-          "getting-started/install-the-skill",
-          "getting-started/first-payment"
-        ]
-      },
-      {
-        "group": "Money in",
-        "pages": [
-          "money-in/overview",
-          "money-in/add-money",
-          "money-in/collect-from-a-payer",
-          "money-in/receive-fiat-as-crypto"
-        ]
-      },
-      {
-        "group": "Money out",
-        "pages": [
-          "money-out/overview",
-          "money-out/bank-payout",
-          "money-out/crypto-to-fiat",
-          "money-out/manage-recipients"
-        ]
-      },
-      {
-        "group": "Exchange",
-        "pages": [
-          "exchange/overview",
-          "exchange/quotes-and-rates",
-          "exchange/same-chain-swaps",
-          "exchange/fiat-to-fiat"
-        ]
-      },
-      {
-        "group": "Payments",
-        "pages": [
-          "payments/overview",
-          "payments/payment-lifecycle",
-          "payments/track-payments",
-          "payments/cancel-or-correct",
-          "payments/recover-failures"
-        ]
-      },
-      {
-        "group": "Autonomy and human control",
-        "pages": [
-          "autonomy/overview",
-          "autonomy/configure-thresholds",
-          "autonomy/world-id-approval",
-          "autonomy/kyc",
-          "autonomy/agentkit-and-gas"
-        ]
-      },
-      {
-        "group": "AI guides",
-        "pages": [
-          "ai-guides/instructions-for-your-agent",
-          "ai-guides/payment-decision-guide",
-          "ai-guides/confirmation-rules",
-          "ai-guides/recipient-rules",
-          "ai-guides/routing-strategy",
-          "ai-guides/conversation-patterns",
-          "ai-guides/safety-and-recovery"
-        ]
-      },
-      {
-        "group": "MCP reference",
-        "pages": [
-          "reference/mcp-overview",
-          "reference/configuration",
-          "reference/resources",
-          "reference/tools/overview",
+        "tab": "AgentBank",
+        "icon": "robot",
+        "groups": [
           {
-            "group": "Setup and identity tools",
+            "group": "Introduction",
+            "pages": ["index"]
+          },
+          {
+            "group": "Overview",
             "pages": [
-              "reference/tools/begin-agent-onboarding",
-              "reference/tools/wait-for-agent-onboarding",
-              "reference/tools/get-installation-status",
-              "reference/tools/revoke-agent",
-              "reference/tools/whoami",
-              "reference/tools/check-verification-status",
-              "reference/tools/do-kyc",
-              "reference/tools/get-verification-guidance",
-              "reference/tools/check-my-scopes"
+              "introduction/overview",
+              "introduction/why-agentbank",
+              "introduction/architecture",
+              "introduction/core-concepts"
             ]
           },
           {
-            "group": "Currency and quote tools",
+            "group": "Getting started",
             "pages": [
-              "reference/tools/list-currencies",
-              "reference/tools/list-quote-book-pairs",
-              "reference/tools/browse-quote-book",
-              "reference/tools/get-ramp-quote"
+              "getting-started/quickstart",
+              "getting-started/environment",
+              "getting-started/connect-your-agent",
+              "getting-started/authentication",
+              "getting-started/install-the-skill",
+              "getting-started/first-payment"
             ]
           },
           {
-            "group": "Payment tools",
+            "group": "Money in",
             "pages": [
-              "reference/tools/get-instructions",
-              "reference/tools/get-account-status",
-              "reference/tools/estimate-payment",
-              "reference/tools/create-payment",
-              "reference/tools/continue-payment",
-              "reference/tools/get-payment",
-              "reference/tools/list-payments",
-              "reference/tools/cancel-payment",
-              "reference/tools/correct-payment-recipient"
+              "money-in/overview",
+              "money-in/add-money",
+              "money-in/collect-from-a-payer",
+              "money-in/receive-fiat-as-crypto"
             ]
           },
           {
-            "group": "Recipient tools",
+            "group": "Money out",
             "pages": [
-              "reference/tools/list-recipients",
-              "reference/tools/get-recipient",
-              "reference/tools/create-recipient",
-              "reference/tools/update-recipient"
+              "money-out/overview",
+              "money-out/bank-payout",
+              "money-out/crypto-to-fiat",
+              "money-out/manage-recipients"
             ]
           },
           {
-            "group": "Wallet and EVM tools",
+            "group": "Exchange",
             "pages": [
-              "reference/tools/list-wallets",
-              "reference/tools/verify-agent-kit",
-              "reference/tools/get-wallet-balances",
-              "reference/tools/get-token-allowance",
-              "reference/tools/approve-token",
-              "reference/tools/execute-payment-instruction",
-              "reference/tools/get-transaction-receipt"
+              "exchange/overview",
+              "exchange/quotes-and-rates",
+              "exchange/same-chain-swaps",
+              "exchange/fiat-to-fiat"
             ]
           },
-          "reference/scopes",
-          "reference/statuses",
-          "reference/errors",
-          "reference/idempotency",
-          "reference/limitations"
+          {
+            "group": "Payments",
+            "pages": [
+              "payments/overview",
+              "payments/payment-lifecycle",
+              "payments/track-payments",
+              "payments/cancel-or-correct",
+              "payments/recover-failures"
+            ]
+          },
+          {
+            "group": "Autonomy and human control",
+            "pages": [
+              "autonomy/overview",
+              "autonomy/configure-thresholds",
+              "autonomy/world-id-approval",
+              "autonomy/kyc",
+              "autonomy/agentkit-and-gas"
+            ]
+          },
+          {
+            "group": "AI guides",
+            "pages": [
+              "ai-guides/instructions-for-your-agent",
+              "ai-guides/payment-decision-guide",
+              "ai-guides/confirmation-rules",
+              "ai-guides/recipient-rules",
+              "ai-guides/routing-strategy",
+              "ai-guides/conversation-patterns",
+              "ai-guides/safety-and-recovery"
+            ]
+          },
+          {
+            "group": "MCP reference",
+            "pages": [
+              "reference/mcp-overview",
+              "reference/configuration",
+              "reference/resources",
+              "reference/tools/overview",
+              {
+                "group": "Setup and identity tools",
+                "pages": [
+                  "reference/tools/begin-agent-onboarding",
+                  "reference/tools/wait-for-agent-onboarding",
+                  "reference/tools/get-installation-status",
+                  "reference/tools/revoke-agent",
+                  "reference/tools/whoami",
+                  "reference/tools/check-verification-status",
+                  "reference/tools/do-kyc",
+                  "reference/tools/get-verification-guidance",
+                  "reference/tools/check-my-scopes"
+                ]
+              },
+              {
+                "group": "Currency and quote tools",
+                "pages": [
+                  "reference/tools/list-currencies",
+                  "reference/tools/list-quote-book-pairs",
+                  "reference/tools/browse-quote-book",
+                  "reference/tools/get-ramp-quote"
+                ]
+              },
+              {
+                "group": "Payment tools",
+                "pages": [
+                  "reference/tools/get-instructions",
+                  "reference/tools/get-account-status",
+                  "reference/tools/estimate-payment",
+                  "reference/tools/create-payment",
+                  "reference/tools/continue-payment",
+                  "reference/tools/get-payment",
+                  "reference/tools/list-payments",
+                  "reference/tools/cancel-payment",
+                  "reference/tools/correct-payment-recipient"
+                ]
+              },
+              {
+                "group": "Recipient tools",
+                "pages": [
+                  "reference/tools/list-recipients",
+                  "reference/tools/get-recipient",
+                  "reference/tools/create-recipient",
+                  "reference/tools/update-recipient"
+                ]
+              },
+              {
+                "group": "Wallet and EVM tools",
+                "pages": [
+                  "reference/tools/list-wallets",
+                  "reference/tools/verify-agent-kit",
+                  "reference/tools/get-wallet-balances",
+                  "reference/tools/get-token-allowance",
+                  "reference/tools/approve-token",
+                  "reference/tools/execute-payment-instruction",
+                  "reference/tools/get-transaction-receipt"
+                ]
+              },
+              "reference/scopes",
+              "reference/statuses",
+              "reference/errors",
+              "reference/idempotency",
+              "reference/limitations"
+            ]
+          },
+          {
+            "group": "Security",
+            "pages": [
+              "security/security-model",
+              "security/account-revocation",
+              "security/responsible-agent-use"
+            ]
+          },
+          {
+            "group": "Support",
+            "pages": [
+              "support/troubleshooting",
+              "support/faq",
+              "support/contact",
+              "changelog"
+            ]
+          }
         ]
       },
       {
-        "group": "Security",
-        "pages": [
-          "security/security-model",
-          "security/account-revocation",
-          "security/responsible-agent-use"
-        ]
-      },
-      {
-        "group": "Support",
-        "pages": [
-          "support/troubleshooting",
-          "support/faq",
-          "support/contact",
-          "changelog"
+        "tab": "Partner API",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": ["partner-api/index"]
+          },
+          {
+            "group": "Getting started",
+            "pages": [
+              "partner-api/quickstart",
+              "partner-api/environments",
+              "partner-api/onboarding",
+              "partner-api/authentication"
+            ]
+          },
+          {
+            "group": "Integration guides",
+            "pages": [
+              "partner-api/workflows/integration",
+              "partner-api/end-user-kyc",
+              "partner-api/rail-readiness",
+              "partner-api/payments",
+              "partner-api/funding-and-tracking",
+              "partner-api/portal-and-webhooks",
+              "partner-api/errors-and-idempotency"
+            ]
+          },
+          {
+            "group": "API reference",
+            "pages": [
+              "partner-api/api-reference",
+              {
+                "group": "Discovery API",
+                "pages": [
+                  "partner-api/reference/discovery/currencies",
+                  "partner-api/reference/discovery/fiat-payment-capabilities",
+                  "partner-api/reference/discovery/payment-instrument-schemas",
+                  "partner-api/reference/discovery/supported-bank-names"
+                ]
+              },
+              {
+                "group": "Signed Partner API",
+                "pages": [
+                  "partner-api/reference/partner/create-end-user",
+                  "partner-api/reference/partner/get-end-user",
+                  "partner-api/reference/partner/update-end-user-kyc",
+                  "partner-api/reference/partner/parse-qr-recipient",
+                  "partner-api/reference/partner/verify-bank-recipient",
+                  "partner-api/reference/partner/estimate-payment",
+                  "partner-api/reference/partner/create-payment",
+                  "partner-api/reference/partner/get-payment",
+                  "partner-api/reference/partner/list-payments",
+                  "partner-api/reference/partner/cancel-payment"
+                ]
+              },
+              {
+                "group": "Merchant Portal API",
+                "pages": [
+                  "partner-api/reference/portal/login",
+                  "partner-api/reference/portal/get-current-user",
+                  "partner-api/reference/portal/list-payments",
+                  "partner-api/reference/portal/get-payment",
+                  "partner-api/reference/portal/create-webhook",
+                  "partner-api/reference/portal/list-webhooks",
+                  "partner-api/reference/portal/get-webhook",
+                  "partner-api/reference/portal/update-webhook",
+                  "partner-api/reference/portal/delete-webhook"
+                ]
+              }
+            ]
+          }
         ]
       }
     ]

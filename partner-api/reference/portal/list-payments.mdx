@@ -1,0 +1,47 @@
+---
+title: "Portal list payments"
+description: "List payment history owned by the merchant authenticated through the portal JWT."
+---
+
+```text
+GET /v1/merchant/payments
+```
+
+**Authentication:** `Authorization: Bearer <portal_jwt>`.
+
+## Query parameters
+
+| Parameter       | Required | Description                                                            |
+| --------------- | -------- | ---------------------------------------------------------------------- |
+| `status`        | No       | Comma-separated raw payment statuses. Cannot be combined with `state`. |
+| `state`         | No       | `all`, `active`, `completed`, `pending`, or `failed`.                  |
+| `created_after` | No       | ISO-8601 timestamp lower bound.                                        |
+| `limit`         | No       | 1-100, default 50.                                                     |
+| `offset`        | No       | Zero-based page offset, default 0.                                     |
+
+```bash
+curl -sS "$AGENTBANK_BASE_URL/v1/merchant/payments?state=completed&limit=20" \
+  -H "Authorization: Bearer $PORTAL_JWT"
+```
+
+## Response
+
+```json
+{
+  "total": 1,
+  "payments": [
+    {
+      "payment_id": "pay_...",
+      "merchant_payment_reference": "invoice-1042",
+      "status": "completed",
+      "terminal": true,
+      "successful": true,
+      "created_at": "2026-08-19T08:00:00.000Z",
+      "updated_at": "2026-08-19T08:03:00.000Z"
+    }
+  ]
+}
+```
+
+The portal returns only the authenticated merchant's B2B payments. The list
+does not contain the timeline; read a payment for detail.

@@ -1,0 +1,86 @@
+---
+title: "Authentication"
+description: "Ed25519 request signing for the Partner API and JWT login for the portal API."
+---
+
+## Signed Partner API
+
+Every request to `/v1/partner/*` uses the merchant Ed25519 key pair. This
+includes end-user KYC and all payment operations, including signed reads.
+
+| Header                   | Value                                                  |
+| ------------------------ | ------------------------------------------------------ |
+| `x-agentbank-partner-id` | Partner ID returned during onboarding (`mp_...`)       |
+| `x-agentbank-timestamp`  | Unix time in milliseconds, exactly 13 digits           |
+| `x-agentbank-nonce`      | Fresh, unique request nonce; maximum 256 characters    |
+| `x-agentbank-signature`  | Base64 Ed25519 signature of the canonical request      |
+| `x-correlation-id`       | Optional merchant correlation ID, up to 256 characters |
+
+Sign the exact raw JSON bytes you send. Do not serialize again after signing.
+The canonical request is:
+
+```text
+agentbank-ed25519-v1
+METHOD
+pathAndQuery
+timestamp
+nonce
+SHA256(rawBody)
+```
+
+`pathAndQuery` includes the leading slash and query string, if any. The body
+hash is lowercase hexadecimal SHA-256. A `GET` with no body uses the hash of an
+empty byte string.
+
+```js
+import { createHash, createPrivateKey, randomUUID, sign } from 'node:crypto';
+
+const rawBody = Buffer.from(JSON.stringify(payload));
+const timestamp = String(Date.now());
+const nonce = randomUUID();
+const pathAndQuery = '/v1/partner/payments';
+const canonical = [
+  'agentbank-ed25519-v1',
+  'POST',
+  pathAndQuery,
+  timestamp,
+  nonce,
+  createHash('sha256').update(rawBody).digest('hex')
+].join('\n');
+
+const signature = sign(null, Buffer.from(canonical), createPrivateKey(privateKeyPem))
+  .toString('base64');
+```
+
+AgentBank verifies the timestamp within its configured acceptance window and
+stores a successful nonce for that window. Reusing a nonce, signing a different
+path, or sending a body different from the signed bytes fails authentication.
+Synchronize your backend clock and generate the nonce immediately before send.
+The partner ID selects its sole active public key but is not a bearer secret:
+the corresponding private Ed25519 key is still required to make every valid request.
+
+## Merchant portal JWT
+
+The portal API is separate. Exchange provisioned credentials at:
+
+```text
+POST /v1/merchant/auth/login
+```
+
+```json
+{"username":"example_merchant","password":"replace-with-secret"}
+```
+
+The response contains `access_token`, `token_type: "Bearer"`, `expires_at`,
+and `merchant_partner_id`. Send it as:
+
+```http
+Authorization: Bearer <access_token>
+```
+
+Portal JWTs may manage webhook endpoints and read only that merchant's payment
+history. They cannot submit KYC, create payments, cancel payments, or invoke a
+funding action. Use the signed Partner API for those operations.
+
+Portal credential reprovisioning invalidates existing portal JWTs. On a `401`,
+log in again rather than retrying a stale token.

@@ -1,0 +1,75 @@
+---
+title: "Create end user"
+description: "Create a merchant-scoped end user from a complete KYC record and inline artifacts."
+---
+
+```text
+POST /v1/partner/end-users
+```
+
+**Authentication:** signed Partner API request. See [Authentication](../../authentication).
+
+## Request body
+
+`kyc` must be a complete `partner_end_user_kyc_v1` record. AgentBank generates
+`end_user_id`; do not send one.
+
+```json
+{
+  "kyc": {
+    "schema_version": "partner_end_user_kyc_v1",
+    "attestation": {
+      "collected_at": "2026-08-19T08:00:00Z",
+      "verified_at": "2026-08-19T08:02:00Z"
+    },
+    "person": {
+      "first_name": "Example",
+      "last_name": "Person",
+      "date_of_birth": "1990-01-02",
+      "gender": "female",
+      "nationality": "VN",
+      "country_of_residence": "VN",
+      "occupation": "employed"
+    },
+    "contact": {"email":"example@example.test","phone_e164":"+84912345678"},
+    "residential_address": {"line1":"1 Example Street"},
+    "identity_document": {
+      "type":"national_id",
+      "number":"TEST-DOCUMENT-ONLY",
+      "issuing_country":"VN",
+      "issued_on":"2021-01-01",
+      "expires_on":"2031-01-01"
+    },
+    "artifacts": {
+      "document_front":{"content_type":"image/jpeg","sha256":"<sha256>","data_base64":"<base64>"},
+      "document_back_not_applicable":true,
+      "selfie_with_document":{"content_type":"image/jpeg","sha256":"<sha256>","data_base64":"<base64>"},
+      "kyc_report_pdf":{"content_type":"application/pdf","sha256":"<sha256>","data_base64":"<base64>"}
+    }
+  }
+}
+```
+
+See [End-user KYC](../../end-user-kyc) for the complete field and artifact
+contract. Artifact hashes are lowercase SHA-256 hex of the decoded bytes.
+
+## Response
+
+```json
+{
+  "end_user_id": "peu_6fa6b3ee9bfe43db8700b04e8c91cc0b",
+  "status": "provider_processing",
+  "kyc_version": "1",
+  "kyc_summary": {
+    "schema_version": "partner_end_user_kyc_v1",
+    "nationality": "VN",
+    "country_of_residence": "VN",
+    "identity_document_type": "national_id"
+  },
+  "rail_readiness": [],
+  "updated_at": "1787000000000"
+}
+```
+
+Persist `end_user_id`, then poll [Get end user](./get-end-user). Raw KYC,
+document numbers, and artifact bytes are never returned.

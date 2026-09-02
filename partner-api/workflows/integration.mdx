@@ -1,0 +1,118 @@
+---
+title: "Integration workflow"
+description: "The safe, deterministic order to discover, prepare, create, fund, and track an AgentBank payment."
+---
+
+An integration asks for a final economic outcome. AgentBank owns the quote,
+route, internal hop(s), provider interaction, and payment lifecycle. Do not
+construct intents, route agreements, settlement records, or a second transfer
+for a fiat-to-fiat payment.
+
+## 1. Discover what can be shown
+
+Read the public discovery APIs before rendering a recipient form:
+
+1. Call [List currencies](../reference/discovery/currencies) for active asset
+   symbols and decimals.
+2. Call [List fiat payment capabilities](../reference/discovery/fiat-payment-capabilities)
+   to see live on-ramp/off-ramp availability. Only an `off_ramp` entry carries
+   final-recipient instruments and fields; an on-ramp ends at a crypto address.
+3. Call [Get payment instrument schemas](../reference/discovery/payment-instrument-schemas)
+   for QR, direct bank-transfer, and mobile-money form fields.
+4. When the user selects direct bank transfer, call
+   [List supported bank names](../reference/discovery/supported-bank-names).
+
+These APIs are form-discovery metadata, not a payment guarantee. Do not infer
+that a user's KYC is ready or that a quote will still be available.
+
+## 2. Create or refresh the end user
+
+Use the signed [Create end user](../reference/partner/create-end-user) endpoint
+with complete KYC and inline artifacts. Persist the returned `end_user_id`; it
+is AgentBank-generated and belongs to the authenticated merchant.
+
+For a material correction, read the end user, then use
+[Update end-user KYC](../reference/partner/update-end-user-kyc) with the latest
+`base_kyc_version`. Never create a second end user merely because a request
+timed out.
+
+## 3. Wait for the target fiat rail
+
+Poll [Get end user](../reference/partner/get-end-user) or consume the
+`end_user.rail_readiness.updated` webhook. Continue only when the relevant
+`rail_readiness[].state` is `available`. KYC acceptance alone is insufficient:
+provider rail forwarding is asynchronous.
+
+## 4. Preflight the final fiat recipient
+
+For a QR payout, call [Parse QR recipient](../reference/partner/parse-qr-recipient)
+with `qr_content` only. Do not send a rail or `end_user_id`: Core detects the
+QR country, derives the supported fiat route, then validates the full payload.
+Provide `country` only when the UI has an independent country constraint; a
+mismatch is rejected rather than routed by the caller's hint.
+
+For a direct account, call [Verify bank recipient](../reference/partner/verify-bank-recipient)
+with `end_user_id`, `country`, and bank details. It also derives the internal
+rail from country, so clients never supply a rail for a fiat bank recipient.
+
+Both endpoints return canonical recipient fields without storing a recipient or
+moving funds. QR parsing does not replace the end user's KYC/readiness check;
+continue to require the relevant rail to be available before creating a payment.
+
+Use the returned `recipient_fields` unchanged in the eventual payment. Preserve
+all returned fields that your integration understands; provider resolution can
+add a bank name, holder name, country, or other display data. Never add a
+client-selected fiat rail back into those fields.
+
+## 5. Estimate immediately before checkout
+
+Call [Estimate payment](../reference/partner/estimate-payment) with the same
+end user and economic direction. An estimate is non-binding and filters out
+rails that are not ready for that end user. It neither reserves liquidity nor
+authorizes settlement.
+
+## 6. Create one semantic payment
+
+Call [Create payment](../reference/partner/create-payment) once the customer
+commits. Supply the source asset/amount, destination asset/amount mode, and the
+**final** `recipient_fields` only. For fiat-to-fiat, do not supply a crypto
+bridge address or a recipient for the internal first hop.
+
+For QR recipients, country is normally derived from `qr_content`; for direct
+bank recipients, country is required. In neither case should a client submit an
+internal rail.
+
+Use one durable `merchant_payment_reference` per commercial order. Retrying an
+uncertain request must reuse the identical body and reference; a changed body
+with the same reference is an idempotency conflict.
+
+## 7. Execute only the issued instruction
+
+Read `payment_instruction` and `next_action` from the create response. Display
+or execute exactly that instruction: asset, amount, account/address, chain,
+memo, reference, QR, calldata, and expiry are server-generated. Never rebuild
+it from a quote or replace it with a familiar account.
+
+If `next_action.type` is `wait`, do not ask the payer to pay again. Poll the
+payment or wait for a webhook.
+
+## 8. Track the aggregate, not internal transfers
+
+Consume webhooks and poll [Get payment](../reference/partner/get-payment) for
+recovery. Render `timeline` as observed history and group entries by
+`hop_index`. Use `next_action` for the only client-facing instruction; do not
+invent a future provider event from a quote or prior timeline item.
+
+Close your order only when `terminal` is true. `completed` / `successful: true`
+is a successful finish; a terminal failure with `funds_moved: true` requires a
+support or recovery workflow rather than automatic recreation.
+
+## Integration checklist
+
+* Treat discovery, estimate, and preflight as advisory; create is authoritative.
+* Never attempt same-source and destination asset payments.
+* Never make parallel active payments for one end user.
+* Deduplicate webhook deliveries by `x-agentbank-delivery-id`.
+* Use a fresh Ed25519 nonce for every signed request, including signed `GET`s.
+* Keep KYC bytes, signing private keys, QR payloads, and webhook secrets out of
+  prompts, client logs, and telemetry.

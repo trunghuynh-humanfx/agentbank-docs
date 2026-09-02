@@ -1,0 +1,42 @@
+---
+title: "Cancel payment"
+description: "Request cancellation of a merchant-owned payment before funding or where the current state permits it."
+---
+
+```text
+POST /v1/partner/payments/:paymentId/cancel
+```
+
+**Authentication:** signed Partner API request.
+
+## Path parameters
+
+| Parameter   | Required | Description                       |
+| ----------- | -------- | --------------------------------- |
+| `paymentId` | Yes      | Merchant-owned payment to cancel. |
+
+## Request body
+
+```json
+{"reason":"customer_changed_mind"}
+```
+
+`reason` is optional and has a 500-character maximum.
+
+## Response
+
+```json
+{
+  "payment_id": "pay_...",
+  "status": "cancelled",
+  "terminal": true,
+  "successful": false,
+  "funds_moved": false,
+  "next_action": {"type":"none","instruction":"No action is required.","poll_after_seconds":null},
+  "payment_instruction": null
+}
+```
+
+Cancellation depends on the current settlement state. Do not tell an end user
+that cancellation succeeded until the returned or subsequently read payment is
+terminal with `status: "cancelled"`.

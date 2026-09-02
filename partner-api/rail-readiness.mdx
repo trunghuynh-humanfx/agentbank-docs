@@ -1,0 +1,63 @@
+---
+title: "Rail readiness"
+description: "Wait for provider KYC forwarding and confirm eligible fiat rails before payment creation."
+---
+
+KYC acceptance and provider readiness are separate states. AgentBank accepts a
+complete KYC version first, then delivers it to the eligible providers and
+reconciles their result asynchronously.
+
+## Readiness response
+
+`GET /v1/partner/end-users/:endUserId` includes:
+
+```json
+{
+  "end_user_id": "peu_...",
+  "status": "partially_available",
+  "kyc_version": "1",
+  "rail_readiness": [
+    {
+      "fiat_currency": "BRL",
+      "state": "available",
+      "reason_code": null,
+      "expires_at": null
+    },
+    {
+      "fiat_currency": "PHP",
+      "state": "pending",
+      "reason_code": null,
+      "expires_at": null
+    }
+  ]
+}
+```
+
+| Rail state    | Meaning                                                  | Merchant action                                                 |
+| ------------- | -------------------------------------------------------- | --------------------------------------------------------------- |
+| `pending`     | Provider evaluation is incomplete                        | Wait and poll or process the webhook                            |
+| `available`   | This end user can be used on the fiat rail               | Estimate or create a compatible payment                         |
+| `unavailable` | Provider cannot currently use the end user for that rail | Show the non-sensitive reason code and choose another rail/user |
+| `suspended`   | Use is temporarily blocked                               | Stop payment attempts and resolve the operational issue         |
+| `expired`     | KYC or readiness needs renewal                           | Submit a new KYC version before using that rail                 |
+
+The end-user `status` summarizes the set of rails. A user can be
+`partially_available` when some rails are available and others are still
+pending or unavailable. Do not infer eligibility from KYC status alone; check
+the actual source or destination fiat currency required by the payment.
+
+## Notifications
+
+Subscribe to `end_user.kyc.accepted` and
+`end_user.rail_readiness.updated`. Readiness can change more than once as each
+provider or rail reaches a result. Treat the webhook data as a state
+notification and fetch the end-user record when you need the complete current
+list.
+
+## Recommended UI behavior
+
+1. Show KYC as submitted after a successful create or update.
+2. Keep a payment option unavailable while its currency is `pending`.
+3. Enable only the rails marked `available`.
+4. On `unavailable`, `suspended`, or `expired`, display a safe next step without
+   exposing provider credentials or raw KYC details.

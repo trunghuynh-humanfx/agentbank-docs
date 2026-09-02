@@ -1,0 +1,39 @@
+---
+title: "Get end user"
+description: "Read redacted KYC state and current fiat-rail readiness for a merchant end user."
+---
+
+```text
+GET /v1/partner/end-users/:endUserId
+```
+
+**Authentication:** signed Partner API request, including an empty-body hash.
+
+## Path parameters
+
+| Parameter   | Required | Description                      |
+| ----------- | -------- | -------------------------------- |
+| `endUserId` | Yes      | AgentBank-generated end-user ID. |
+
+```text
+GET /v1/partner/end-users/peu_6fa6b3ee9bfe43db8700b04e8c91cc0b
+```
+
+## Response
+
+```json
+{
+  "end_user_id": "peu_6fa6b3ee9bfe43db8700b04e8c91cc0b",
+  "status": "partially_available",
+  "kyc_version": "2",
+  "kyc_summary": {"schema_version":"partner_end_user_kyc_v1","nationality":"VN"},
+  "rail_readiness": [
+    {"fiat_currency":"VND","state":"available","reason_code":null,"expires_at":null},
+    {"fiat_currency":"BRL","state":"pending","reason_code":null,"expires_at":null}
+  ],
+  "updated_at": "1787000000000"
+}
+```
+
+Create or estimate a payment only when its required fiat rail is `available`.
+See [Rail readiness](../../rail-readiness) for every state.

@@ -1,0 +1,55 @@
+---
+title: "List currencies"
+description: "Read the active crypto and fiat asset catalog."
+---
+
+```text
+GET /api/currencies
+```
+
+**Authentication:** none. This public catalog is suitable for personal and
+partner clients.
+
+## Request
+
+This endpoint has no query parameters or request body.
+
+```bash
+curl -sS "$AGENTBANK_BASE_URL/api/currencies"
+```
+
+## Response
+
+```json
+{
+  "crypto": [
+    {
+      "asset_id": "asset_...",
+      "ticker": "USDC",
+      "chain": "worldchain",
+      "name": "USD Coin",
+      "address": "0x...",
+      "decimals": 6,
+      "status": "active",
+      "created_at": "1787000000000",
+      "logo_url": null,
+      "price_usd": "1",
+      "price_updated_at": "1787000000000"
+    }
+  ],
+  "fiat": [
+    {
+      "symbol": "VND",
+      "name": "Vietnamese dong",
+      "description": null,
+      "decimals": 0,
+      "status": "active",
+      "created_at": "1787000000000"
+    }
+  ]
+}
+```
+
+Only `active` assets are returned. This is a catalog, not a live-corridor or
+end-user-readiness check. Next call [List fiat payment capabilities](./fiat-payment-capabilities)
+and then estimate the concrete payment.

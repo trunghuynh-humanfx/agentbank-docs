@@ -1,0 +1,67 @@
+---
+title: "List fiat payment capabilities"
+description: "Discover live on-ramp and off-ramp routes, plus final fiat recipient instruments for off-ramps."
+---
+
+```text
+GET /api/payment-capabilities
+```
+
+**Authentication:** none. This public API is shared by personal and partner
+clients.
+
+## Request
+
+This endpoint has no parameters or request body.
+
+```bash
+curl -sS "$AGENTBANK_BASE_URL/api/payment-capabilities"
+```
+
+## Response
+
+```json
+{
+  "capabilities": [
+    {
+      "fiat_currency": "VND",
+      "routes": [
+        {
+          "direction": "off_ramp",
+          "supported_payment_instruments": ["bank_transfer", "qr"],
+          "recipient_requirements": [
+            {
+              "payment_instrument": "bank_transfer",
+              "country": "VN",
+              "required_fields": ["country", "bank_name", "account_number", "holder_name"]
+            },
+            {
+              "payment_instrument": "qr",
+              "country": "VN",
+              "required_fields": ["qr_content"]
+            }
+          ]
+        },
+        {
+          "direction": "on_ramp"
+        }
+      ]
+    }
+  ]
+}
+```
+
+| Field                           | Meaning                                                                                                              |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `fiat_currency`                 | The ISO-4217 fiat rail/currency. It is the currency-level country rail used by payment creation.                     |
+| `direction`                     | `on_ramp` means the fiat-to-crypto corridor is live; `off_ramp` means crypto-to-fiat.                                |
+| `supported_payment_instruments` | Present only for `off_ramp`; any of `qr`, `bank_transfer`, or `mobile_money` available for the final fiat recipient. |
+| `recipient_requirements`        | Present only for `off_ramp`; country, instrument, and required fields for the final fiat recipient.                  |
+
+The response is derived from unexpired quote-book snapshots and can change. It
+does not expose providers, rates, liquidity, an individual end user's readiness,
+or a reservation. `recipient_requirements` can be empty for legacy live quotes.
+Use [Get payment instrument schemas](./payment-instrument-schemas) to build
+fields and estimate/create to make the final decision. An on-ramp intentionally
+has no recipient fields here: its final recipient is a crypto address, not a
+saved fiat recipient.

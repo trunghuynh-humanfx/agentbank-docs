@@ -1,0 +1,52 @@
+---
+title: "Get payment"
+description: "Read the current aggregate, instruction, hops, and observed timeline for one B2B payment."
+---
+
+```text
+GET /v1/partner/payments/:paymentId
+```
+
+**Authentication:** signed Partner API request.
+
+## Path parameters
+
+| Parameter   | Required | Description                          |
+| ----------- | -------- | ------------------------------------ |
+| `paymentId` | Yes      | Merchant-owned `pay_...` payment ID. |
+
+## Response
+
+```json
+{
+  "payment_id": "pay_...",
+  "merchant_payment_reference": "invoice-1042",
+  "end_user_id": "peu_...",
+  "status": "in_progress",
+  "terminal": false,
+  "successful": false,
+  "funds_moved": true,
+  "payment_instruction": null,
+  "next_action": {"type":"wait","instruction":"Payment is being processed.","poll_after_seconds":10},
+  "hops": [{"index":0,"type":"off_ramp","status":"in_progress","instruction_available":false,"funds_moved":true}],
+  "timeline": [
+    {
+      "step_id": "step_...",
+      "settlement_id": "set_...",
+      "hop_index": 0,
+      "event": "crypto_received",
+      "step_code": "crypto_received",
+      "canonical": true,
+      "occurred_at": "2026-08-19T08:02:00.000Z",
+      "tx_hash": "0x...",
+      "detail": "6 USDC received by payment provider. Transaction 0x..."
+    }
+  ],
+  "created_at": "2026-08-19T08:00:00.000Z",
+  "updated_at": "2026-08-19T08:02:00.000Z"
+}
+```
+
+`timeline` is observed history only. Group it by `hop_index`; do not invent a
+future provider event. Use `next_action` to decide whether the caller must
+fund, wait, or take no further action. See [Funding and tracking](../../funding-and-tracking).

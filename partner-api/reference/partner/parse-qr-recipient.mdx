@@ -1,0 +1,70 @@
+---
+title: "Parse QR recipient"
+description: "Detect a fiat QR's country and resolve its canonical recipient details without storing it."
+---
+
+```text
+POST /v1/partner/recipients/parse-qr
+```
+
+**Authentication:** signed Partner API request.
+
+## Request body
+
+| Field        | Required | Description                                                                               |
+| ------------ | -------- | ----------------------------------------------------------------------------------------- |
+| `qr_content` | Yes      | Raw EMV or provider QR payload, maximum 4096 characters.                                  |
+| `country`    | No       | ISO alpha-2 constraint, for example `AR`. It must match the country detected from the QR. |
+
+```json
+{
+  "qr_content": "00020101021143540016com.mercadolibre...630456C8"
+}
+```
+
+Do not send `rail` or `end_user_id`. QR parsing is a merchant-scoped preview,
+not a user KYC or payment-readiness check.
+
+## Response
+
+```json
+{
+  "country": "AR",
+  "payment_instrument": "qr",
+  "recipient_fields": {
+    "country": "AR",
+    "qr_content": "00020101021143540016com.mercadolibre...630456C8",
+    "payment_instrument": "qr",
+    "account_number": "23316888984",
+    "holder_name": "Example Recipient"
+  },
+  "derived_fields": [
+    {"name":"account_number","source":"provider_lookup"},
+    {"name":"holder_name","source":"qr_payload"}
+  ],
+  "verification": "not_supported"
+}
+```
+
+## Country detection and routing
+
+Core determines the country before it selects the fiat route:
+
+1. It first reads top-level EMVCo tag `58` when present, for example
+   `5802PH`, `5802ID`, `5802NG`, `5802VN`, `5802BR`, or `5802AR`.
+2. If that tag is absent or unusable, it tries the configured QR decoders in
+   order until one identifies a country.
+3. The detected country is mapped to the supported fiat currency and then the
+   selected route owner parses and validates the complete QR payload.
+
+Tag `58` is only a routing hint; it never bypasses recipient validation. If
+`country` is supplied and differs from the detected country, the request fails
+with `400 RECIPIENT_COUNTRY_MISMATCH`. A QR with no detectable supported country
+also fails instead of guessing a route.
+
+The resolved fields vary by country and provider. `verification` describes
+whether an account-holder check was available; it is not itself a payment
+status. This endpoint does not create an address-book record, reserve a route,
+or verify the merchant end user's readiness. Send the returned
+`recipient_fields` unchanged to [Create payment](./create-payment) after a
+successful preview.

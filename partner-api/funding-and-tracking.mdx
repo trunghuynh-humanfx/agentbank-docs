@@ -1,0 +1,74 @@
+---
+title: "Funding and tracking"
+description: "Present funding instructions safely and follow a payment through terminal state."
+---
+
+Payment creation returns an aggregate that explains the next required action.
+Use it as the source of truth rather than reconstructing a flow from quotes or
+provider assumptions.
+
+## Funding instructions
+
+When `next_action.type` is `fund`, display `payment_instruction` to the end
+user or execute it from your merchant-controlled funding wallet.
+
+| Instruction type | What to do                                                                                                        |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `bank_transfer`  | Show the exact account, beneficiary, reference, and amount                                                        |
+| `qr`             | Present the exact provider QR payload or image                                                                    |
+| `payment_link`   | Direct the payer to the returned URL and preserve the expiry                                                      |
+| `mobile_money`   | Follow the returned mobile-money recipient/instruction                                                            |
+| `crypto_deposit` | Send only the stated asset/amount on the stated chain to the exact address; honor memo and calldata when supplied |
+
+Never change the amount, token, chain, address, memo, reference, or expiry.
+For a two-hop fiat-to-fiat payment, fund only the first visible instruction.
+The intermediate crypto delivery is internal to AgentBank.
+
+## Poll payment state
+
+```text
+GET /v1/partner/payments/:paymentId
+```
+
+The response has three useful layers:
+
+| Field                              | Meaning                                                                   |
+| ---------------------------------- | ------------------------------------------------------------------------- |
+| `status`, `terminal`, `successful` | The top-level outcome for the merchant order                              |
+| `next_action`                      | `fund`, `wait`, or `none`, with safe user-facing guidance                 |
+| `hops`                             | Read-only progress for one or two internal payment legs                   |
+| `timeline`                         | Detailed provider settlement events, with `hop_index` and `settlement_id` |
+
+Common terminal states are `completed`, `cancelled`, and `failed`.
+`funds_moved` tells you whether any funds were moved, which matters for support
+and recovery handling. A payment can be non-terminal with `next_action: wait`
+while a provider is reconciling it.
+
+When a provider supplies a crypto transaction hash, the relevant timeline entry
+contains `tx_hash`. It may be `null` for a fiat event or a provider event with
+no on-chain transaction.
+
+## Webhooks and polling together
+
+Use webhooks for prompt state changes and polling for recovery:
+
+1. Verify, deduplicate, and durably store every webhook.
+2. Update your local view from the payment snapshot in its `data` payload.
+3. For `payment.timeline_step.recorded`, append the new `data.timeline_step` by
+   `step_id` instead of inventing a new status.
+4. On restart, delayed webhook, or uncertain timeout, fetch the payment by ID.
+5. Close your order only when `terminal` is `true`; use `successful` to
+   distinguish a successful terminal completion from a terminal failure.
+
+`payment.created`, `payment.funding_required`, and lifecycle events provide a
+complete fresh payment representation. A timeline webhook likewise carries a
+fresh snapshot plus the newly observed timeline step.
+
+## Expiry and support
+
+Funding instructions can expire. Before asking the end user to pay, fetch the
+payment again and confirm the instruction is still present and not expired. If
+funding is late, do not make a replacement payment while the original one is
+active; first inspect or cancel the original payment. Include the `payment_id`,
+merchant payment reference, and optional `x-correlation-id` in support cases,
+but never include KYC bytes, private keys, or webhook secrets.

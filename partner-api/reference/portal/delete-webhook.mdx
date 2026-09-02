@@ -1,0 +1,42 @@
+---
+title: "Delete webhook"
+description: "Soft-disable a merchant webhook endpoint."
+---
+
+```text
+DELETE /v1/merchant/webhooks/:endpointId
+```
+
+**Authentication:** `Authorization: Bearer <portal_jwt>`.
+
+## Path parameters
+
+| Parameter    | Required | Description                           |
+| ------------ | -------- | ------------------------------------- |
+| `endpointId` | Yes      | Merchant-owned `mwe_...` endpoint ID. |
+
+## Request
+
+This request has no body.
+
+```bash
+curl -sS -X DELETE "$AGENTBANK_BASE_URL/v1/merchant/webhooks/mwe_..." \
+  -H "Authorization: Bearer $PORTAL_JWT"
+```
+
+## Response
+
+```json
+{
+  "endpoint_id": "mwe_...",
+  "url": "https://merchant.example/webhooks/agentbank",
+  "status": "disabled",
+  "signing_scheme": "hmac_sha256_v1",
+  "created_at": "2026-08-19T08:00:00.000Z",
+  "updated_at": "2026-08-19T08:20:00.000Z",
+  "disabled_at": "2026-08-19T08:20:00.000Z"
+}
+```
+
+Deletion stops future deliveries but does not revoke prior deliveries or alter
+their signatures. A disabled endpoint cannot be re-enabled; create a new one.

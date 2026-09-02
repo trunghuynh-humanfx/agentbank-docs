@@ -1,0 +1,32 @@
+---
+title: "Get current portal user"
+description: "Read the merchant identity associated with a portal JWT."
+---
+
+```text
+GET /v1/merchant/me
+```
+
+**Authentication:** `Authorization: Bearer <portal_jwt>`.
+
+## Request
+
+This endpoint has no parameters or request body.
+
+```bash
+curl -sS "$AGENTBANK_BASE_URL/v1/merchant/me" \
+  -H "Authorization: Bearer $PORTAL_JWT"
+```
+
+## Response
+
+```json
+{
+  "merchant_partner_id": "mp_...",
+  "merchant_portal_user_id": "mpu_...",
+  "username": "example_merchant"
+}
+```
+
+Use this to confirm that a cached portal token belongs to the intended merchant
+before showing read-only history or webhook configuration.

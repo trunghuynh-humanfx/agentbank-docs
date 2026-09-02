@@ -1,0 +1,55 @@
+---
+title: "Onboarding"
+description: "Set up merchant credentials and prepare your backend for the Partner API."
+---
+
+AgentBank activates each merchant before it can call the Partner API. The
+merchant generates and owns its Ed25519 key pair; only the public key is shared
+with AgentBank.
+
+## Provide these details
+
+Send the following through the approved onboarding channel:
+
+* merchant display name
+* Ed25519 public key in PEM SPKI form
+* portal username: 3-64 lowercase letters, numbers, dots, underscores, or
+  hyphens
+* initial portal password: 12-256 characters
+
+Keep the private key only in your backend secret manager. Never send it to
+AgentBank, embed it in a client application, or commit it to source control.
+
+## Receive and store merchant configuration
+
+After activation, AgentBank sends the following through the approved secure
+channel:
+
+* `merchant_partner_id`, for example `mp_...`; send this as
+  `x-agentbank-partner-id`
+* the provisioned portal username and password
+
+Store the merchant ID and private key together in your backend configuration.
+Store the portal password separately. The portal password is stored by AgentBank
+only as a salted hash.
+
+## Verify access
+
+1. Use the private key and merchant ID to sign a Partner API request
+   as described in [Authentication](./authentication).
+2. Exchange the portal username and password at
+   `POST /v1/merchant/auth/login`.
+3. Register a webhook endpoint before creating KYC records or payments.
+
+## Credential recovery and rotation
+
+Contact AgentBank through the approved support channel to:
+
+* replace portal credentials; this invalidates existing portal JWTs
+* rotate the registered Ed25519 public key; keep using the same merchant ID
+  before sending another signed request
+* suspend or restore merchant access
+
+Generate and securely store a replacement key pair before requesting a key
+rotation. Do not retry a failed signed request until AgentBank
+confirms the rotation is complete.

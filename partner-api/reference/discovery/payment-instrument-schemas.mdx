@@ -1,0 +1,61 @@
+---
+title: "Get payment instrument schemas"
+description: "Read the uniform recipient form schema for QR, direct bank transfer, and mobile money."
+---
+
+```text
+GET /api/payment-instruments/schema
+```
+
+**Authentication:** none. This public contract is shared by personal and
+partner clients and is independent of fiat country.
+
+## Request
+
+This endpoint has no parameters or request body.
+
+```bash
+curl -sS "$AGENTBANK_BASE_URL/api/payment-instruments/schema"
+```
+
+## Response
+
+```json
+{
+  "schema_version": 1,
+  "payment_instruments": [
+    {
+      "payment_instrument": "qr",
+      "fields": [
+        {"name":"qr_content","value_type":"string","required":true,"description":"Raw EMV or provider QR payload."},
+        {"name":"country","value_type":"string","required":false,"description":"Optional ISO alpha-2 recipient-country constraint."}
+      ]
+    },
+    {
+      "payment_instrument": "bank_transfer",
+      "fields": [
+        {"name":"country","value_type":"string","required":true},
+        {"name":"bank_name","value_type":"string","required":true},
+        {"name":"account_number","value_type":"string","required":true},
+        {"name":"holder_name","value_type":"string","required":true},
+        {"name":"bank_code","value_type":"string","required":false}
+      ]
+    },
+    {
+      "payment_instrument": "mobile_money",
+      "fields": [
+        {"name":"country","value_type":"string","required":true},
+        {"name":"mobile_money_network_code","value_type":"string","required":true},
+        {"name":"mobile_money_destination","value_type":"string","required":true}
+      ]
+    }
+  ]
+}
+```
+
+Use this response to build a common recipient form. Then use
+[List fiat payment capabilities](./fiat-payment-capabilities) to determine
+which instrument/country combinations are live, and use
+[List supported bank names](./supported-bank-names) when direct bank transfer
+is selected. A QR `country` is optional here but can become required by the
+selected live route's `recipient_requirements`.

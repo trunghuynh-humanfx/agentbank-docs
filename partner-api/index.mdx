@@ -1,0 +1,63 @@
+---
+title: "AgentBank Partner API"
+description: "Build regulated fiat and crypto payments for your own end users."
+---
+
+The AgentBank Partner API lets a merchant offer payments to its own verified end
+users. Your backend registers end-user KYC, checks which fiat rails are ready,
+creates a payment, and follows the server-generated funding instruction through
+completion.
+
+## What you can build
+
+* **On-ramp:** fiat to crypto, such as PHP to USDC on World Chain.
+* **Off-ramp:** crypto to fiat, such as USDC on World Chain to BRL.
+* **Fiat-to-fiat:** one two-hop path, `on_ramp -> off_ramp`, such as PHP to
+  BRL through USDC. AgentBank creates the internal bridge recipient; you supply
+  only the final fiat recipient.
+
+## Environments
+
+| Environment | API base URL                               | Use it for                                       |
+| ----------- | ------------------------------------------ | ------------------------------------------------ |
+| Sandbox     | `https://staging-protocol.agentbank.world` | Development, integration, and end-to-end testing |
+| Production  | `https://protocol.agentbank.world`         | Live merchant traffic                            |
+
+All paths in these docs are relative to one of these hosts. For example, the
+Sandbox payment-create endpoint is
+`https://staging-protocol.agentbank.world/v1/partner/payments`.
+
+See [Environments](./environments) before moving an integration to production.
+
+## Merchant credentials
+
+| Surface             | Credential                            | Use it for                                                       | Do not use it for                               |
+| ------------------- | ------------------------------------- | ---------------------------------------------------------------- | ----------------------------------------------- |
+| Partner API         | Merchant-owned Ed25519 key pair       | KYC, readiness reads, estimates, payment create/read/list/cancel | Portal and webhook management                   |
+| Merchant portal API | Username/password exchanged for a JWT | Webhook CRUD and merchant-owned payment history                  | KYC, payment creation, cancellation, or funding |
+
+Your private Ed25519 key and the portal password are separate secrets. Keep
+both out of browsers, client apps, source control, and logs.
+
+## The integration flow
+
+1. Generate an Ed25519 key pair in your merchant backend.
+2. AgentBank activates the merchant and sends your merchant ID and portal
+   credentials through the approved onboarding channel.
+3. Log in to the portal and register one or more webhook endpoints. Store each
+   HMAC secret shown in the creation response; it is never shown again.
+4. Submit a complete KYC record. AgentBank generates the `end_user_id`.
+5. Wait for provider forwarding and rail readiness, then estimate and create a
+   payment with its final recipient.
+6. Present the returned funding instruction exactly as issued, and use
+   webhooks and polling to follow the durable payment state.
+
+## Start here
+
+* [Quickstart](./quickstart) for an end-to-end integration path.
+* [Integration workflow](./workflows/integration) for the safe,
+  numbered discovery-to-completion sequence.
+* [Onboarding](./onboarding) for the admin and merchant handoff.
+* [Authentication](./authentication) for the signed request format.
+* [End-user KYC](./end-user-kyc) for the complete and partial KYC contracts.
+* [Payments](./payments) for the semantic payment API.

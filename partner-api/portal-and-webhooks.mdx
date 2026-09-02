@@ -1,0 +1,143 @@
+---
+title: "Portal and webhooks"
+description: "Manage webhook endpoints with a portal JWT and verify durable HMAC deliveries."
+---
+
+The merchant portal API manages webhook endpoints and reads payment history. It
+uses a portal JWT, not your Ed25519 signing key.
+
+## Log in
+
+```http
+POST /v1/merchant/auth/login
+Content-Type: application/json
+
+{"username":"example_merchant","password":"replace-with-secret"}
+```
+
+Send the returned token with `Authorization: Bearer <access_token>` for every
+endpoint on this page.
+
+## Register an endpoint
+
+```http
+POST /v1/merchant/webhooks
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{"url":"https://merchant.example/webhooks/agentbank"}
+```
+
+```json
+{
+  "endpoint_id": "mwe_...",
+  "url": "https://merchant.example/webhooks/agentbank",
+  "status": "active",
+  "signing_scheme": "hmac_sha256_v1",
+  "created_at": "...",
+  "updated_at": "...",
+  "disabled_at": null,
+  "signing_secret": "shown-once-only"
+}
+```
+
+Store `signing_secret` before responding to the user. It is returned **only**
+by this create response and cannot be read, changed, or recovered later. If it
+is lost, register a new endpoint and update your receiver to use the new
+secret.
+
+There is no callback URL in end-user KYC or payment requests. Every active
+registered endpoint receives a durable delivery for each new merchant event.
+New endpoints do not receive a replay of older events.
+
+## Manage endpoints
+
+| Method   | Path                                | Meaning                                                           |
+| -------- | ----------------------------------- | ----------------------------------------------------------------- |
+| `GET`    | `/v1/merchant/webhooks`             | List active and disabled endpoints owned by the merchant          |
+| `GET`    | `/v1/merchant/webhooks/:endpointId` | Read one endpoint                                                 |
+| `PATCH`  | `/v1/merchant/webhooks/:endpointId` | Replace the URL of an active endpoint: `{ "url": "https://..." }` |
+| `DELETE` | `/v1/merchant/webhooks/:endpointId` | Soft-disable the endpoint                                         |
+
+An endpoint cannot be reactivated or edited after deletion. Register a new one
+instead. Deleting it does not change its signing secret; it simply stops future
+delivery to that endpoint.
+
+## Verify deliveries
+
+AgentBank posts JSON to your endpoint with these headers:
+
+| Header                          | Meaning                                        |
+| ------------------------------- | ---------------------------------------------- |
+| `x-agentbank-webhook-id`        | Registered endpoint ID                         |
+| `x-agentbank-delivery-id`       | Stable identifier for this endpoint delivery   |
+| `x-agentbank-event-id`          | Stable event identifier                        |
+| `x-agentbank-timestamp`         | Unix milliseconds when the delivery was signed |
+| `x-agentbank-signature-version` | `agentbank-webhook-hmac-sha256-v1`             |
+| `x-agentbank-signature`         | `v1=<lowercase HMAC-SHA-256 hex>`              |
+
+Read the exact raw UTF-8 body before parsing JSON. The HMAC input is:
+
+```text
+agentbank-webhook-hmac-sha256-v1
+deliveryId
+eventId
+timestamp
+SHA256(rawBody)
+```
+
+The HMAC uses SHA-256 and the endpoint's `signing_secret`. Compare the
+`v1=<hex>` value in constant time. Also enforce a reasonable timestamp window
+in your receiver, persist the delivery ID before processing, and return `2xx`
+only after durable acceptance.
+
+```js
+import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
+
+const rawBody = request.rawBody; // exact UTF-8 string, not reserialized JSON
+const canonical = [
+  'agentbank-webhook-hmac-sha256-v1',
+  headers['x-agentbank-delivery-id'],
+  headers['x-agentbank-event-id'],
+  headers['x-agentbank-timestamp'],
+  createHash('sha256').update(rawBody, 'utf8').digest('hex')
+].join('\n');
+const expected = `v1=${createHmac('sha256', signingSecret)
+  .update(canonical, 'utf8').digest('hex')}`;
+const valid = Buffer.byteLength(expected) === Buffer.byteLength(headers['x-agentbank-signature']) &&
+  timingSafeEqual(Buffer.from(expected), Buffer.from(headers['x-agentbank-signature']));
+```
+
+## Delivery model
+
+The payload has this envelope:
+
+```json
+{
+  "event_id": "evt_...",
+  "event_type": "payment.timeline_step.recorded",
+  "occurred_at": "...",
+  "merchant_partner_id": "mp_...",
+  "aggregate": {"type":"payment","id":"pay_...","sequence":"4"},
+  "data": {"payment_id":"pay_...","status":"funding_required"}
+}
+```
+
+Expect the following event families:
+
+* `end_user.kyc.accepted` and `end_user.rail_readiness.updated`
+* `payment.created`, `payment.funding_required`, `payment.completed`,
+  `payment.failed`, `payment.cancelled`, and `payment.updated`
+* `payment.timeline_step.recorded`, whose `data.timeline_step` is a newly
+  observed timeline entry and whose data includes a fresh payment snapshot
+
+Delivery is at least once. Transient network failures, `429`, and `5xx`
+responses are retried with backoff. Use `x-agentbank-delivery-id` to
+deduplicate; do not assume ordering across endpoints or use a duplicate as a
+second payment instruction.
+
+<Warning>
+  Your endpoint must be publicly reachable over HTTPS. A local development
+  tunnel must forward to your actual webhook server port, not to a tunnel
+  inspector page.
+</Warning>

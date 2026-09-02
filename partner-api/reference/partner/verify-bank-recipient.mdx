@@ -1,0 +1,58 @@
+---
+title: "Verify bank recipient"
+description: "Validate and resolve a final direct bank-transfer recipient without storing it."
+---
+
+```text
+POST /v1/partner/recipients/verify-bank
+```
+
+**Authentication:** signed Partner API request.
+
+## Request body
+
+| Field            | Required | Description                                                                 |
+| ---------------- | -------- | --------------------------------------------------------------------------- |
+| `end_user_id`    | Yes      | Merchant end user used for provider-aware validation.                       |
+| `country`        | Yes      | Recipient ISO alpha-2 country. Core derives the internal fiat rail from it. |
+| `bank_name`      | Yes      | Canonical bank name, preferably from the public bank directory.             |
+| `account_number` | Yes      | Payout account number.                                                      |
+| `holder_name`    | Yes      | Recipient display/legal holder name.                                        |
+| `bank_code`      | No       | A provider/bank code already known by the caller.                           |
+
+```json
+{
+  "end_user_id": "peu_6fa6b3ee9bfe43db8700b04e8c91cc0b",
+  "country": "PH",
+  "bank_name": "UnionBank (InstaPay)",
+  "account_number": "23316888984",
+  "holder_name": "Example Person"
+}
+```
+
+## Response
+
+```json
+{
+  "country": "PH",
+  "payment_instrument": "bank_transfer",
+  "recipient_fields": {
+    "country": "PH",
+    "bank_name": "UnionBank (InstaPay)",
+    "account_number": "23316888984",
+    "holder_name": "Example Person"
+  },
+  "derived_fields": [
+    {"name":"bank_name","source":"input"},
+    {"name":"account_number","source":"input"},
+    {"name":"holder_name","source":"provider_verified"}
+  ],
+  "verification": "verified"
+}
+```
+
+Do not send `rail`; country is the external routing input for a direct bank
+recipient. Provider validation can return `verified`, `unverified`, or
+`not_supported`. The value describes account-holder validation availability and
+outcome, not a payment status. Always use the returned canonical fields; the
+call has no persistence side effect.

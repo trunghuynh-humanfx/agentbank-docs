@@ -1,0 +1,46 @@
+---
+title: "Portal get payment"
+description: "Read a merchant-owned payment aggregate and its observed timeline through the portal API."
+---
+
+```text
+GET /v1/merchant/payments/:paymentId
+```
+
+**Authentication:** `Authorization: Bearer <portal_jwt>`.
+
+## Path parameters
+
+| Parameter   | Required | Description                          |
+| ----------- | -------- | ------------------------------------ |
+| `paymentId` | Yes      | Merchant-owned `pay_...` payment ID. |
+
+```bash
+curl -sS "$AGENTBANK_BASE_URL/v1/merchant/payments/pay_..." \
+  -H "Authorization: Bearer $PORTAL_JWT"
+```
+
+## Response
+
+```json
+{
+  "payment_id": "pay_...",
+  "merchant_payment_reference": "invoice-1042",
+  "status": "in_progress",
+  "terminal": false,
+  "successful": false,
+  "next_action": {"type":"wait","instruction":"Payment is being processed.","poll_after_seconds":10},
+  "timeline": [
+    {
+      "step_id": "step_...",
+      "hop_index": 0,
+      "event": "crypto_received",
+      "detail": "6 USDC received by payment provider. Transaction 0x...",
+      "tx_hash": "0x..."
+    }
+  ]
+}
+```
+
+The response matches the signed [Get payment](../partner/get-payment) resource
+but is read-only and authenticated with the portal JWT.

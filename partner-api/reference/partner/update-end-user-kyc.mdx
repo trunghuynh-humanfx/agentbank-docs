@@ -1,0 +1,47 @@
+---
+title: "Update end-user KYC"
+description: "Apply a versioned partial KYC update to a merchant end user."
+---
+
+```text
+PUT /v1/partner/end-users/:endUserId/kyc
+```
+
+**Authentication:** signed Partner API request.
+
+## Path parameters
+
+| Parameter   | Required | Description                                                    |
+| ----------- | -------- | -------------------------------------------------------------- |
+| `endUserId` | Yes      | AgentBank-generated `peu_...` ID owned by the signed merchant. |
+
+## Request body
+
+`base_kyc_version` must be the version from the latest end-user read. `kyc` is
+a partial patch: omitted fields remain unchanged, while `null` and unknown
+fields are rejected.
+
+```json
+{
+  "base_kyc_version": "1",
+  "kyc": {
+    "contact": {"phone_e164":"+84999999999"}
+  }
+}
+```
+
+## Response
+
+```json
+{
+  "end_user_id": "peu_6fa6b3ee9bfe43db8700b04e8c91cc0b",
+  "status": "provider_processing",
+  "kyc_version": "2",
+  "kyc_summary": {"schema_version":"partner_end_user_kyc_v1","nationality":"VN"},
+  "rail_readiness": [{"fiat_currency":"VND","state":"pending","reason_code":null,"expires_at":null}],
+  "updated_at": "1787000000000"
+}
+```
+
+On a KYC version conflict, read the end user, merge only allowed changes, and
+send a new patch. Do not retry a stale version unchanged.

@@ -1,0 +1,55 @@
+---
+title: "Estimate payment"
+description: "Get a non-binding, end-user-readiness-filtered quote for one payment direction."
+---
+
+```text
+POST /v1/partner/payments/estimate
+```
+
+**Authentication:** signed Partner API request.
+
+## Request body
+
+`direction` is `on_ramp` or `off_ramp`; direct `on_chain_swap` estimates are not
+available on this endpoint. Send exactly one of `amount_in` or `amount_out`.
+
+```json
+{
+  "end_user_id": "peu_6fa6b3ee9bfe43db8700b04e8c91cc0b",
+  "direction": "off_ramp",
+  "token_in": {"type":"crypto","ticker":"USDC","chain":"worldchain"},
+  "token_out": {"type":"fiat","symbol":"BRL"},
+  "amount_in": "6",
+  "preferred_rails": ["BRL"]
+}
+```
+
+Optional fields are `expected_amount_in`, `expected_amount_out`,
+`required_badges`, `required_reputation`, `deadline`, and `description`.
+
+## Response
+
+```json
+{
+  "intent_id": "int_...",
+  "best": {
+    "base_ccy": {"type":"crypto","ticker":"USDC","chain":"worldchain"},
+    "quote_ccy": {"type":"fiat","symbol":"BRL"},
+    "payment_method": "BRL",
+    "client_quote_id": "quote_...",
+    "rate": "5.12",
+    "fee_pct": "0.5",
+    "flat_fee": "0",
+    "fee_ccy": "USDC",
+    "min_amount": "1",
+    "max_amount": "1000",
+    "expiration": 1787000060000,
+    "supported_payment_instruments": ["qr", "bank_transfer"]
+  },
+  "all_quotes": []
+}
+```
+
+An estimate does not reserve a route or authorize movement of funds. Call it
+near checkout, then create the semantic payment once the user commits.

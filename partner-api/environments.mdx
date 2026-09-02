@@ -1,0 +1,53 @@
+---
+title: "Environments"
+description: "Sandbox and Production API hosts, isolation, and promotion guidance."
+---
+
+AgentBank has two fully isolated API environments. Select the base URL before
+onboarding a merchant or storing any integration state.
+
+| Environment | API base URL                               | Intended use                                                               |
+| ----------- | ------------------------------------------ | -------------------------------------------------------------------------- |
+| Sandbox     | `https://staging-protocol.agentbank.world` | Build, test webhooks, validate KYC integration, and exercise payment flows |
+| Production  | `https://protocol.agentbank.world`         | Live merchant onboarding and customer payments                             |
+
+Every API path in this guide is relative to one of these base URLs:
+
+```text
+Sandbox Partner API: https://staging-protocol.agentbank.world/v1/partner/*
+Sandbox Portal API:  https://staging-protocol.agentbank.world/v1/merchant/*
+Sandbox Discovery API: https://staging-protocol.agentbank.world/api/*
+
+Production Partner API: https://protocol.agentbank.world/v1/partner/*
+Production Portal API:  https://protocol.agentbank.world/v1/merchant/*
+Production Discovery API: https://protocol.agentbank.world/api/*
+```
+
+## Environment isolation
+
+Sandbox and Production do not share any merchant resource or credential:
+
+* merchant IDs and Ed25519 key registrations
+* Ed25519 key registrations
+* portal usernames, passwords, and JWTs
+* webhook endpoint IDs and HMAC signing secrets
+* end-user IDs, KYC versions, rail readiness, payment IDs, and payment history
+
+Register the merchant again in Production, use a Production-only key pair or
+securely provisioned Production key, register Production webhook endpoints, and
+repeat KYC/payment testing with approved live procedures before go-live.
+
+## Configuration
+
+Use an explicit environment-specific configuration value:
+
+```bash
+# .env.sandbox
+AGENTBANK_BASE_URL=https://staging-protocol.agentbank.world
+
+# .env.production
+AGENTBANK_BASE_URL=https://protocol.agentbank.world
+```
+
+Do not make the base URL user-controlled. Pin it in trusted backend
+configuration and allow only HTTPS outbound traffic to the selected host.

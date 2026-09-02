@@ -1,0 +1,76 @@
+---
+title: "Create payment"
+description: "Create one semantic on-ramp, off-ramp, or fiat-to-fiat payment."
+---
+
+```text
+POST /v1/partner/payments
+```
+
+**Authentication:** signed Partner API request.
+
+## Request body
+
+```json
+{
+  "request_id": "checkout-1042",
+  "end_user_id": "peu_6fa6b3ee9bfe43db8700b04e8c91cc0b",
+  "merchant_payment_reference": "invoice-1042",
+  "source": {
+    "asset": {"type":"crypto","ticker":"USDC","chain":"worldchain"},
+    "amount": "6"
+  },
+  "destination": {"asset":{"type":"fiat","symbol":"BRL"}},
+  "amount_mode": "exact_source",
+  "routing_preference": "balanced",
+  "recipient_fields": {
+    "payment_instrument": "qr",
+    "qr_content": "provider-approved-qr-content"
+  }
+}
+```
+
+| Field                        | Required | Description                                                                                            |
+| ---------------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| `request_id`                 | Yes      | Merchant correlation ID, maximum 128 characters.                                                       |
+| `merchant_payment_reference` | Yes      | Durable idempotency key, maximum 160 characters.                                                       |
+| `source` / `destination`     | Yes      | Requested assets plus source amount for `exact_source`, or destination amount for `exact_destination`. |
+| `amount_mode`                | Yes      | `exact_source` or `exact_destination`.                                                                 |
+| `recipient_fields`           | Yes      | Final payout recipient only. For fiat-to-fiat, never supply an internal bridge recipient.              |
+
+For a QR payout, send the QR payload and omit `rail`; Core derives the country
+and fiat route from the QR. You may include `recipient_fields.country` only as
+an ISO alpha-2 constraint, and it must match the detected country. For a direct
+bank-transfer payout, include `country`, bank details, and holder name; Core
+again derives the internal rail. Reuse the canonical `recipient_fields` from a
+recipient preview when one was performed.
+
+## Response
+
+```json
+{
+  "payment_id": "pay_...",
+  "merchant_payment_reference": "invoice-1042",
+  "end_user_id": "peu_...",
+  "status": "funding_required",
+  "terminal": false,
+  "successful": false,
+  "routing": {"intermediate_asset":null,"hop_count":1},
+  "payment_instruction": {
+    "instruction_id": "payment:pay_...:hop:0",
+    "type": "crypto_deposit",
+    "amount": "6",
+    "asset": "USDC",
+    "pay_to": {"chain":"worldchain","address":"0x..."},
+    "expires_at": "2026-08-19T09:00:00.000Z"
+  },
+  "next_action": {"type":"fund","instruction":"Follow the server-generated funding instruction before it expires.","poll_after_seconds":null},
+  "hops": [{"index":0,"type":"off_ramp","status":"in_progress","instruction_available":true,"funds_moved":false}],
+  "created_at": "2026-08-19T08:00:00.000Z",
+  "updated_at": "2026-08-19T08:00:00.000Z"
+}
+```
+
+The server-generated `payment_instruction` is authoritative. Preserve its
+amount, asset, account/address, chain, memo, reference, calldata, and expiry.
+Retry an uncertain create with the identical body and payment reference.

@@ -1,0 +1,51 @@
+---
+title: "API reference"
+description: "Endpoint-by-endpoint reference for discovery, signed partner, and merchant portal APIs."
+---
+
+Set `AGENTBANK_BASE_URL` to the intended environment. Signed partner and portal
+routes live directly under `/v1/*`; public shared discovery routes use `/api/*`.
+
+| Environment | `AGENTBANK_BASE_URL`                       |
+| ----------- | ------------------------------------------ |
+| Sandbox     | `https://staging-protocol.agentbank.world` |
+| Production  | `https://protocol.agentbank.world`         |
+
+For example:
+
+```text
+https://staging-protocol.agentbank.world/v1/partner/end-users
+https://protocol.agentbank.world/v1/merchant/auth/login
+https://staging-protocol.agentbank.world/api/currencies
+```
+
+Never use Sandbox credentials, merchant IDs, webhook secrets, end-user IDs, or
+payment IDs against Production, or the reverse.
+
+## Use the workflow first
+
+For an integration, begin with the numbered
+[integration workflow](./workflows/integration). It explains the safe
+order: discover, prepare the recipient, wait for end-user readiness, estimate,
+create, then follow the server-generated instruction and timeline.
+
+## Endpoint groups
+
+Every endpoint has its own page with authentication, path/query parameters,
+example request, and example response.
+
+| Group                                                     | Use it for                                                                                                                                                   |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Discovery](./reference/discovery/currencies)             | Active currencies, live fiat instruments, recipient schemas, and curated bank names. These routes are public and work for both personal and partner clients. |
+| [Signed Partner API](./reference/partner/create-end-user) | KYC, recipient previews, payment estimates, payment lifecycle reads, and cancellation. Every request is Ed25519-signed.                                      |
+| [Merchant Portal API](./reference/portal/login)           | Portal login, payment-history reads, and webhook endpoint management.                                                                                        |
+
+## Content conventions
+
+* Use `Content-Type: application/json` for bodies.
+* Send and sign the exact UTF-8 JSON bytes.
+* Timestamps returned by the B2B objects may be strings containing Unix
+  milliseconds; payment `created_at` and `updated_at` are ISO timestamps.
+* Preserve all opaque IDs (`mp_`, `mpk_`, `peu_`, `pay_`, `mwe_`) as strings.
+* Treat fields documented as provider-generated, especially `payment_instruction`
+  and `timeline`, as read-only.

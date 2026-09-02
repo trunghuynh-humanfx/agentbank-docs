@@ -1,0 +1,37 @@
+---
+title: "Portal login"
+description: "Exchange provisioned portal credentials for a merchant portal JWT."
+---
+
+```text
+POST /v1/merchant/auth/login
+```
+
+**Authentication:** none. This endpoint is rate limited; use only from a
+trusted merchant backend or portal server, never an untrusted client.
+
+## Request body
+
+```json
+{
+  "username": "example_merchant",
+  "password": "replace-with-provisioned-secret"
+}
+```
+
+`username` is 3-64 characters. `password` is 12-256 characters.
+
+## Response
+
+```json
+{
+  "access_token": "eyJ...",
+  "token_type": "Bearer",
+  "expires_at": "2026-08-19T09:00:00.000Z",
+  "merchant_partner_id": "mp_..."
+}
+```
+
+Send `Authorization: Bearer <access_token>` to all other portal endpoints.
+Portal credentials and JWTs never authorize KYC or payment creation; use the
+signed Partner API for those operations.
