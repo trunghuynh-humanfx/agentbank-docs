@@ -1,0 +1,16 @@
+---
+title: "get_payment_instruction"
+description: "Reopen a hosted funding card when the current instruction was missed."
+---
+
+**Surface:** Hosted OAuth  
+**Mutates state:** No
+
+```json
+{ "payment_id": "pay_..." }
+```
+
+Use only when the user asks to see the current instruction again or reports
+that the card is unavailable. Do not use `get_payment` to reopen a card. After
+displaying a crypto-deposit instruction, wait for a new user choice before
+inspecting or using spending grants.

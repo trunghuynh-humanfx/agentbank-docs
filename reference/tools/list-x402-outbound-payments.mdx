@@ -1,0 +1,18 @@
+---
+title: "list_x402_outbound_payments"
+description: "Find earlier outbound x402 intents for recovery and tracking."
+---
+
+**Mutates state:** No
+
+```json
+{
+  "status": "pending",
+  "x402_url": "https://example.com/paid-resource",
+  "limit": 20
+}
+```
+
+Results are newest first. The URL filter is exact and may still match several
+historical purchases. Compare the request, amount, status, and time before
+choosing one. Resume the existing intent instead of creating a replacement.

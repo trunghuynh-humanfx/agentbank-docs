@@ -37,7 +37,9 @@
             "pages": [
               "getting-started/quickstart",
               "getting-started/environment",
+              "getting-started/connection-types",
               "getting-started/connect-your-agent",
+              "getting-started/hosted-oauth",
               "getting-started/authentication",
               "getting-started/install-the-skill",
               "getting-started/first-payment"
@@ -75,6 +77,9 @@
             "pages": [
               "payments/overview",
               "payments/payment-lifecycle",
+              "payments/hosted-payment-cards",
+              "payments/payment-plans",
+              "payments/x402-payments",
               "payments/track-payments",
               "payments/cancel-or-correct",
               "payments/recover-failures"
@@ -85,6 +90,7 @@
             "pages": [
               "autonomy/overview",
               "autonomy/configure-thresholds",
+              "autonomy/spending-grants",
               "autonomy/world-id-approval",
               "autonomy/kyc",
               "autonomy/agentkit-and-gas"
@@ -115,6 +121,7 @@
                   "reference/tools/begin-agent-onboarding",
                   "reference/tools/wait-for-agent-onboarding",
                   "reference/tools/get-installation-status",
+                  "reference/tools/relogin",
                   "reference/tools/revoke-agent",
                   "reference/tools/whoami",
                   "reference/tools/check-verification-status",
@@ -127,9 +134,9 @@
                 "group": "Currency and quote tools",
                 "pages": [
                   "reference/tools/list-currencies",
+                  "reference/tools/get-supported-payment-capabilities",
                   "reference/tools/list-quote-book-pairs",
-                  "reference/tools/browse-quote-book",
-                  "reference/tools/get-ramp-quote"
+                  "reference/tools/browse-quote-book"
                 ]
               },
               {
@@ -147,8 +154,41 @@
                 ]
               },
               {
+                "group": "Payment plan tools",
+                "pages": [
+                  "reference/tools/create-payment-plan",
+                  "reference/tools/review-payment-plan",
+                  "reference/tools/list-payment-plans",
+                  "reference/tools/submit-payment-plan",
+                  "reference/tools/cancel-payment-plan"
+                ]
+              },
+              {
+                "group": "x402 tools",
+                "pages": [
+                  "reference/tools/estimate-x402-outbound-payment",
+                  "reference/tools/confirm-x402-outbound-payment",
+                  "reference/tools/get-x402-outbound-payment",
+                  "reference/tools/list-x402-outbound-payments"
+                ]
+              },
+              {
+                "group": "Hosted OAuth tools",
+                "pages": [
+                  "reference/tools/show-payment-approval",
+                  "reference/tools/get-payment-instruction",
+                  "reference/tools/show-payment-progress",
+                  "reference/tools/list-spending-grants",
+                  "reference/tools/get-spending-grant",
+                  "reference/tools/show-spending-grant",
+                  "reference/tools/request-spending-grant",
+                  "reference/tools/fund-payment-with-grant"
+                ]
+              },
+              {
                 "group": "Recipient tools",
                 "pages": [
+                  "reference/tools/get-supported-bank-names",
                   "reference/tools/list-recipients",
                   "reference/tools/get-recipient",
                   "reference/tools/create-recipient",

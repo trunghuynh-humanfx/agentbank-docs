@@ -26,5 +26,7 @@ Remote reading may be temporary unless the client persists the skill.
 ## Verify both parts
 
 Ask the agent to summarize the skill's safety rules, then verify that
-`whoami`, `get_instructions`, and `begin_agent_onboarding` are available. The
-recommended experience requires both the skill and MCP.
+`whoami` and `get_instructions` are available. A local stdio connection also
+exposes `begin_agent_onboarding`; a hosted OAuth connection exposes hosted card
+and spending-grant tools instead. The recommended experience requires both the
+skill and MCP.

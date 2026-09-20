@@ -23,16 +23,14 @@ description: "Persist a payment, independently validate its route, and create it
       "intent_id": "...",
       "direction": "on_ramp",
       "source": "quote_accept",
-      "client_quote_id": "...",
-      "recipient_ref": { "hop_index": 1 }
+      "client_quote_id": "..."
     },
     {
       "hop_index": 1,
       "intent_id": "...",
       "direction": "off_ramp",
       "source": "quote_accept",
-      "client_quote_id": "...",
-      "recipient_fields": {}
+      "client_quote_id": "..."
     }
   ]
 }
@@ -40,12 +38,22 @@ description: "Persist a payment, independently validate its route, and create it
 
 One or two hops are allowed. Directions are `on_ramp`, `off_ramp`, and
 `on_chain_swap`; sources are `quote_accept` and `auto_selected`. Two hops
-require top-level `intermediate_asset`.
+require top-level `intermediate_asset`. Hops contain route data only; MCP binds
+the top-level destination recipient and the internal two-hop reference.
+
+For a plan-bound payment, also provide `plan_id` and a unique `plan_position`.
+Its confirmation occurs when the complete plan is submitted, so it does not
+use standalone `confirmed_by_user`.
 
 Core independently validates quote references, amount continuity, readiness,
 and the route. If the fiat rail is not ready, it returns `need_review` with
 `payment_created=false` and `reason=rail_not_ready`; no payment or authorization
 was created.
 
-A successful result is the durable payment view. Above-threshold payments may
-include an expiring first-party `approval_url` for World ID authorization.
+A successful result is the durable payment view. Use the exact hops from an
+unexpired estimate while its inputs are unchanged. On `QUOTE_EXPIRED` or
+`PRICE_MISMATCH`, estimate again and reconfirm the refreshed terms.
+
+When status is `approval_required`, hosted OAuth calls
+`show_payment_approval`; local clients show the expiring first-party approval
+URL. When status is `approval_ready`, continue the same payment.

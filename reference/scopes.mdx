@@ -3,7 +3,7 @@ title: "Scopes"
 description: "Understand the normal permissions requested by an AgentBank connected agent."
 ---
 
-The normal onboarding scope request is:
+The normal local-onboarding scope request is:
 
 ```text
 quote:read
@@ -23,3 +23,7 @@ scopes; recipient tools use read or write scopes; wallet execution uses
 
 Use `check_my_scopes` as a diagnostic, but note that its displayed map may still
 contain legacy compatibility entries even when backend enforcement is correct.
+
+Hosted OAuth grants connection-specific scopes and exposes a different tool
+surface. Use `check_my_scopes` and the live tool list rather than applying the
+local onboarding scope list to a hosted connection.

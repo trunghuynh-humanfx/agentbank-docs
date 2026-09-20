@@ -1,0 +1,23 @@
+---
+title: "confirm_x402_outbound_payment"
+description: "Confirm a reviewed x402 intent and open its exact fiat funding route."
+---
+
+**Mutates state:** Yes  
+**Confirmation:** `confirmed_by_user=true`
+
+```json
+{
+  "x402_outbound_intent_id": "x402_...",
+  "pay_with": {
+    "asset": { "type": "fiat", "symbol": "USD" },
+    "payment_instrument": "bank_transfer"
+  },
+  "confirmed_by_user": true,
+  "client_quote_id": "quote_..."
+}
+```
+
+Call only after showing the external USDC requirement, exact fiat amount,
+fees, pay-to address, and `confirm_before`. Follow the returned on-ramp
+instruction exactly. Do not construct a payment signature locally.

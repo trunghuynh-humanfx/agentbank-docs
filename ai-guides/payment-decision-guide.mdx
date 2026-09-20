@@ -22,8 +22,11 @@ Before routing, collect:
 - amount;
 - destination asset or fiat currency;
 - destination country;
-- concrete recipient;
 - optional routing preference.
+
+Estimate the route before asking for a recipient. For a fiat destination, use
+the returned `recipient_requirements` to ask the user which instrument to use
+and collect only that instrument's required fields before creation.
 
 If no live route exists, explain that it is currently unavailable. Do not
 invent a corridor, split the payment, or silently change chains.

@@ -14,8 +14,8 @@ description: "Read native and ERC-20 balances for the bound AgentBank wallet."
 ```
 
 Returns the wallet address plus native and token balances in raw and formatted
-units. When `tokens` is omitted on chain 480, reads active Worldchain token
-contracts from `list_currencies`.
+units. When `tokens` is omitted, it queries active AgentBank tokens for the
+selected configured chain.
 
-The service uses one configured EVM RPC endpoint. Do not assume an arbitrary
-`chain_id` selects another network.
+Use `list_currencies` to verify supported chains, token addresses, and decimals
+instead of guessing them.

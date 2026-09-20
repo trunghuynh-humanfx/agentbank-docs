@@ -19,6 +19,7 @@ flowchart TD
     P --> T{"Terminal state"}
     T --> D["Completed"]
     T --> K["Cancelled"]
+    T --> E["Expired or funding timeout"]
     T --> L["Failed"]
 ```
 
@@ -29,3 +30,8 @@ approved settlement steps and returns the current instruction.
 `execute_payment_instruction` can execute only that current instruction through
 the pinned wallet. `get_transaction_receipt` reports on-chain state, while
 `get_payment` reports the authoritative aggregate payment state.
+
+On hosted OAuth, approval and funding are displayed in dedicated cards. Local
+crypto instructions can use `execute_payment_instruction`; hosted crypto
+deposits require manual owner action or a separately confirmed spending grant,
+and hosted swaps use the returned first-party signing URL.

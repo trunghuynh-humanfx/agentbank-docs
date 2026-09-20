@@ -1,20 +1,22 @@
 ---
 title: "Configure the automatic transaction threshold"
-description: "Set how much an authorized agent may transact automatically before World ID is required."
+description: "Configure the amount threshold that contributes to AgentBank's payment-approval policy."
 ---
 
 Open [app.agentbank.world](https://app.agentbank.world) to view or change the
 automatic transaction threshold for your connected agent.
 
-- Payments below the configured threshold may proceed automatically within
-  granted permissions.
-- Payments above the threshold require World ID payment authorization.
+- The threshold contributes to the active payment-approval policy.
+- `approval_ready` means the current payment can continue without another
+  World ID action.
+- `approval_required` means the current payment needs payment-specific World ID
+  authorization.
 - Changing the threshold does not bypass account readiness, scopes, recipient
   validation, balance checks, route locking, or idempotency.
 - You can lower the threshold or revoke the connected agent from the platform.
 
 <Note>
 The platform is the configuration surface. AgentBank MCP does not expose a tool
-for changing the threshold. The platform's displayed boundary behavior is
-authoritative.
+for changing the threshold. Do not infer the result from a fixed amount;
+follow the payment status returned by Core.
 </Note>

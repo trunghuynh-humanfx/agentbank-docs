@@ -1,0 +1,15 @@
+---
+title: "get_supported_payment_capabilities"
+description: "Read a general product-capability summary without checking live route readiness."
+---
+
+**Mutates state:** No
+
+```json
+{}
+```
+
+Returns a static Markdown summary of generally supported fiat funding and
+payout currencies, settlement assets, and networks. It does not prove that a
+route is live, in the requested amount band, or ready for the current user.
+Use `list_quote_book_pairs` and `estimate_payment` for an executable request.

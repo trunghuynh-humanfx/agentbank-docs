@@ -3,8 +3,9 @@ title: "AgentKit verification and sponsored gas"
 description: "Verify the bound agent wallet and understand sponsored gas eligibility."
 ---
 
-AgentKit verification is separate from KYC, World ID badges, the automatic
-transaction threshold, and payment-specific authorization.
+AgentKit verification is separate from KYC, World ID badges, the payment
+threshold, and payment-specific authorization. The `verify_agent_kit` workflow
+applies to the local stdio wallet surface.
 
 1. Call `verify_agent_kit` without supplying a wallet ID or address.
 2. Show the returned verification URL to the user.

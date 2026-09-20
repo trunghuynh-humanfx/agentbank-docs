@@ -6,7 +6,8 @@ description: "Resolve AgentBank connection, authorization, recipient, payment, a
 <AccordionGroup>
   <Accordion title="AgentBank tools are not visible">
     Confirm Node.js and `npx` are available, validate the client configuration,
-    restart or reload the client, and verify `APP_BASE_URL`. OpenClaw users can
+    restart or reload the client. When using staging, verify `APP_BASE_URL`.
+    OpenClaw users can
     run `openclaw mcp doctor agentbank --probe`.
   </Accordion>
   <Accordion title="whoami returns MISSING_CREDENTIAL">
@@ -16,6 +17,15 @@ description: "Resolve AgentBank connection, authorization, recipient, payment, a
   <Accordion title="Browser authorization is still pending">
     Keep the same enrollment ID. Do not start a second onboarding flow.
   </Accordion>
+  <Accordion title="The local session expired">
+    Call `relogin` once and retry the original operation. Do not create a new
+    onboarding flow for `UNAUTHENTICATED` caused by session expiry.
+  </Accordion>
+  <Accordion title="The local credential vault cannot open">
+    Preserve the installation and follow the remediation returned for the
+    operating-system protector, vault file, or profile mismatch. Do not replace
+    the installation to work around a vault error.
+  </Accordion>
   <Accordion title="KYC or the market is not ready">
     Complete the hosted KYC flow and recheck readiness. For `rail_not_ready`, no
     payment was created and no funds moved.
@@ -23,6 +33,10 @@ description: "Resolve AgentBank connection, authorization, recipient, payment, a
   <Accordion title="The quote or authorization expired">
     Obtain a new estimate and create a new payment after any required user
     confirmation. In-place authorization refresh is not exposed.
+  </Accordion>
+  <Accordion title="Creation returned QUOTE_EXPIRED or PRICE_MISMATCH">
+    Obtain one fresh estimate, show the changed terms, and get confirmation
+    again before creation. Do not silently substitute a different quote.
   </Accordion>
   <Accordion title="Recipient fields are missing">
     Ask only for the fields listed by `create_recipient`. Use a new request ID
@@ -32,11 +46,16 @@ description: "Resolve AgentBank connection, authorization, recipient, payment, a
     Read `get_payment`. The on-chain receipt is not final aggregate completion.
   </Accordion>
   <Accordion title="Execution result is ambiguous">
-    Retry `execute_payment_instruction` with the same request ID. Do not submit
-    a replacement transaction.
+    On local stdio, retry `execute_payment_instruction` with the same request
+    ID. Do not submit a replacement transaction. Hosted swaps return to the
+    first-party signing action and then read `get_payment`.
   </Accordion>
   <Accordion title="Funds moved and the payment failed">
     Do not improvise a recovery transfer. Contact support with the payment ID,
     status, request ID, and transaction hash when available.
+  </Accordion>
+  <Accordion title="A hosted funding card is missing">
+    Call `get_payment_instruction` for the existing payment. Do not create a
+    duplicate payment or use `get_payment` to try to reopen the card.
   </Accordion>
 </AccordionGroup>

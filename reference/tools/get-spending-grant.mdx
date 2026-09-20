@@ -1,0 +1,14 @@
+---
+title: "get_spending_grant"
+description: "Inspect one selected hosted spending grant without displaying its card."
+---
+
+**Surface:** Hosted OAuth  
+**Mutates state:** No
+
+```json
+{ "grant_id": "grant_..." }
+```
+
+Use only when the grant list lacks detail needed for a selected candidate. To
+display a pending grant for activation, call `show_spending_grant` instead.

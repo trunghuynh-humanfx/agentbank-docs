@@ -1,0 +1,22 @@
+---
+title: "estimate_x402_outbound_payment"
+description: "Validate an external x402 challenge and create a durable outbound intent."
+---
+
+**Mutates state:** Creates a durable outbound intent; moves no funds
+
+```json
+{
+  "x402_url": "https://example.com/paid-resource",
+  "request": { "method": "GET" },
+  "pay_with": {
+    "asset": { "type": "fiat", "symbol": "USD" },
+    "payment_instrument": "bank_transfer"
+  }
+}
+```
+
+The tool fetches the exact external request, validates a supported Worldchain
+USDC requirement, and returns an intent ID, fiat funding amount, fees, pay-to
+address, and confirmation deadline. Current public execution supports live
+fiat on-ramp funding only.

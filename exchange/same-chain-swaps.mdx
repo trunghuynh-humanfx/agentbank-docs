@@ -4,24 +4,27 @@ description: "Swap supported crypto assets on one chain through a Core-generated
 ---
 
 Both assets must be supported on the same chain. Use canonical asset objects
-and `estimate_payment`; do not use `get_ramp_quote` for crypto-to-crypto swaps.
+and `estimate_payment`.
 
 <Steps>
   <Step title="Estimate">
     Confirm the source amount or source ceiling, destination amount, fees,
-    chain, and recipient.
+    chain, and expiry. The estimate is recipient-free; a pure swap uses the
+    connection's bound wallet internally.
   </Step>
   <Step title="Create and continue">
     Create one durable payment, satisfy the active authorization policy, and
     request its current instruction.
   </Step>
   <Step title="Execute">
-    Use `execute_payment_instruction`. Core checks allowance and submits an
-    exact token approval only when required.
+    Local stdio uses `execute_payment_instruction`; Core checks allowance and
+    submits an exact token approval only when required. Hosted OAuth opens the
+    returned `transaction_signing_url` for owner signing through Privy. Do not
+    use a spending grant for a swap.
   </Step>
   <Step title="Track">
-    Retry an ambiguous execution with the same request ID, then poll
-    `get_payment` until terminal.
+    For local execution, retry an ambiguous result with the same request ID.
+    Poll `get_payment` until terminal on either surface.
   </Step>
 </Steps>
 

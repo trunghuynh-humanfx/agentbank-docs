@@ -11,6 +11,10 @@ description: "Select direct or two-step routes using live pairs and complete exe
 - Use an explicit settlement asset for two-step routes.
 - Preserve the requested amount exactness, chain, and recipient.
 
+Reuse an unexpired `estimate_ready` result when the economic inputs are
+unchanged. Re-estimate only after expiry, a material input change,
+`QUOTE_EXPIRED`, or `PRICE_MISMATCH`, then reconfirm refreshed terms.
+
 Partner identity is intentionally hidden. Route selection must use economic and
 execution properties rather than partner names.
 

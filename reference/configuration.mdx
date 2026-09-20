@@ -6,20 +6,30 @@ description: "Configure AgentBank endpoints, transport, credentials, and local p
 | Variable | Meaning | Default |
 | --- | --- | --- |
 | `PROTOCOL_BASE_URL` | Protocol Core API base URL | `https://protocol.agentbank.world/` |
-| `APP_BASE_URL` | First-party AgentBank app base URL | `https://staging.agentbank.world/` |
+| `APP_BASE_URL` | First-party AgentBank app base URL | `https://app.agentbank.world/` |
 | `MCP_TRANSPORT` | MCP transport mode | stdio unless set to `http` |
-| `HFX_AGENT_CREDENTIAL` | Legacy-compatible connected-agent credential override | none |
-| `HFX_MCP_PROFILE` | Legacy-compatible local profile selector | `default` |
+| `AGENTBANK_MCP_PROFILE` | Stable local identity and credential profile | `default` |
+| `AGENTBANK_MCP_CREDENTIAL_STORE` | Local vault backend (`auto`, `keychain`, or managed `file`) | platform default |
+| `AGENTBANK_MCP_KEY_STORE_SECRET` | Managed-file vault passphrase supplied outside the model | none |
+| `AGENTBANK_MCP_KEY_STORE_FILE` | Optional managed encrypted-vault path | platform configuration directory |
 
 Trailing slashes are removed before use. Explicit environment values override
 defaults.
 
-The normal personal setup does not require manually supplying
-`HFX_AGENT_CREDENTIAL`; browser authorization and the local credential store
-manage it. Use `HFX_MCP_PROFILE` only when isolating multiple local connected
-agents.
+Normal production setup requires no endpoint overrides. Browser authorization
+and the local credential vault manage the installation session. Keep
+`AGENTBANK_MCP_PROFILE` stable across restarts and use a different profile for
+each local human or agent identity.
+
+On Linux, the default vault is protected by the OS-user boundary and the host's
+disk and backup controls. Copying the complete vault directory also copies its
+local key. Managed hosts that require a separately supplied passphrase can use
+the `file` store and inject `AGENTBANK_MCP_KEY_STORE_SECRET` outside the model
+and repository.
+
+Hosted OAuth connections do not use a local MCP credential profile.
 
 <Warning>
-Never commit credentials to the documentation repository or paste them into
-support messages.
+Never commit credentials, vault secrets, or encrypted vault files to the
+documentation repository or paste them into chat or support messages.
 </Warning>

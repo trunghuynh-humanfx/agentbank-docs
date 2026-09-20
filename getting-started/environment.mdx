@@ -3,14 +3,14 @@ title: "Environment"
 description: "Choose AgentBank staging for mock-token workflows or production for live payment routes."
 ---
 
-AgentBank has separate staging and production environments. Both use the same
-protocol URL and MCP package, while `APP_BASE_URL` selects where the agent
-operates.
+AgentBank has separate staging and production app environments. The published
+MCP package defaults to production. Override `APP_BASE_URL` only when using the
+supported staging experience.
 
 | Environment | `APP_BASE_URL` | Funds |
 | --- | --- | --- |
 | Staging | `https://staging.agentbank.world` | Mock tokens with no real-world monetary value |
-| Production | `https://app.agentbank.world` | Real value through supported routes |
+| Production | `https://app.agentbank.world` | Real value through supported routes; MCP default |
 
 ## Staging
 
@@ -66,10 +66,7 @@ payment details and required safeguards before creating a live payment.
 ### Connect production
 
 ```bash
-codex mcp add agentbank \
-  --env PROTOCOL_BASE_URL=https://protocol.agentbank.world \
-  --env APP_BASE_URL=https://app.agentbank.world \
-  -- npx -y agent-bank-mcp@latest
+codex mcp add agentbank -- npx -y agent-bank-mcp@latest
 ```
 
 <Warning>
@@ -86,6 +83,6 @@ recipient, source and destination assets, amount mode, fees, route, and expiry.
 4. Complete KYC when a selected fiat market requires it.
 5. Ask the agent to estimate and show the complete route before creation.
 
-Payments below your configured threshold may proceed automatically within the
-agent's granted permissions. Payments above it require World ID payment
-authorization.
+The threshold is one input to AgentBank's active authorization policy. Follow
+the payment status returned by Core rather than inferring approval from the
+amount alone.

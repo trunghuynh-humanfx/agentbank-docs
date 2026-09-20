@@ -1,18 +1,53 @@
 ---
 name: agentbank-pay
-description: Use the installed AgentBank MCP across setup, identity, payment, wallet, recipient, tracking, and recovery workflows; check readiness, create direct or two-hop payments, use the shared Privy wallet, and recover durable payments safely.
+description: Use the installed AgentBank MCP across setup, identity, standard payments, x402 outbound payments, wallet, recipient, tracking, and recovery workflows; check readiness, create direct or two-hop payments, pay external x402 resources with supported fiat, use the shared Privy wallet, and recover durable payments safely.
 ---
 
 # AgentBank Pay
+
+## Prerequisite: install the AgentBank MCP
+
+AgentBank Pay requires the local AgentBank MCP server. The published package
+already defaults to the production AgentBank endpoints, so use these commands
+without environment overrides:
+
+### Codex
+
+```bash
+codex mcp add agentbank -- npx -y agent-bank-mcp@latest
+```
+
+### Claude Code
+
+```bash
+claude mcp add agentbank -- npx -y agent-bank-mcp@latest
+```
+
+### Hermes
+
+```bash
+hermes mcp add agentbank --command npx --args -y agent-bank-mcp@latest
+```
+
+After installation, start a new Codex or Claude Code conversation. In Hermes,
+run `/reload-mcp`. Then confirm the client exposes `whoami`,
+`get_instructions`, and `begin_agent_onboarding` before continuing.
+
+Credential persistence is bound to the OS user and the stable
+`AGENTBANK_MCP_PROFILE` (default `default`), not to `XDG_RUNTIME_DIR`, a desktop
+session, or the calling MCP client. Use a distinct profile for each local human
+or agent identity and keep it unchanged across restarts. On Linux, the default
+vault relies on per-user file permissions plus the host's disk and backup
+protection; copying the complete vault directory also copies its local key.
 
 ## Use the AgentBank MCP
 
 Before AgentBank work, make sure the AgentBank MCP is installed and loaded by checking whether the
 current client exposes `whoami`, `get_instructions`, and `begin_agent_onboarding`.
 
-If these tools are absent, stop and tell the human that the AgentBank MCP must be made available
-before the workflow can continue. Do not install, configure, reload, or provide installation
-commands from this skill.
+If these tools are absent, install the MCP using the matching command above, reload the client as
+described above, and check again. If the client cannot run its configuration command, show the
+matching command to the human. Do not replace AgentBank MCP calls with direct HTTP while it reloads.
 
 When the tools are available, preserve the original task and continue immediately. Call `whoami`
 without waiting for another user message, then use the relevant AgentBank MCP tools across setup,
@@ -30,8 +65,8 @@ progress-reporting mutations. They are not exposed by the production server.
 - Never request or expose private keys, seed phrases, AgentBank JWTs, Privy tokens, authorization keys, or World ID proofs.
 - Never infer a wallet address, bank account, recipient, token contract, chain, decimals, amount, or calldata from weak context.
 - Use decimal strings for human amounts.
-- Build a complete recipient, source amount, destination amount, fees with fee currencies, route, and expiry summary before `create_payment`.
-- Set `confirmed_by_user=true` only when an explicit human confirmation or the account's active platform standing authorization permits the payment. If the runtime does not expose a valid standing authorization, ask the human to confirm.
+- Show the complete recipient, source amount, destination amount, fees with fee currencies, route, and expiry before `create_payment`.
+- Set `confirmed_by_user=true` only after the human confirms that summary.
 - Use only a current server-generated payment instruction to move funds.
 - A transaction hash or successful receipt is not payment completion. Trust
   `get_payment`.
@@ -85,13 +120,72 @@ Use `list_currencies` whenever a ticker, fiat code, chain, token address, or
 decimals need verification. Always pass the complete structured asset object;
 compound asset strings are invalid.
 
+`get_supported_payment_capabilities` is optional product reference material. It
+returns a static Markdown summary and never confirms that a route is currently
+live, in the requested amount band, or ready for this user.
+
+## x402 outbound payments
+
+Use the dedicated x402 tools only when the human asks to pay a URL that returns
+an x402 payment challenge:
+
+1. Call `estimate_x402_outbound_payment` with the exact external URL, request
+   method/body, and requested fiat funding asset. This fetches and validates the
+   challenge and creates a durable outbound intent; it does not move funds.
+2. Show the external USDC requirement, the exact fiat amount, fees, pay-to
+   address, and `confirm_before`. Obtain explicit confirmation.
+3. Call `confirm_x402_outbound_payment` with the returned intent ID and
+   `confirmed_by_user=true`. For fiat, it creates the on-ramp payment and
+   returns the current server-generated funding instruction.
+4. Show the instruction exactly as returned. The human completes the fiat
+   transfer; then poll `get_x402_outbound_payment` until it is terminal.
+5. Use `list_x402_outbound_payments` to recover a prior intent when the human
+   does not know its ID. Do not create a replacement intent after an
+   interruption.
+
+Outbound x402 currently supports only live fiat on-ramps. Do not offer, sign,
+or attempt direct USDC funding even if the tool schema accepts a crypto asset;
+the public estimate and confirm paths reject it. If no executable fiat quote is
+available, explain the unavailable corridor and do not confirm.
+
+Do not build an x402 header, EIP-3009 authorization, transaction, or signature
+locally. Core derives a dedicated payer wallet for the intent, funds it through
+the confirmed on-ramp, submits the authorization to the external resource, and
+records the terminal result. Treat `get_x402_outbound_payment` with
+`status=completed` and `successful=true` as the authority that both funding and
+the external x402 submission succeeded. A USDC transfer hash alone is not proof
+that the external resource accepted payment.
+
 ## 1. Set up the agent
+
+### Determine the MCP surface
+
+- **Local stdio:** `begin_agent_onboarding` and `execute_payment_instruction`
+  are available. It authenticates an installation on this device.
+- **Hosted OAuth:** `request_spending_grant` and `fund_payment_with_grant` are
+  available, while local onboarding tools are absent. OAuth already identifies
+  the human and the durable hosted installation; never attempt local onboarding
+  or request a local credential.
 
 As soon as the MCP tools are available, call `whoami` without waiting for
 another user message.
 
+For hosted OAuth, then call `check_my_scopes` and `list_wallets`. If a wallet is
+needed but absent, tell the human to finish their AgentBank/Privy wallet setup;
+do not call `begin_agent_onboarding`. The hosted setup flow ends here.
+
+For local stdio, continue with the installation flow below.
+
+### Local stdio onboarding
+
 If it succeeds, call `get_account_status` and continue with the existing
 installation.
+
+If it returns `UNAUTHENTICATED` because the stored session expired, call
+`relogin` once, then retry the original tool call. `relogin` signs a fresh
+challenge only for the active local installation; it never accepts or returns
+a credential, key, challenge, or signature. Do not begin a new onboarding flow
+for an expired session.
 
 If it returns `MISSING_CREDENTIAL`:
 
@@ -102,9 +196,16 @@ If it returns `MISSING_CREDENTIAL`:
 3. Call `wait_for_agent_onboarding` immediately with the returned
    `enrollment_id`; it polls while the human approves. If it times out while the
    enrollment remains pending, call it again with the same enrollment ID.
-4. Verify `agentbank_claimed`, `privy_authorized`, `wallet_bound`, and
+4. Verify `privy_authorized`, `wallet_bound`, and
    `authenticated`.
 5. Call `whoami`, `check_my_scopes`, `get_account_status`, and `list_wallets`.
+
+For `CREDENTIAL_PROTECTOR_LOCKED`, `CREDENTIAL_PROTECTOR_UNAVAILABLE`,
+`CREDENTIAL_DEVICE_MISMATCH`, `CREDENTIAL_STORE_UNAVAILABLE`,
+`CREDENTIAL_STORE_CORRUPT`, `CREDENTIAL_STORE_CONFLICT`,
+`CREDENTIAL_PROFILE_MISMATCH`, or `SESSION_REFRESH_FAILED`, do not start a new
+onboarding flow. Preserve the installation, show the returned remediation, and
+retry only after the OS credential condition or connectivity problem is fixed.
 
 Browser approval is the only required human step. Do not ask the human to
 repeat the setup request after MCP availability is confirmed. Do not call a legacy registration
@@ -116,6 +217,9 @@ When the human asks to log out or reset this local agent:
    wallet authorization for this agent and clears local credentials.
 2. Obtain explicit confirmation.
 3. Call `revoke_agent({"confirm":true})`.
+
+For hosted OAuth, connection revocation is managed from the human-facing
+AgentBank connection settings. Never call a local revocation tool for it.
 
 ## 2. Handle identity requirements
 
@@ -155,13 +259,16 @@ World's pinned official flow, refreshes Core, and does not move funds.
 
 ## 3. Understand the payment request
 
-Collect:
+For an estimate, collect:
 
 - source asset and chain, or source fiat currency;
 - exact source or exact destination amount;
 - destination asset/currency and country;
-- recipient or destination wallet;
 - optional routing preference.
+
+Do not request, create, or pass a recipient merely to estimate a payment.
+Collect the recipient or destination wallet only after the user elects to create
+the reviewed route.
 
 Routing preferences are:
 
@@ -199,9 +306,40 @@ For a new fiat or crypto recipient, call `create_recipient` with one or more of:
 - raw `qr_content`;
 - a QR image.
 
+For every fiat recipient, first read the final quote's
+`recipient_requirements`, choose exactly one listed `payment_instrument`, and
+pass it to `create_recipient`. Never infer the instrument from the presence of
+a QR or bank fields. The field requirements are fixed:
+
+```text
+qr:             country + qr_content
+bank_transfer:  country + bank_name + account_number + holder_name
+mobile_money:   country + mobile_money_network_code + mobile_money_destination
+```
+
+`mobile_money_destination` is an opaque provider-validatable value. Do not
+force E.164 and do not collect `holder_name` unless a future quote explicitly
+requires it. If the chosen bank-transfer requirement sets
+`holder_name_must_match_kyc=true`, explain that the submitted holder must equal
+the user's verified KYC legal name; do not request or disclose that KYC name.
+
+Before collecting or creating a `bank_transfer` recipient, call
+`get_supported_bank_names` for the final fiat rail when that tool is available.
+Use its matching canonical value as `bank_name`. If the lookup is unavailable
+or the rail publishes no directory, submit the human-provided bank name to
+`create_recipient`; Core remains the authority that validates or canonicalizes
+it. Never refuse a bank transfer or demand a QR solely because canonical bank
+lookup is unavailable.
+
+For a curated fiat rail, collect a non-empty `holder_name` from the human in addition to the QR,
+bank details, or payment key. This is an unverified payout detail. Do not infer it from an EMV QR
+display label. For direct bank transfers, use the bank name returned by
+`get_supported_bank_names` when available, otherwise let `create_recipient`
+validate the human-provided name. QR-derived bank metadata is separate.
+
 When the human sends recipient information through chat as an image, raw QR
 payload, pasted bank text, account/holder details, or structured bank data,
-call `create_recipient` before `estimate_payment` or `create_payment`. Use the
+call `create_recipient` before `create_payment`. Use the
 returned `recipient_id` or canonical `recipient_fields`; do not manually copy
 unvalidated image/QR fields directly into a payment request.
 
@@ -215,7 +353,7 @@ missing or invalid fields and retry with the same request ID only if the payload
 is unchanged. Use a new request ID after adding or changing fields.
 
 On success, use either the returned `recipient_id` or canonical
-`recipient_fields` in payment tools.
+`recipient_fields` only in `create_payment.destination`.
 
 Use `update_recipient` only after the human confirms the replacement fields.
 It creates a replacement record; it does not edit or revoke the old record.
@@ -226,8 +364,12 @@ key.
 
 ## 5. Discover a supported route
 
+Use `get_supported_payment_capabilities` only when explaining AgentBank's general
+product capabilities. It does not decide whether a payment can proceed.
+
 Call `list_quote_book_pairs` to inspect live direct on/off-ramp corridors. Use a
-matching live pair directly in `estimate_payment`.
+matching live pair directly in `estimate_payment`; Core then validates the
+amount-specific route and the user's rail readiness when creating the payment.
 
 For fiat-to-fiat or source-token-to-fiat routing:
 
@@ -243,9 +385,6 @@ route.
 Use `browse_quote_book` only for anonymous rough-rate or band discovery. Its
 `rate` is raw. Read `fee_pct`, `flat_fee`, and `fee_ccy` together.
 
-Use `get_ramp_quote` only for a direct `on_ramp` or `off_ramp`. Never pass
-`on_chain_swap` to it.
-
 ## 6. Estimate the complete payment
 
 Call `estimate_payment` for every supported flow:
@@ -256,8 +395,8 @@ Call `estimate_payment` for every supported flow:
 - explicit fiat-to-fiat two-hop;
 - explicit crypto-token-to-fiat two-hop.
 
-For two hops, pass `route.intermediate_asset`. A concrete final recipient is
-required.
+For two hops, pass `route.intermediate_asset`. Do not provide a recipient:
+estimates are recipient-free route previews.
 
 Treat the result as an ephemeral review preview:
 
@@ -265,8 +404,19 @@ Treat the result as an ephemeral review preview:
 - it is not durable;
 - it may create quote intents;
 - it never creates approval, settlement, or execution calldata;
-- `create_payment` validates the route independently;
+- `create_payment` live-validates the exact submitted quote references;
 - its quote references can expire.
+
+Reuse an `estimate_ready` result while the source, destination, amount, amount
+mode, and route are unchanged and `expires_at` has not passed. After human
+confirmation, attempt `create_payment` before any second estimate.
+Do not call `estimate_payment` again merely because `create_payment` is next. The same rule
+applies when `create_payment_plan` is next. Core's live validation during
+creation does not require a second estimate call and never silently substitutes a replacement quote.
+Re-estimate only when the estimate has expired, a material
+payment input changes, or
+`create_payment` returns `QUOTE_EXPIRED` or `PRICE_MISMATCH`; show the refreshed
+summary and reconfirm before creation.
 
 Require `status=estimate_ready`. Read:
 
@@ -276,13 +426,40 @@ Require `status=estimate_ready`. Read:
 - effective request-specific amounts;
 - expiry;
 - route and intermediate amount;
-- recipient validation;
 - returned `hops`.
+
+For a fiat destination, also read `recipient_requirements`. They are the
+authoritative payoff-instrument choices and country-specific field contract.
+Do not select a recipient or create a payment until the user chooses one of
+them and supplies its required fields.
+
+If the user wants to create the reviewed payment, collect or select the final
+recipient now. A pure swap without a recipient uses the onboarding-bound wallet
+internally; all other payment routes require a recipient in
+`create_payment.destination`.
 
 If no executable estimate is available, explain the blocking requirement and
 stop or select another live route with the user's approval.
 
-## 7. Apply authorization once
+If `estimate_payment` returns `QUOTE_UNAVAILABLE` or
+`status=estimate_unavailable`:
+
+1. Call `browse_quote_book` for each matching direct leg. For a two-hop route,
+   inspect the upstream and downstream legs separately.
+2. Compare the requested effective amount with every live band's `min_amount`,
+   `max_amount`, expiry, `fee_pct`, `flat_fee`, and `fee_ccy`. Raw `rate` alone
+   does not establish that the requested amount is executable.
+3. Explain whether there is no live band, the requested amount falls outside a
+   band after fees, or the available quote expired. Do not invent a customer
+   rate or imply that funds can be moved.
+4. Call `check_verification_status` only when a response identifies KYC or rail
+   readiness as a blocker, or when the human asks about it. Its `markets`
+   result is not a live-corridor or quote-readiness result, so do not present it
+   as the cause of `QUOTE_UNAVAILABLE`.
+5. Ask the human whether to use an in-band amount or another supported route;
+   obtain a fresh estimate after any change.
+
+## 7. Confirm once
 
 Show one complete summary before creating the payment:
 
@@ -295,57 +472,97 @@ Route: [direct, swap, or source -> intermediate -> destination]
 Estimate expires: [time]
 Expected duration: [when available]
 Material warnings: [only relevant warnings]
+Recipient instrument: [qr, bank transfer, or mobile money]
 ```
 
 Do not show a raw rate as the effective customer rate when fees change the
 actual source/destination amounts.
 
-Apply the account owner's automatic transaction threshold configured at
-`https://app.agentbank.world`:
+Ask the human to confirm the complete payment. Reconfirm after any material
+change to recipient, source amount, destination amount, fee, route, or expiry.
 
-- below-threshold payments may continue automatically only when the current
-  runtime exposes valid standing authorization for the connected agent;
-- above-threshold payments require World ID payment authorization;
-- if standing authorization is absent or unclear, ask the human to confirm the
-  complete payment.
+### Payment plan (multiple payments, one approval)
 
-After any material change to recipient, source amount, destination amount, fee,
-route, or expiry, reevaluate authorization and reconfirm when required. Never
-infer the threshold, its currency conversion, or whether a payment qualifies.
+Use a payment plan only when the human wants to group several independently
+settled payments under one World ID approval. A plan does not combine funds,
+recipients, or settlement instructions: every plan item remains a normal
+payment and is continued independently.
+
+1. Call `create_payment_plan` with a concise description of the intended
+   batch and a new stable `request_id`.
+2. Estimate every intended payment. Show one consolidated review containing
+   each item's recipient, source/destination amount, fees, route, expiry, and
+   material warnings. Obtain one explicit confirmation for the complete plan.
+3. Call `create_payment` once per reviewed item with the returned `plan_id`, a
+   unique `plan_position`, and a unique `request_id`. Plan-bound creates do
+   not require `confirmed_by_user`; confirmation is supplied when submitting
+   the complete plan.
+4. Call `review_payment_plan` and ensure every intended item is present with
+   the expected position and payment details. This reviews the durable plan;
+   it does not replace an expired quote or revise a locked route.
+5. Call `submit_payment_plan` with a new stable `request_id` and
+   `confirmed_by_user=true`. It seals the plan permanently and, if required,
+   returns the only World ID approval URL for every item in the plan.
+6. Show only that returned approval URL and expiry. After the human approves,
+   use `get_payment` and then `continue_payment` for each ready payment using
+   the normal individual-payment flow.
+
+Never add, remove, or modify a plan item after submission. Cancel the plan
+before funds move if the human abandons it. A plan can contain payments that
+are continued concurrently, sequentially, or later; provider and wallet
+capacity rules still apply to each actual payment.
 
 ## 8. Create and approve the durable payment
 
-After the applicable explicit or standing authorization is satisfied, call
-`create_payment` with:
+After confirmation, call `create_payment` with:
 
 - a new stable `request_id`;
 - `confirmed_by_user=true`;
 - the reviewed source, destination, amount mode, and routing preference;
+- the final recipient once in `destination.recipient_id` or
+  `destination.recipient_fields`, when the route requires one;
+- the recipient's `payment_instrument` inside its canonical `recipient_fields`
+  when the selected quote exposed `recipient_requirements`;
 - top-level `intermediate_asset` for two hops;
 - the exact `hops` returned by the current estimate.
 
 Do not pass an estimate ID. None exists.
 
-For two-hop payments, preserve the returned structure:
+The returned hops contain route data only. For two-hop payments, the MCP
+internally creates the linked Core structure:
 
 - hop 0 is `on_ramp` or `on_chain_swap`;
-- hop 0 has `recipient_ref:{"hop_index":1}`;
 - hop 1 is `off_ramp`;
-- hop 1 has concrete `recipient_fields`.
+- hop 0 receives `recipient_ref:{"hop_index":1}` internally;
+- hop 1 receives the top-level destination recipient internally.
 
 When the payment returns `approval_required`:
 
-1. Show `approval.approval_url`, the first-party action page.
-2. State that the human must sign in as the payment owner before the page reveals the World ID request.
-3. State the approval expiry.
-4. Ask the human to approve in World App.
-5. Never request, print, reconstruct, or transmit a raw World ID QR, verification URL, or proof.
+1. On a hosted MCP surface that exposes `show_payment_approval`, call it immediately with the returned
+   `payment_id`; do not also print the approval link.
+2. On clients without that tool, show `approval.approval_url`, the first-party action page.
+3. State the approval expiry and ask the human to approve in World App.
+4. Never request, print, reconstruct, or transmit a raw World ID QR, verification URL, or proof.
 
-Payments below the configured platform threshold may return `approval_ready`
-with `approval:null`. Do not ask for World ID authorization in that case. Call
-`continue_payment` with a new continuation request ID. When the payment returns
-`approval_required`, call `get_payment` after the human authorizes and continue
-when it returns `approval_ready`.
+Core applies World ID approval according to its payment rules and the calling
+installation's threshold where applicable. Do not infer a fixed threshold: follow
+the returned status.
+When it returns `approval_ready` with `approval:null`, call
+`continue_payment` with a new continuation request ID. When it returns
+`approval_required`, wait for the human approval and call `get_payment` until
+it returns `approval_ready`.
+
+On hosted MCP surfaces, `continue_payment` renders a dedicated funding card.
+That card owns the payment instruction and refreshes itself to funded, expired,
+cancelled, or failed. Do not repeat its payment or action links in chat unless
+the human asks for a link or reports that the card is unavailable. Fiat payment,
+QR, mobile-money, and payment-link instructions must be funded through the
+card; do not offer spending-grant funding. For `crypto_deposit` only, stop and
+wait for a new human response choosing its manual action or automatic
+spending-grant funding. Earlier confirmation to create, approve, or continue
+the payment does not authorize wallet funding. Do not inspect grants, open grant
+cards, request a grant, or fund in the same turn as `continue_payment` or
+`get_payment_instruction`.
 
 ## 9. Follow the payment instruction
 
@@ -365,7 +582,9 @@ then tracks the aggregate:
   directly into hop 1. No second wallet transfer is required.
 
 For fiat-to-fiat, ask the human to pay the source on-ramp instruction, then poll
-`get_payment`. For crypto-token-to-fiat, execute the source swap instruction;
+`get_payment`. If a hosted user missed the funding card or asks to see the
+instruction again, call `get_payment_instruction`; do not use `get_payment` to
+reopen it. For crypto-token-to-fiat, execute the source swap instruction;
 its output recipient is already the downstream off-ramp deposit, then poll
 `get_payment`.
 
@@ -385,10 +604,17 @@ confirmation.
 
 For on-ramp bank, QR, payment-link, or mobile-money instructions:
 
-1. Show the action URL and exact amount/expiry.
-2. Ask the human to complete the fiat payment.
-3. Do not call `execute_payment_instruction` for fiat funding.
-4. Poll `get_payment` after the human pays.
+1. Show the server-issued `presentation_url` or `next_action.action_url`, exact
+   amount, currency, and expiry.
+2. When `pay_to.qr_content` is present, treat it as the canonical QR payment
+   payload. Never alter, reconstruct, or generate a replacement payment
+   payload. `qr_url`, when present, is optional presentation metadata.
+3. An image-capable app may render the unchanged `qr_content` as a QR for
+   display only. A terminal client should print the action link and a copyable
+   `qr_content`; it must not shell out to generate a QR image.
+4. Ask the human to complete the fiat payment.
+5. Do not call `execute_payment_instruction` for fiat funding.
+6. Poll `get_payment` after the human pays.
 
 ### Crypto deposit funding
 
@@ -396,18 +622,25 @@ For a direct one-hop off-ramp crypto deposit:
 
 1. Show the exact chain, asset, amount, full destination, memo/reference, and
    expiry.
-2. Do not ask the human to open a frontend payment page. The agent controls the
-   onboarding-bound Privy wallet and should execute the current instruction in
-   chat after the applicable explicit or standing authorization.
-3. Call `get_wallet_balances` for the required asset.
-4. Obtain explicit confirmation before sending unless the runtime confirms that
-   the account's standing authorization permits this below-threshold execution.
-5. Call `execute_payment_instruction` with the payment ID, current instruction
-   ID, stable request ID, and `confirmed_by_user=true`.
-6. If execution is still pending, call `execute_payment_instruction` again with
-   the same request ID. Do not construct ERC-20 calldata or submit a replacement
-   wallet transaction.
-7. Continue polling `get_payment`; Core tracks the deposit independently.
+2. **Local stdio:** do not ask the human to open a frontend page. Check
+   `get_wallet_balances`, obtain confirmation, then call
+   `execute_payment_instruction` with the current instruction ID and stable
+   request ID. Reuse that same request ID while execution remains pending.
+3. **Hosted OAuth:** only after a new human response explicitly chooses automatic
+   funding for this current instruction, use `list_spending_grants` to select a compatible grant for the exact source asset and chain;
+   do not call `get_spending_grant` for every historical grant. If a selected
+   grant is pending or none exists, explain that automatic funding is unavailable
+   until a grant is activated and ask whether the human wants to activate/request
+   one or use the card's manual action. Do not call a grant mutation before that
+   choice, and do not call the payment blocked while manual funding remains
+   available. If chosen, display/request the activation card and wait until the
+   human activates it. Then call
+   `fund_payment_with_grant` with the payment ID, current instruction ID,
+   hosted wallet ID, stable request ID, and `confirmed_by_user=true`. Reuse the
+   same request ID while execution remains pending.
+4. In either surface, never construct ERC-20 calldata or submit a replacement
+   wallet transaction. Continue polling `get_payment`; Core tracks the deposit
+   independently.
 
 Never send a rounded amount when the instruction requires an exact amount.
 
@@ -421,16 +654,20 @@ asset balance because the wallet must pay gas in that mode.
 For `payment_instruction.type=swap_execution`:
 
 1. Read only the fresh execution returned by `continue_payment`/`get_payment`.
-2. Show the authorized source ceiling, destination amount, asset, chain, and
+2. Show the confirmed source ceiling, destination amount, asset, chain, and
    recipient. Do not expose or ask the human to validate raw calldata.
-3. Call `execute_payment_instruction` with the payment ID, current instruction
-   ID, stable request ID, and `confirmed_by_user=true`.
-4. Core checks the current allowance and submits an exact approval only when
+3. **Local stdio:** call `execute_payment_instruction` with the payment ID,
+   current instruction ID, stable request ID, and `confirmed_by_user=true`.
+4. **Hosted OAuth:** open `transaction_signing_url`; swap execution requires
+   the owner to sign through the first-party Privy page. Do not request a
+   spending grant or call `fund_payment_with_grant` for a swap.
+5. Core checks the current allowance and submits an exact approval only when
    needed, immediately rechecks allowance before the swap, executes the pinned
    swap, and submits the final hash for verification.
-5. If execution is pending, call `execute_payment_instruction` again with the
+6. For local stdio execution, if it is pending, call
+   `execute_payment_instruction` again with the
    same request ID. Never rotate the request ID after an ambiguous submission.
-6. Poll `get_payment` while Core verifies the transaction.
+7. Poll `get_payment` while Core verifies the transaction.
 
 Do not invent calldata, allowance targets, token contracts, or amount ceilings.
 For exact destination, never spend more than the confirmed source ceiling.
@@ -440,9 +677,15 @@ For exact destination, never spend more than the confirmed source ceiling.
 Use `get_payment` as the authoritative state. Follow
 `next_action.poll_after_seconds` when present.
 
+On hosted MCP surfaces, `get_payment` itself is card-free. Before funds move,
+urge the human to complete the existing funding instruction and call
+`get_payment_instruction` only when the instruction card was missed or is
+requested again. After funds move, call `show_payment_progress` to render the
+payment lifecycle card. The funding card must not turn into the progress card.
+
 Current statuses are `approval_required`, `approval_ready`, `funding_required`,
-`funding_detecting`, `need_review`, `recipient_correction_required`,
-`completed`, `cancelled`, and `failed`.
+`funding_detecting`, `processing`, `need_review`, `recipient_correction_required`,
+`completed`, `cancelled`, `expired`, `funding_timeout`, and `failed`.
 
 Do not report a two-hop payment complete until the aggregate is `completed`.
 One completed hop is not complete payment delivery.
@@ -458,7 +701,8 @@ temporary settlement condition. Do not call `continue_payment` or
 call `get_payment` again. This state does not mean the saved recipient is
 invalid.
 
-Use `list_payments` to find historical payments for the current installation.
+Use `list_payments` to find historical payments for the current installation or
+hosted OAuth connection.
 When the user refers to an earlier payment ambiguously, compare source,
 destination, amount, status, and time, then ask which one they mean if multiple
 records fit.
@@ -477,6 +721,11 @@ When status is `recipient_correction_required`:
 4. Call `correct_payment_recipient` with a new request ID and
    `confirmed_by_user=true`.
 5. Resume polling.
+
+If Core rejects payment creation because a recipient is incompatible, no
+payment or settlement exists and no funds moved. Return to the final quote,
+choose a listed `recipient_requirement`, correct or create the recipient, then
+obtain a fresh estimate and confirmation if the quote has expired.
 
 ### Cancellation
 
@@ -502,11 +751,16 @@ Read `failure.code`, `failure.stage`, `failure.message`, `retryable`, and
 ## 12. Tool selection reference
 
 ```text
-Setup: begin_agent_onboarding, wait_for_agent_onboarding, get_installation_status, revoke_agent
+Local setup: begin_agent_onboarding, wait_for_agent_onboarding, get_installation_status, revoke_agent
+Hosted setup: whoami, check_my_scopes, list_wallets
 Identity: whoami, get_account_status, check_my_scopes, check_verification_status, do_kyc, get_verification_guidance
-Discovery: list_currencies, list_quote_book_pairs, browse_quote_book, get_ramp_quote, estimate_payment
-Payments: create_payment, continue_payment, execute_payment_instruction, get_payment, list_payments, cancel_payment, correct_payment_recipient
+Discovery: list_currencies, get_supported_payment_capabilities, list_quote_book_pairs, browse_quote_book, estimate_payment
+Plans: create_payment_plan, review_payment_plan, list_payment_plans, submit_payment_plan, cancel_payment_plan
+Local payments: create_payment, continue_payment, execute_payment_instruction, get_payment, list_payments, cancel_payment, correct_payment_recipient
+Hosted payments: create_payment, continue_payment, fund_payment_with_grant, get_payment, list_payments, cancel_payment, correct_payment_recipient
 Recipients: list_recipients, get_recipient, create_recipient, update_recipient
-Wallet: list_wallets, verify_agent_kit, get_wallet_balances, get_token_allowance, approve_token, get_transaction_receipt
+Local wallet: list_wallets, verify_agent_kit, get_wallet_balances, get_token_allowance, approve_token, get_transaction_receipt
+Hosted wallet: list_wallets, get_wallet_balances, request_spending_grant, list_spending_grants, get_spending_grant, show_spending_grant
+Hosted bank directory: get_supported_bank_names
 Guidance: get_instructions
 ```

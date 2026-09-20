@@ -1,35 +1,27 @@
 ---
 title: "Tool overview"
-description: "Browse all 33 production AgentBank MCP tools by capability."
+description: "Understand AgentBank MCP capabilities and the tools available on local and hosted connections."
 ---
 
-## Setup and identity
+The reference navigation groups tools by setup and identity, discovery,
+payments, payment plans, x402, hosted OAuth, recipients, and wallet operations.
+Available tools vary by MCP surface and granted scopes.
 
-`begin_agent_onboarding`, `wait_for_agent_onboarding`,
-`get_installation_status`, `revoke_agent`, `whoami`,
-`check_verification_status`, `do_kyc`, `get_verification_guidance`,
-`check_my_scopes`
+<CardGroup cols={2}>
+  <Card title="Local and hosted MCP" href="/getting-started/connection-types">
+    Choose the correct setup, revocation, and wallet-execution model.
+  </Card>
+  <Card title="Payment plans" href="/payments/payment-plans">
+    Group multiple independent payments under one approval.
+  </Card>
+  <Card title="x402 payments" href="/payments/x402-payments">
+    Pay an external x402 resource through a supported fiat on-ramp.
+  </Card>
+  <Card title="Hosted cards and grants" href="/payments/hosted-payment-cards">
+    Use embedded approval, funding, progress, and spending-grant tools.
+  </Card>
+</CardGroup>
 
-## Currency and quotes
-
-`list_currencies`, `list_quote_book_pairs`, `browse_quote_book`,
-`get_ramp_quote`
-
-## Payments
-
-`get_instructions`, `get_account_status`, `estimate_payment`, `create_payment`,
-`continue_payment`, `get_payment`, `list_payments`, `cancel_payment`,
-`correct_payment_recipient`
-
-## Recipients
-
-`list_recipients`, `get_recipient`, `create_recipient`, `update_recipient`
-
-## Wallet and EVM
-
-`list_wallets`, `verify_agent_kit`, `get_wallet_balances`,
-`get_token_allowance`, `approve_token`, `execute_payment_instruction`,
-`get_transaction_receipt`
-
-Each tool page describes required authentication, mutation behavior,
-confirmation, idempotency, safe retries, and related workflows.
+Use `check_my_scopes` and the live tool list to determine what the current
+connection can call. Each linked tool page documents its surface, mutation
+behavior, confirmation boundary, idempotency, and safe retry rules.

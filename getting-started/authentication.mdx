@@ -1,6 +1,6 @@
 ---
 title: "2. Browser authorization"
-description: "Connect an agent installation to your AgentBank account and bound Privy wallet."
+description: "Connect a local MCP installation to your AgentBank account and bound Privy wallet."
 ---
 
 ```mermaid
@@ -29,9 +29,17 @@ sequenceDiagram
 3. Show the returned authorization URL.
 4. Immediately call `wait_for_agent_onboarding` with the same enrollment ID.
 5. If polling times out while still pending, reuse that enrollment ID.
-6. Verify `agentbank_claimed`, `privy_authorized`, `wallet_bound`, and
-   `authenticated`.
+6. Verify `privy_authorized`, `wallet_bound`, and `authenticated`.
 7. Check identity, scopes, account readiness, and wallets.
+
+If an existing installation returns `UNAUTHENTICATED` because its session
+expired, call `relogin` once and retry the original operation. Do not begin a
+new onboarding flow for an expired session.
+
+Credential-store errors such as `CREDENTIAL_PROTECTOR_LOCKED`,
+`CREDENTIAL_STORE_CORRUPT`, or `CREDENTIAL_PROFILE_MISMATCH` require the
+returned operating-system or profile remediation. Preserve the installation
+instead of replacing it.
 
 <Warning>
 Never paste a private key, seed phrase, AgentBank token, Privy token,
@@ -42,3 +50,6 @@ authorization key, or World ID proof into chat or support.
 
 `revoke_agent` invalidates the connected installation and clears its local
 credential. It requires explicit user confirmation.
+
+Hosted OAuth connections use a different setup and revocation path. See
+[Hosted OAuth](/getting-started/hosted-oauth).

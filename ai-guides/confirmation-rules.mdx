@@ -5,21 +5,26 @@ description: "Distinguish standing authorization, user confirmation, World ID, w
 
 | Boundary | Meaning |
 | --- | --- |
-| Platform threshold | Standing authorization for automatic below-threshold transactions |
-| Payment summary confirmation | User approves the recipient, amounts, fees, route, and expiry when required |
-| World ID authorization | Payment-specific approval above the platform threshold |
+| Platform threshold | One input to AgentBank's payment-approval policy |
+| Payment summary confirmation | User explicitly approves the recipient, amounts, fees, route, and expiry before creation or plan submission |
+| World ID authorization | A separate payment-specific approval when Core returns `approval_required` |
 | Wallet execution confirmation | Authorization to execute a current on-chain instruction when the active policy requires it |
+| Spending-grant funding choice | A new, explicit hosted-user choice for the current crypto-deposit instruction |
 | Browser fiat funding | A payer manually completes the current production bank or QR instruction |
 
 The deployed tool reference is authoritative for exact fields:
 
 - `create_payment`: `confirmed_by_user=true`
+- `submit_payment_plan`: `confirmed_by_user=true` after one consolidated review
 - `execute_payment_instruction`: `confirmed_by_user=true`
+- `request_spending_grant`: confirmation of scope and limits
+- `fund_payment_with_grant`: a new confirmation for the current instruction
 - `approve_token`: confirmation when a transaction is required
 - `correct_payment_recipient`: explicit confirmation
 - `update_recipient`: explicit confirmation
 - `revoke_agent`: `confirm=true`
 - `cancel_payment`: caller obtains confirmation before calling
 
-An agent must set a confirmation field only when a current user confirmation or
-the platform's active standing authorization permits it.
+An agent must set a confirmation field only when the corresponding current user
+confirmation permits it. Confirmation to create, approve, or continue a
+payment does not authorize hosted wallet funding.

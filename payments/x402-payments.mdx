@@ -1,0 +1,34 @@
+---
+title: "x402 outbound payments"
+description: "Pay an external x402 resource through a supported live fiat on-ramp."
+---
+
+Use the dedicated x402 tools only when a requested external URL returns an
+x402 payment challenge.
+
+<Steps>
+  <Step title="Estimate the external request">
+    Call `estimate_x402_outbound_payment` with the exact URL, HTTP method,
+    optional request body, and requested fiat funding asset. The tool validates
+    the challenge and creates a durable outbound intent without moving funds.
+  </Step>
+  <Step title="Review and confirm">
+    Show the external USDC requirement, exact fiat amount, fees, pay-to
+    address, and `confirm_before`. Obtain explicit confirmation.
+  </Step>
+  <Step title="Start fiat funding">
+    Call `confirm_x402_outbound_payment` with the returned intent ID and
+    `confirmed_by_user=true`. Follow the server-generated on-ramp instruction.
+  </Step>
+  <Step title="Track the durable intent">
+    Poll `get_x402_outbound_payment` until terminal. Use
+    `list_x402_outbound_payments` to recover an existing intent when its ID is
+    unknown.
+  </Step>
+</Steps>
+
+Outbound x402 currently supports live fiat on-ramps only. Do not construct an
+x402 header, EIP-3009 authorization, transaction, or signature locally. A USDC
+transaction hash alone does not prove that the external resource accepted the
+payment; require the durable intent to report `completed` and
+`successful=true`.

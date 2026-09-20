@@ -15,8 +15,7 @@ description: "Preview a complete direct, swap, or explicit two-step payment rout
   "destination": {
     "asset": { "type": "fiat", "symbol": "VND" },
     "amount": "10000000",
-    "country": "VN",
-    "recipient_id": "recipient_..."
+    "country": "VN"
   },
   "amount_mode": "exact_destination",
   "routing_preference": "lowest_total_cost",
@@ -31,9 +30,16 @@ description: "Preview a complete direct, swap, or explicit two-step payment rout
 ```
 
 Supports direct on/off-ramp, same-chain swap, fiat-to-fiat, and
-token-to-fiat routes. Two-step estimates require a concrete recipient and an
-explicit intermediate asset selected from live pairs.
+token-to-fiat routes. Estimates are recipient-free. A two-step estimate
+requires an explicit intermediate asset selected from live pairs.
 
 The result is ephemeral: it has no estimate ID, creates no payment or
-executable calldata, and may contain expiring quote references. Pass the
-returned `hops` to `create_payment` after authorization review.
+executable calldata, and may contain expiring quote references. For fiat
+destinations, `recipient_requirements` defines the supported instruments and
+required recipient fields. Collect the final recipient only after the user
+chooses one of those instruments.
+
+Reuse an `estimate_ready` result while its economic inputs are unchanged and
+`expires_at` has not passed. Pass its `hops` unchanged to `create_payment` or a
+plan-bound payment. Re-estimate only after expiry, a material input change,
+`QUOTE_EXPIRED`, or `PRICE_MISMATCH`, and reconfirm changed terms.

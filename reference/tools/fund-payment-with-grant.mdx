@@ -1,0 +1,24 @@
+---
+title: "fund_payment_with_grant"
+description: "Fund the current hosted crypto-deposit instruction with an active compatible grant."
+---
+
+**Surface:** Hosted OAuth  
+**Mutates state:** Submits the current immutable payment instruction  
+**Idempotency:** Stable `request_id`  
+**Confirmation:** A new explicit funding choice for this instruction
+
+```json
+{
+  "request_id": "stable funding ID",
+  "payment_id": "pay_...",
+  "instruction_id": "instruction_...",
+  "wallet_id": "wallet_...",
+  "confirmed_by_user": true
+}
+```
+
+The caller cannot supply an amount, recipient, transaction, chain, or calldata.
+Call only after the funding card was displayed and a later user response chose
+automatic grant funding. Reuse the same request ID while execution remains
+pending. Never use this tool for fiat instructions or swaps.

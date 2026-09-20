@@ -1,0 +1,15 @@
+---
+title: "review_payment_plan"
+description: "Review the authoritative ordered contents and totals of a draft payment plan."
+---
+
+**Mutates state:** No
+
+```json
+{ "payment_plan_id": "plan_..." }
+```
+
+Returns ordered payment details, grouped totals, routes, fees, expiries,
+approval state, and the next action. Verify every intended item and position,
+then obtain one explicit confirmation for the complete plan. Review does not
+refresh an expired quote or revise a locked route.

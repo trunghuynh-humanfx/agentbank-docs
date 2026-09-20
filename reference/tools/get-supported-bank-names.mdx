@@ -1,0 +1,17 @@
+---
+title: "get_supported_bank_names"
+description: "Read canonical bank names for a hosted fiat rail when the directory is available."
+---
+
+**Surface:** Hosted OAuth  
+**Mutates state:** No
+
+```json
+{ "rail": "VND" }
+```
+
+Pass the destination currency rail from the quote, not an instrument or
+provider name. Use a matching canonical value in a bank-transfer recipient.
+If the lookup is unavailable or the directory is empty, pass the user's bank
+name to `create_recipient` and let Core validate or canonicalize it. Do not
+require QR solely because directory lookup is unavailable.

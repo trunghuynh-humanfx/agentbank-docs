@@ -1,0 +1,18 @@
+---
+title: "create_payment_plan"
+description: "Create a draft that will contain several independently settled payments."
+---
+
+**Mutates state:** Yes  
+**Idempotency:** Stable `request_id`
+
+```json
+{
+  "request_id": "stable plan-create ID",
+  "description": "Monthly supplier payouts"
+}
+```
+
+The draft moves no funds and opens no settlements. Add items with
+`create_payment` using the returned `plan_id`, a unique `plan_position`, and a
+unique request ID for each payment.

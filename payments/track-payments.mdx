@@ -4,7 +4,7 @@ description: "Resume durable payments safely and report the authoritative state.
 ---
 
 Use `get_payment` for one known payment and `list_payments` to find earlier
-payments owned by the current connected agent.
+payments visible to the current local installation or hosted OAuth connection.
 
 ## Tracking rules
 
@@ -17,5 +17,10 @@ payments owned by the current connected agent.
 - For two-step routes, one completed step is not the completed payment.
 
 Current payment statuses include `approval_required`, `approval_ready`,
-`funding_required`, `funding_detecting`, `need_review`,
+`funding_required`, `funding_detecting`, `processing`, `need_review`,
 `recipient_correction_required`, `completed`, `cancelled`, and `failed`.
+
+Terminal states also include `expired` and `funding_timeout`. On hosted OAuth,
+`get_payment` remains card-free: reopen a missed pre-funding instruction with
+`get_payment_instruction`, and display `show_payment_progress` only after funds
+move.

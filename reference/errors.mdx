@@ -6,7 +6,12 @@ description: "Recover safely from common AgentBank MCP errors without duplicate 
 | Error or reason | Meaning | Safe response |
 | --- | --- | --- |
 | `MISSING_CREDENTIAL` | No connected-agent credential is available | Begin browser authorization once |
+| `UNAUTHENTICATED` | The active local session may have expired | Call `relogin` once, then retry the original operation |
+| `CREDENTIAL_PROFILE_MISMATCH` | The selected local profile does not match the stored installation | Restore the correct `AGENTBANK_MCP_PROFILE`; do not re-onboard |
+| `CREDENTIAL_STORE_UNAVAILABLE` | The local credential vault cannot be opened | Follow the returned OS or managed-vault remediation |
 | `IDEMPOTENCY_CONFLICT` | A request ID was reused with a different payload | Use the original payload or create a new ID for the changed action |
+| `QUOTE_EXPIRED` | The reviewed quote is no longer live | Estimate again, show the refreshed terms, and reconfirm |
+| `PRICE_MISMATCH` | Live validation no longer matches the reviewed economic terms | Estimate again and reconfirm; never substitute silently |
 | `need_review` | The payment cannot advance automatically | Read the reason and current payment state |
 | `rail_not_ready` | KYC or market readiness is incomplete | No payment was created and no funds moved; wait and retry safely |
 

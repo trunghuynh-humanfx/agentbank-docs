@@ -27,3 +27,8 @@ description: "Resume interrupted payments without duplicate funding or duplicate
 
 Never rotate the request ID after an ambiguous on-chain submission. Never
 rebroadcast an unresolved aged submission with a replacement idempotency key.
+
+For `expired` or `funding_timeout`, read `funds_moved` and the returned failure
+details before creating anything new. If funds did not move, obtain a fresh
+estimate and confirmation. If funds moved, continue tracking or escalate; do
+not duplicate funding.

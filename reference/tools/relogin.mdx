@@ -1,0 +1,18 @@
+---
+title: "relogin"
+description: "Refresh an expired session for the active local AgentBank installation."
+---
+
+**Surface:** Local stdio only  
+**Mutates state:** Refreshes the current installation session
+
+```json
+{}
+```
+
+Call once after `UNAUTHENTICATED` or an expired-session response, then retry
+the original operation. The tool signs a fresh Core challenge with the locally
+stored installation key. It accepts and returns no credential, key, challenge,
+or signature.
+
+Do not start a new onboarding flow for a session that can be refreshed.

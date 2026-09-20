@@ -1,0 +1,35 @@
+---
+title: "Hosted OAuth"
+description: "Use AgentBank through an OAuth-connected agent with embedded payment cards."
+---
+
+A hosted OAuth connection identifies the signed-in AgentBank user without a
+local installation credential. Connect AgentBank from the OAuth-capable host,
+complete the AgentBank authorization screen, and then begin with these checks:
+
+<Steps>
+  <Step title="Verify the identity">
+    Call `whoami` and confirm the expected owner and hosted connection.
+  </Step>
+  <Step title="Check permissions">
+    Call `check_my_scopes` instead of guessing which tools are authorized.
+  </Step>
+  <Step title="Check the wallet">
+    Call `list_wallets`. If the owner wallet is absent, finish the
+    AgentBank/Privy wallet setup before attempting a wallet-funded payment.
+  </Step>
+  <Step title="Use hosted payment cards">
+    Approval, funding, grant activation, and progress are displayed in
+    dedicated cards. Do not repeat card links in chat unless the user asks or
+    reports that a card is unavailable.
+  </Step>
+</Steps>
+
+Hosted OAuth does not expose `begin_agent_onboarding`, `relogin`,
+`revoke_agent`, or local wallet execution. Revoke a hosted connection from
+the connection settings in AgentBank.
+
+<CardGroup cols={2}>
+  <Card title="Hosted payment cards" href="/payments/hosted-payment-cards" />
+  <Card title="Spending grants" href="/autonomy/spending-grants" />
+</CardGroup>

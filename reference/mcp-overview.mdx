@@ -5,14 +5,22 @@ description: "Understand the AgentBank production MCP transport, package, tools,
 
 - npm package: `agent-bank-mcp`
 - binary: `agent-bank-mcp`
-- intended personal-agent transport: `stdio`
-- hosted transport option: `MCP_TRANSPORT=http`
-- public production surface: exactly 33 tools
+- local personal-agent transport: `stdio`
+- hosted connection: OAuth-authenticated remote MCP
 
-The published server exposes high-level setup, quote, payment, recipient,
-wallet, tracking, and recovery tools. Legacy low-level intent,
-route-agreement, approval, settlement, partner, and raw-swap mutations are not
-part of the external contract.
+The available tool surface depends on the connection:
+
+| Local stdio | Hosted OAuth |
+| --- | --- |
+| Local onboarding, session refresh, revocation, and current-instruction execution | OAuth identity, embedded payment cards, owner signing, and spending grants |
+| Credentials persist under a stable local profile | Identity and history are scoped to the OAuth connection |
+
+Both surfaces expose high-level discovery, payment, plan, x402, recipient,
+wallet-read, tracking, and recovery capabilities. Use `check_my_scopes` and the
+client's live tool list instead of relying on a fixed tool count.
+
+Legacy low-level intent, route-agreement, approval, settlement, partner, and
+raw-swap mutations are not part of the external contract.
 
 AgentBank Core remains authoritative for scopes, route locking, payment
 instructions, transaction verification, idempotency, and durable payment state.

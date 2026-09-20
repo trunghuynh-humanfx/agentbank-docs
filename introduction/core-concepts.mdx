@@ -5,15 +5,16 @@ description: "Learn AgentBank accounts, wallets, assets, routes, payments, ident
 
 ## Account owner and connected agent
 
-The **account owner** signs in to AgentBank and authorizes one or more local
-agent installations. Each **connected agent** has its own credential, scopes,
-and installation-scoped payment history.
+The **account owner** signs in to AgentBank and authorizes a local installation
+or hosted OAuth connection. Each **connected agent** has its own scopes and
+connection-scoped payment history. Local installations also have a protected
+local credential profile.
 
 ## AgentBank wallet
 
-Successful browser authorization binds the user's Privy Ethereum wallet to the
-connected agent. Wallet tools return public wallet information and balances;
-they never expose a private key or seed phrase.
+Authorization makes the user's bound Privy wallet available through the
+connection's supported tools. Wallet tools return public wallet information
+and balances; they never expose a private key or seed phrase.
 
 ## Assets and amounts
 
@@ -49,10 +50,14 @@ that common asset from live pairs; Core does not currently auto-plan it.
 
 - **Browser authorization** connects the agent and wallet.
 - **KYC** determines eligibility for supported fiat markets.
-- **World ID payment authorization** approves a payment above the configured
-  autonomy threshold.
+- **World ID payment authorization** approves a payment when Core returns
+  `approval_required`.
 - **AgentKit verification** verifies the agent wallet and may enable sponsored
   gas where supported.
+
+A hosted **spending grant** is a separate bounded Privy permission for funding
+the current compatible crypto-deposit instruction. It does not replace payment
+review or World ID authorization.
 
 ## Request IDs
 

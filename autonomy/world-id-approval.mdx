@@ -1,15 +1,17 @@
 ---
 title: "World ID payment authorization"
-description: "Authorize an above-threshold payment without sharing a World ID proof with the agent."
+description: "Authorize a payment when AgentBank returns approval_required without sharing a World ID proof with the agent."
 ---
 
-When an above-threshold payment requires authorization, `create_payment`
-returns a first-party AgentBank action URL.
+When a payment returns `approval_required`, local clients use the returned
+first-party AgentBank action URL. Hosted OAuth calls `show_payment_approval` to
+display the embedded approval card and does not repeat the URL unless requested
+or the card is unavailable.
 
 <Steps>
   <Step title="Open the AgentBank action">
-    Sign in as the payment owner. The page reveals the World ID request only
-    after owner authentication.
+    Use the local action URL or hosted approval card. Sign in as the payment
+    owner; AgentBank reveals the World ID request only after authentication.
   </Step>
   <Step title="Authorize in World App">
     Complete the payment-specific authorization before its expiry.

@@ -1,0 +1,18 @@
+---
+title: "cancel_payment_plan"
+description: "Cancel a plan before any child payment has moved funds."
+---
+
+**Mutates state:** Yes  
+**Idempotency:** Stable `request_id`
+
+```json
+{
+  "payment_plan_id": "plan_...",
+  "request_id": "stable plan-cancel ID",
+  "reason": "User abandoned the batch"
+}
+```
+
+Cancels unstarted child payments and releases unopened route locks. It never
+interrupts a child payment after funds move.

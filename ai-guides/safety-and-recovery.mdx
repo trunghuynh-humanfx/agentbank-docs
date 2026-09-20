@@ -18,6 +18,11 @@ fees, route, and expiry at the authorization boundary.
 Execute only the current Core-owned payment instruction. Never construct
 calldata or substitute the wallet, chain, token, amount, target, or spender.
 
+On hosted OAuth, do not inspect or use spending grants in the same turn that
+the funding card is shown. Wait for a new explicit user choice for the current
+crypto-deposit instruction. Spending grants never fund fiat instructions or
+swaps.
+
 ## Idempotent recovery
 
 Reuse a request ID only for the same logical request and payload. Preserve the

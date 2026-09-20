@@ -6,12 +6,25 @@ description: "Prevent guessed, ambiguous, or unvalidated payment destinations."
 1. Never infer a wallet address or bank account from weak context.
 2. Search saved recipients when the user names someone known.
 3. Ask the user to choose if multiple records match.
-4. Call `create_recipient` before estimation when input arrives as bank fields,
-   pasted text, QR content, or a QR image.
-5. Use only the canonical fields returned by AgentBank.
-6. Ask only for missing or invalid fields listed by the tool.
-7. Do not treat `verified=false` as automatic route invalidity.
-8. Explain that `update_recipient` creates a replacement record.
+4. Estimate without a recipient, then choose exactly one payment instrument
+   from the returned `recipient_requirements`.
+5. Call `get_supported_bank_names` before a hosted bank-transfer recipient when
+   the lookup is available. Otherwise submit the user's bank name for Core to
+   validate; do not force QR.
+6. Call `create_recipient` before `create_payment` when input arrives as bank
+   fields, pasted text, QR content, or a QR image.
+7. Use only the canonical fields returned by AgentBank.
+8. Ask only for missing or invalid fields listed by the tool.
+9. Do not treat `verified=false` as automatic route invalidity.
+10. Explain that `update_recipient` creates a replacement record.
+
+The fixed fiat instrument contracts are:
+
+| Instrument | Required fields |
+| --- | --- |
+| `qr` | `country`, `qr_content` |
+| `bank_transfer` | `country`, `bank_name`, `account_number`, `holder_name` |
+| `mobile_money` | `country`, `mobile_money_network_code`, `mobile_money_destination` |
 
 <Warning>
 A text-only screenshot is not OCR input. Ask the user to provide its visible

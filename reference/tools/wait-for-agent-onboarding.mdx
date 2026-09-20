@@ -16,9 +16,8 @@ polls Privy and AgentBank, authenticates the selected Ethereum-compatible
 wallet, signs the binding with the local installation key, finalizes
 enrollment, and stores the connected-agent session locally.
 
-Safe result fields include `agentbank_claimed`, `privy_authorized`,
-`wallet_bound`, public wallet details, and `authenticated`. A server still in
-the naming migration may return `humanfx_claimed` as a compatibility field.
+Safe result fields include `privy_authorized`, `wallet_bound`, public wallet
+details, and `authenticated`.
 
 Reuse the same enrollment ID after a pending timeout. No credential, private
 key, or signing key is returned.

@@ -1,0 +1,38 @@
+---
+title: "Hosted spending grants"
+description: "Authorize bounded automatic funding for hosted crypto-deposit instructions."
+---
+
+A spending grant is a Privy wallet permission scoped to the hosted OAuth
+connection. It can fund only the current immutable AgentBank crypto-deposit
+instruction within the grant's asset, chain, amount, rolling-window, and
+expiry limits.
+
+## Activation
+
+1. Review the requested asset and chain scope, per-transaction limit, rolling
+   limit, window, and expiry.
+2. Call `request_spending_grant` only after the owner confirms those limits.
+3. The owner activates the pending grant through its card.
+4. Use `show_spending_grant` only to display or reopen the selected grant's
+   activation card.
+
+## Funding a payment
+
+After `continue_payment` displays a crypto-deposit instruction, stop and ask
+whether the user wants manual card funding or automatic grant funding. Only a
+new response choosing automatic funding authorizes the agent to:
+
+1. call `list_spending_grants` and select an active compatible grant;
+2. call `list_wallets` for the hosted wallet ID;
+3. call `fund_payment_with_grant` with the current payment and instruction IDs,
+   stable request ID, and `confirmed_by_user=true`.
+
+If no active compatible grant exists, manual funding remains available. Do not
+describe the payment as blocked.
+
+<Warning>
+A spending grant cannot fund fiat, QR, mobile-money, or payment-link
+instructions and must not be used for swaps. Never inspect, request, or use a
+grant in the same turn that displays the funding instruction.
+</Warning>

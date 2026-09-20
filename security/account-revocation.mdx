@@ -3,8 +3,8 @@ title: "Revoke a connected agent"
 description: "Disconnect a lost, compromised, or no-longer-needed AgentBank agent installation."
 ---
 
-Use `revoke_agent` when a device or connected agent is compromised, lost, or no
-longer authorized.
+Use `revoke_agent` when a local stdio device or connected agent is compromised,
+lost, or no longer authorized.
 
 Before calling it, explain that revocation:
 
@@ -15,3 +15,6 @@ Before calling it, explain that revocation:
 
 The tool requires `confirm=true` after explicit user confirmation. After
 revocation, reconnect through a new browser authorization flow if needed.
+
+For hosted OAuth, revoke the connection from AgentBank connection settings. Do
+not call the local revocation tool.

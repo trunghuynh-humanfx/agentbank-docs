@@ -1,0 +1,45 @@
+---
+title: "Payment plans"
+description: "Group multiple independent payments under one review and one World ID approval."
+---
+
+Use a payment plan when one user wants to authorize several independently
+settled payments together. A plan does not combine recipients, balances, or
+funding instructions; every item remains a normal payment.
+
+<Steps>
+  <Step title="Create a draft plan">
+    Call `create_payment_plan` with a stable request ID and concise description.
+  </Step>
+  <Step title="Estimate every item">
+    Create one recipient-free estimate per payment. Reuse each unexpired
+    result while its economic inputs are unchanged.
+  </Step>
+  <Step title="Resolve every recipient">
+    For each fiat destination, choose one instrument from its estimate's
+    `recipient_requirements`, then select or create the final recipient.
+  </Step>
+  <Step title="Review the complete batch">
+    Show every recipient, source and destination amount, fee, route, expiry,
+    and material warning. Obtain one explicit confirmation for the complete
+    plan.
+  </Step>
+  <Step title="Add plan-bound payments">
+    Call `create_payment` once per item using the shared `plan_id`, a unique
+    `plan_position`, and a unique request ID. Do not set standalone
+    `confirmed_by_user` on a plan-bound item.
+  </Step>
+  <Step title="Review and submit">
+    Call `review_payment_plan`, verify all intended items and positions, then
+    call `submit_payment_plan` with `confirmed_by_user=true`.
+  </Step>
+  <Step title="Approve and continue each payment">
+    Complete the single plan approval when required. Then track and continue
+    every ready child payment independently.
+  </Step>
+</Steps>
+
+Submission permanently seals the plan. Do not add, remove, or modify an item
+after submission. Cancel the plan before funds move if the user abandons it.
+A child payment can be continued concurrently, sequentially, or later, but
+its provider and wallet constraints still apply.

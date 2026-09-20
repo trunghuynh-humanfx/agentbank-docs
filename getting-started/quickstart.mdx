@@ -1,6 +1,6 @@
 ---
 title: "Quickstart"
-description: "Connect AgentBank MCP, authorize your account, install the skill, and verify readiness."
+description: "Choose a connection, authorize AgentBank, install the skill when needed, and verify readiness."
 ---
 
 <Steps>
@@ -8,9 +8,10 @@ description: "Connect AgentBank MCP, authorize your account, install the skill, 
     Use [staging](/getting-started/environment#staging) for mock tokens or
     [production](/getting-started/environment#production) for live routes.
   </Step>
-  <Step title="Connect the AgentBank MCP">
-    Follow the configuration for your client in
-    [Connect your agent](/getting-started/connect-your-agent).
+  <Step title="Choose a connection type">
+    Use [local stdio](/getting-started/connect-your-agent) for an agent running
+    on your device, or [hosted OAuth](/getting-started/hosted-oauth) in a
+    supported OAuth-capable host.
   </Step>
   <Step title="Install the AgentBank Pay skill">
     Install from `theagentbank/skills` or load the canonical skill URL.
@@ -22,12 +23,13 @@ description: "Connect AgentBank MCP, authorize your account, install the skill, 
     Check my AgentBank connection, account readiness, and wallet. Do not create a payment.
     ```
   </Step>
-  <Step title="Complete browser authorization">
-    If credentials are missing, your agent returns a URL titled **Connect to
-    your AgentBank Account**. Sign in and approve the connected agent.
+  <Step title="Complete authorization">
+    A local installation with missing credentials returns **Connect to your
+    AgentBank Account**. A hosted connection uses its OAuth authorization flow.
   </Step>
   <Step title="Verify the account">
-    Your agent checks `whoami`, scopes, account status, and `list_wallets`.
+    Your agent calls `whoami`, checks scopes, and reads `list_wallets`. Local
+    installations also check account and installation readiness.
   </Step>
 </Steps>
 

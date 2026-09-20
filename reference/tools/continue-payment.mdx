@@ -19,6 +19,13 @@ upstream step funds it.
 The result may include `instruction_id`, type, amount, asset, destination,
 expiry, a first-party presentation URL, and swap execution metadata.
 
+On hosted OAuth, this tool displays a dedicated funding card. Do not duplicate
+its action links unless requested or unavailable. Fiat, QR, mobile-money, and
+payment-link instructions are completed through that card. For a
+`crypto_deposit`, stop and wait for a new user choice between manual card
+funding and a compatible spending grant. For a hosted swap, the owner signs
+through the returned `transaction_signing_url`.
+
 <Warning>
 In a linked two-step payment, never fund the downstream deposit separately.
 The upstream route is already bound to it.

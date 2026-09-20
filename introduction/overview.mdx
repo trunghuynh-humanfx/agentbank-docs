@@ -10,15 +10,17 @@ An agent can discover currencies and live pairs, estimate a complete payment,
 resolve recipients, create a durable payment, follow Core-generated
 instructions, and track final status. Supported journeys include direct
 on-ramps, direct off-ramps, same-chain swaps, fiat-to-fiat routes, and
-token-to-fiat routes.
+token-to-fiat routes. Payment plans group several independent payments under
+one approval, and the dedicated x402 flow can fund supported external payment
+challenges through live fiat on-ramps.
 
 <CardGroup cols={3}>
   <Card title="For users">
-    Authorize an agent, configure its automatic transaction threshold, and
-    complete browser actions when required.
+    Authorize an agent, configure its payment-approval threshold, and complete
+    browser actions when required.
   </Card>
   <Card title="For builders">
-    Connect the local AgentBank MCP to Codex, Claude, OpenClaw, or Hermes.
+    Connect a local stdio agent or a hosted OAuth experience.
   </Card>
   <Card title="For agents">
     Use the AgentBank Pay skill to follow safe payment and recovery rules.

@@ -1,0 +1,36 @@
+---
+title: "Connection types"
+description: "Choose local stdio MCP or hosted OAuth based on where your agent runs."
+---
+
+AgentBank supports two MCP connection surfaces. Both use AgentBank Core for
+routes, approvals, payment instructions, and durable payment state, but their
+setup and wallet-execution experience differ.
+
+| | Local stdio MCP | Hosted OAuth MCP |
+| --- | --- | --- |
+| Best for | Codex, Claude Code, Claude Desktop, OpenClaw, and Hermes on your device | An OAuth-capable hosted agent experience |
+| Identity | One installation and local credential profile | The signed-in user's OAuth connection |
+| Setup signal | `begin_agent_onboarding` is available | `request_spending_grant` is available and local onboarding tools are absent |
+| Wallet action | `execute_payment_instruction` executes the current Core instruction | Embedded cards, owner signing, or an activated spending grant |
+| Disconnect | Confirm and call `revoke_agent` | Revoke the connection in AgentBank connection settings |
+
+<CardGroup cols={2}>
+  <Card title="Connect a local agent" href="/getting-started/connect-your-agent">
+    Install the stdio MCP and authorize one local installation.
+  </Card>
+  <Card title="Use hosted OAuth" href="/getting-started/hosted-oauth">
+    Verify the OAuth identity, wallet, scopes, and embedded-card workflow.
+  </Card>
+</CardGroup>
+
+<Warning>
+Do not run local onboarding on a hosted OAuth surface. OAuth already identifies
+the user and durable hosted connection.
+</Warning>
+
+<Note>
+To use AgentBank without connecting any external AI agent, open the hosted
+AgentBank chat at [app.agentbank.world](https://app.agentbank.world). That
+browser experience requires no MCP or skill installation.
+</Note>

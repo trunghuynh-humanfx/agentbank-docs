@@ -12,9 +12,9 @@ description: "Parse, validate, and register a fiat or crypto recipient from supp
   "request_id": "stable retry ID",
   "rail": "VND",
   "type": "fiat",
+  "payment_instrument": "bank_transfer",
   "fields": {},
   "bank_info": {
-    "bank_code": "970407",
     "bank_name": "optional",
     "account_number": "19030936530017",
     "holder_name": "optional",
@@ -33,9 +33,16 @@ description: "Parse, validate, and register a fiat or crypto recipient from supp
 }
 ```
 
-`request_id`, `rail`, `type`, and at least one input source are required. Use
-exactly one of `image.path` or `image.data_base64`. Images are limited to 10 MB
-decoded data and must contain machine-readable QR content; OCR is not provided.
+`request_id`, `rail`, `type`, and at least one input source are required. Fiat
+recipients also require exactly one `payment_instrument` selected from the
+estimate's `recipient_requirements`: `qr`, `bank_transfer`, or `mobile_money`.
+Use exactly one of `image.path` or `image.data_base64`. Images are limited to 10
+MB decoded data and must contain machine-readable QR content; OCR is not
+provided.
+
+On hosted OAuth, call `get_supported_bank_names` before a bank-transfer
+recipient when the tool is available. If it is unavailable, submit the user's
+bank name and let Core validate or canonicalize it.
 
 The tool either returns `information_required` without writing, or registers
 canonical fields and returns the recipient plus a reusable payment destination.

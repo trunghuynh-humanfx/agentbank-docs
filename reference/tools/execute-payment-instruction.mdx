@@ -4,6 +4,8 @@ description: "Execute only the current Core-owned payment instruction through th
 ---
 
 **Authentication:** `settlement:initiate`, `agent_wallet:use`  
+**Surface:** Local stdio only
+
 **Mutates state:** Yes; on-chain  
 **Idempotency:** Stable execution `request_id`  
 **Confirmation:** `confirmed_by_user=true` under the active authorization policy
@@ -27,3 +29,7 @@ submissions with the same request ID.
 
 The result omits wallet IDs, RPC bodies, Privy authorization material, and
 Privy transaction IDs. Continue tracking with `get_payment`.
+
+Hosted OAuth uses manual card action or `fund_payment_with_grant` for an
+explicitly authorized crypto deposit. Hosted swaps use the first-party signing
+URL.

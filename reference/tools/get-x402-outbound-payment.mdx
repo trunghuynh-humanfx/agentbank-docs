@@ -1,0 +1,14 @@
+---
+title: "get_x402_outbound_payment"
+description: "Read the authoritative state of one outbound x402 intent."
+---
+
+**Mutates state:** No
+
+```json
+{ "x402_outbound_intent_id": "x402_..." }
+```
+
+Poll the same intent through fiat funding and external submission. Treat only
+`status=completed` with `successful=true` as proof that both funding and the
+external x402 request succeeded.

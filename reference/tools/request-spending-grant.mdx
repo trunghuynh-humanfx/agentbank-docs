@@ -1,0 +1,24 @@
+---
+title: "request_spending_grant"
+description: "Create a pending, bounded Privy spending grant for a hosted wallet."
+---
+
+**Surface:** Hosted OAuth  
+**Mutates state:** Creates a pending grant  
+**Idempotency:** Stable `request_id`  
+**Confirmation:** `confirmed_by_user=true` after reviewing scope and limits
+
+```json
+{
+  "request_id": "stable grant-request ID",
+  "asset_and_chain_scope": {},
+  "per_transaction_limit_atomic": "1000000",
+  "rolling_limit_atomic": "5000000",
+  "rolling_window_seconds": 86400,
+  "confirmed_by_user": true
+}
+```
+
+The grant has no spending authority until the owner activates it through the
+attached card. Show the raw activation URL only when requested or when the
+card is unavailable.

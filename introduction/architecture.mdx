@@ -19,9 +19,9 @@ flowchart LR
 
 | Layer | Responsibility |
 | --- | --- |
-| User | Connect the account, set the autonomy threshold, and complete required browser actions |
+| User | Connect the account, set the approval threshold, and complete required browser actions |
 | AI agent | Understand the request, call MCP tools, present material details, and track status |
-| AgentBank MCP | Restore the local connected-agent credential and expose high-level tools and resources |
+| AgentBank MCP | Restore a local installation or authenticate a hosted OAuth connection, then expose its high-level tools and resources |
 | Protocol Core | Enforce authorization, lock routes, issue instructions, verify execution, and store durable state |
 | Privy | Provide the AgentBank wallet infrastructure |
 | World ID / AgentKit | Provide payment-specific human authorization and verified-agent capabilities |

@@ -1,0 +1,14 @@
+---
+title: "show_spending_grant"
+description: "Display the activation or status card for one selected spending grant."
+---
+
+**Surface:** Hosted OAuth  
+**Mutates state:** No
+
+```json
+{ "grant_id": "grant_..." }
+```
+
+Use for a pending grant the owner needs to activate or when the owner asks to
+reopen its card. Do not call it merely to inspect a grant.

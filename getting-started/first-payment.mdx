@@ -11,27 +11,28 @@ description: "Learn the universal AgentBank payment sequence without committing 
   <Step title="Discover supported assets and routes">
     Use live currencies and quote-book pairs. Never assume a route exists.
   </Step>
-  <Step title="Resolve the recipient">
-    Select a saved recipient or create one from validated fields, pasted bank
-    data, or QR content.
-  </Step>
   <Step title="Estimate the complete payment">
     Choose exact source or exact destination and include an explicit settlement
-    asset for a two-step route.
+    asset for a two-step route. Estimates do not accept recipients.
+  </Step>
+  <Step title="Resolve the recipient">
+    For a fiat destination, choose one instrument from the estimate's
+    `recipient_requirements`, then select or create the final recipient.
   </Step>
   <Step title="Review material details">
     Show the full recipient, source and destination amounts, all fees and fee
     currencies, route, expiry, and expected browser action.
   </Step>
   <Step title="Apply authorization policy">
-    A below-threshold payment may continue automatically within granted
-    permissions. An above-threshold payment requires World ID authorization.
+    Follow `approval_ready` or `approval_required` as returned. Never infer a
+    fixed threshold from the amount.
   </Step>
   <Step title="Create and continue one durable payment">
     Use stable request IDs and follow only the current Core-owned instruction.
   </Step>
   <Step title="Track final status">
-    Poll `get_payment` until `completed`, `cancelled`, or `failed`.
+    Poll `get_payment` until `completed`, `cancelled`, `expired`,
+    `funding_timeout`, or `failed`.
   </Step>
 </Steps>
 

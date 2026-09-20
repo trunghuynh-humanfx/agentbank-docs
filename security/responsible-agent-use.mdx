@@ -4,7 +4,8 @@ description: "Operate AgentBank agents with clear permissions, bounded autonomy,
 ---
 
 1. Use a separate connected-agent profile where operational isolation matters.
-2. Set the automatic transaction threshold deliberately.
+2. Set the payment-approval threshold deliberately and follow Core's returned
+   status for each payment.
 3. Validate recipients before granting an agent payment autonomy.
 4. Keep production and staging configurations visibly separate.
 5. Never instruct the model to bypass MCP, Core instructions, KYC, World ID, or

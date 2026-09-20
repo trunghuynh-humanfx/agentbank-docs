@@ -33,5 +33,23 @@ Pay my saved recipient in VND from supported crypto. Estimate the route, show al
 Read the current durable state of payment pay_..., tell me the next safe action, and do not create a duplicate payment.
 ```
 
+## Create a payment plan
+
+```text
+Group these payments into one AgentBank payment plan. Estimate each item, show one consolidated review, ask me to confirm once, and do not submit the plan until I approve the complete list.
+```
+
+## Pay an x402 resource
+
+```text
+Open this x402 URL, estimate the exact supported fiat funding amount, show the external USDC requirement and fees, and wait for my confirmation before funding it.
+```
+
+## Use hosted automatic funding
+
+```text
+For this current crypto-deposit instruction, check whether an active compatible spending grant can fund it. Do not request or use a grant until I explicitly choose automatic funding.
+```
+
 These patterns show observable goals and actions. They do not expose or request
 hidden chain-of-thought.

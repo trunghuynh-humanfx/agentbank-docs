@@ -1,0 +1,15 @@
+---
+title: "show_payment_approval"
+description: "Display the hosted World ID approval card for a payment that requires approval."
+---
+
+**Surface:** Hosted OAuth  
+**Mutates state:** No
+
+```json
+{ "payment_id": "pay_..." }
+```
+
+Call immediately after `create_payment` returns `approval_required`. Do not
+also repeat the approval link in chat unless the user asks or the card is
+unavailable. Never expose a raw World ID request or proof.

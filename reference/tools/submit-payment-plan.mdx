@@ -1,0 +1,20 @@
+---
+title: "submit_payment_plan"
+description: "Seal a reviewed plan and create its single World ID approval."
+---
+
+**Mutates state:** Yes  
+**Idempotency:** Stable `request_id`  
+**Confirmation:** `confirmed_by_user=true` after reviewing the complete plan
+
+```json
+{
+  "payment_plan_id": "plan_...",
+  "request_id": "stable plan-submit ID",
+  "confirmed_by_user": true
+}
+```
+
+Submission permanently seals the plan and prepares one approval covering all
+items when required. Do not request individual World ID approvals for child
+payments. After approval, track and continue each payment independently.

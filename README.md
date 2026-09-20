@@ -8,9 +8,9 @@ Mintlify documentation for AgentBank.
 npx mintlify dev
 ```
 
-The documentation covers the AgentBank MCP, the `agentbank-pay` skill, payment
-journeys, autonomy controls, security, all 33 public MCP tools, and the Partner
-API for merchant integrations.
+The documentation covers the AgentBank MCP, the `agentbank-pay` skill, local
+and hosted OAuth connections, payment journeys, autonomy controls, security,
+and the Partner API for merchant integrations.
 
 ## Environments
 
@@ -23,5 +23,5 @@ API for merchant integrations.
 ## Content sources
 
 Technical reference pages must remain aligned with the official AgentBank MCP
-specification and AgentBank skill. Public guides use AgentBank terminology;
-legacy `HFX_*` identifiers appear only where compatibility requires them.
+specification and AgentBank skill. Public guides use AgentBank terminology and
+document `AGENTBANK_MCP_*` configuration for new installations.

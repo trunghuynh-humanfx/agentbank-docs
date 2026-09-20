@@ -1,0 +1,15 @@
+---
+title: "show_payment_progress"
+description: "Display the hosted lifecycle card after payment funds have moved."
+---
+
+**Surface:** Hosted OAuth  
+**Mutates state:** No
+
+```json
+{ "payment_id": "pay_..." }
+```
+
+Call after `get_payment` confirms that funds moved. Do not show it while the
+payment is awaiting funding; the funding instruction and progress views are
+separate cards.

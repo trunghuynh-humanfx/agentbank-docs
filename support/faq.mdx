@@ -14,8 +14,19 @@ description: "Answers about custody, wallets, identity, autonomy, staging, colle
     authorized by that user can operate it through granted AgentBank workflows.
   </Accordion>
   <Accordion title="Can my agent transact automatically?">
-    Yes, below the threshold configured at `app.agentbank.world` and within the
-    agent's granted permissions. Above-threshold payments require World ID.
+    AgentBank applies the threshold configured at `app.agentbank.world` with
+    the connection's permissions and current payment policy. Follow
+    `approval_ready` or `approval_required` for the actual payment; do not infer
+    the result from a fixed amount.
+  </Accordion>
+  <Accordion title="What is a spending grant?">
+    It is a bounded Privy permission for a hosted OAuth wallet. After a new
+    explicit funding choice, it can fund the current compatible crypto-deposit
+    instruction. It cannot fund fiat instructions or swaps.
+  </Accordion>
+  <Accordion title="How do I disconnect hosted OAuth?">
+    Revoke the connection in AgentBank connection settings. `revoke_agent`
+    applies only to a local stdio installation.
   </Accordion>
   <Accordion title="How does staging work?">
     Create a supported staging on-ramp. It automatically succeeds and credits
@@ -34,5 +45,14 @@ description: "Answers about custody, wallets, identity, autonomy, staging, colle
   </Accordion>
   <Accordion title="Is a transaction hash final completion?">
     No. Use `get_payment` for the authoritative aggregate payment state.
+  </Accordion>
+  <Accordion title="Can I approve several payments together?">
+    Yes. A payment plan groups independently settled child payments under one
+    consolidated review and one World ID approval.
+  </Accordion>
+  <Accordion title="Can AgentBank pay an x402 resource?">
+    Yes, when the external URL returns a supported x402 challenge and a live
+    fiat on-ramp is available. The current public flow does not offer direct
+    USDC funding.
   </Accordion>
 </AccordionGroup>

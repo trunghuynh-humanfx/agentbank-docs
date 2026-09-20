@@ -1,0 +1,51 @@
+---
+title: "Hosted payment cards"
+description: "Keep approval, funding, signing, and progress actions in their dedicated hosted OAuth cards."
+---
+
+Hosted OAuth separates payment actions into cards so the user can approve and
+fund through first-party AgentBank and Privy experiences.
+
+```mermaid
+flowchart LR
+    C["Create payment"] --> A{"Approval required?"}
+    A -->|"Yes"| AC["Approval card"]
+    A -->|"No"| F["Continue payment"]
+    AC --> F
+    F --> FC["Funding or signing card"]
+    FC --> M["Funds move"]
+    M --> PC["Progress card"]
+```
+
+## Approval
+
+When `create_payment` returns `approval_required`, call
+`show_payment_approval` with that payment ID. Do not also paste the approval
+URL unless the user asks for it or the card is unavailable.
+
+## Funding instruction
+
+`continue_payment` displays the current funding card. Reopen a missed card
+with `get_payment_instruction`; `get_payment` reads state but does not reopen
+the card.
+
+Fiat bank, QR, mobile-money, and payment-link instructions are completed
+through the card. A crypto-deposit card can be funded manually or, after a new
+explicit user choice, with a compatible spending grant.
+
+## Swap signing
+
+For hosted swaps, open the returned `transaction_signing_url`. The owner signs
+through the first-party Privy page. A spending grant must not be used for a
+swap.
+
+## Progress
+
+Call `get_payment` to read authoritative state. Before funds move, refer the
+user to the existing funding card. After funds move, call
+`show_payment_progress`. The funding card and progress card remain separate.
+
+<Warning>
+Showing or approving a payment is not wallet-funding authorization. Wait for a
+new user response before using a spending grant for the current instruction.
+</Warning>

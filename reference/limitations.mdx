@@ -4,18 +4,18 @@ description: "Understand the explicit non-capabilities of the current AgentBank 
 ---
 
 - No automatic Core planner selects a settlement asset for two-step routes.
-- Estimates are ephemeral, have no ID, and are not matched by
-  `create_payment`.
+- Estimates are ephemeral and have no ID. Creation live-validates their quote
+  references and never silently replaces them.
 - Expired or rejected payment authorization cannot be refreshed in place.
 - Partial two-step failure has no dedicated automated recovery action.
 - QR images are decoded, but text-only screenshot OCR is not implemented.
 - Recipient updates create replacements and do not revoke the old record.
 - No generic arbitrary EVM transaction tool is exposed.
-- The payment status model does not emit `expired`.
-- Wallet chain reads use one configured RPC endpoint.
 - Partner identity and partner-query APIs are hidden.
 - Legacy low-level settlement workflows are outside the production surface.
 - A pending AgentKit verification session may need to be recreated after MCP
   restart.
 - Shareable single-payment links are coming soon.
 - The agent can track whether a collection was paid, not who paid it.
+- Spending grants apply only to hosted crypto-deposit funding; they cannot
+  authorize fiat funding or swaps.

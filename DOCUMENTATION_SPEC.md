@@ -1,10 +1,11 @@
 # AgentBank Mintlify Documentation Specification
 
-Status: Final implementation brief for documentation and engineering review  
+Status: Structural implementation brief; current behavior is owned by the
+embedded AgentBank skill and published documentation
 Target platform: Mintlify  
 Target repository: `trunghuynh-humanfx/agentbank-docs`
 Public repository URL: `https://github.com/trunghuynh-humanfx/agentbank-docs`
-Last updated: 2026-07-29
+Last updated: 2026-09-19
 
 ## 1. Purpose
 
@@ -24,8 +25,8 @@ and Sponge Wallet while reflecting AgentBank's actual product model:
 - World ID is used for unique-human attestation and payment approvals.
 - World AgentKit verification can make an eligible verified agent's wallet
   eligible for sponsored gas.
-- The public MCP surface contains the 33 tools defined in the official AgentBank
-  MCP specification.
+- The MCP exposes distinct local stdio and hosted OAuth surfaces. Documentation
+  must not hardcode a tool count.
 
 This file is a content and implementation specification, not a substitute for
 the official MCP contract.
@@ -35,8 +36,9 @@ the official MCP contract.
 When sources disagree, documentation writers must use this order:
 
 1. Deployed AgentBank behavior in the selected environment.
-2. `agentbank-mcp-specification(1).md` for the public MCP contract.
-3. `agentbank-SKILL.md` for agent workflow and safety behavior.
+2. `skills/agentbank-pay/SKILL.md` for the current agent workflow and safety
+   behavior.
+3. The deployed MCP tool schemas for the callable contract.
 4. This documentation specification for structure, positioning, and planned
    product behavior.
 5. AgentCard and Sponge materials only as structural references.
@@ -55,9 +57,8 @@ amount conventions, tool names, or custody language into AgentBank docs.
   `trunghuynh-humanfx/agentbank-docs` GitHub coordinate is a repository
   identifier, not product
   branding.
-- Retain the following compatibility environment variable names exactly:
-  - `HFX_AGENT_CREDENTIAL`
-  - `HFX_MCP_PROFILE`
+- Use `AGENTBANK_MCP_*` names for new local installations. Do not present
+  legacy `HFX_*` variables as recommended configuration.
 - Use "browser authorization" as the public term for the account connection
   flow.
 - The browser page heading is "Connect to your AgentBank Account."
@@ -69,8 +70,8 @@ amount conventions, tool names, or custody language into AgentBank docs.
 | Staging | `https://staging.agentbank.world` | `https://protocol.agentbank.world` | A supported on-ramp automatically succeeds and credits mock tokens |
 | Production | `https://app.agentbank.world` | `https://protocol.agentbank.world` | Live supported payment routes |
 
-AgentBank does not currently have an in-product test-mode switch. Staging and
-production must be presented as separate MCP configurations. Do not use
+The production package defaults to `https://app.agentbank.world`. Staging uses
+an explicit `APP_BASE_URL=https://staging.agentbank.world` override. Do not use
 "switch to test mode" language.
 
 The staging funding flow is:
@@ -148,20 +149,20 @@ The confirmed product policy is:
 - The account owner configures the threshold on
   `https://app.agentbank.world`.
 - The threshold is a platform setting, not an MCP configuration command.
-- A payment below the configured threshold may be transacted automatically by
-  the authorized agent within its granted permissions.
-- A payment above the threshold requires World ID attestation.
+- The threshold contributes to AgentBank's active payment-approval policy.
+- The agent still obtains the explicit payment-summary confirmation required
+  by the tool contract.
+- Core's returned `approval_ready` or `approval_required` status determines
+  whether payment-specific World ID authorization is needed.
 - The threshold does not bypass recipient validation, route validation, balance
   checks, scope checks, idempotency, or Core-owned payment instructions.
 - The user can return to the AgentBank platform to change the threshold or
   revoke the connected agent.
 
-Do not present USD 10 as the permanent public rule. The supplied MCP and skill
-still describe a fixed USD 10 bypass and explicit confirmation flags. Treat
-that wording as a source migration issue: the deployed platform, MCP, and skill
-must agree before publication. Tool-reference pages must still reproduce the
-exact deployed schemas, while user guides describe the configured platform
-threshold and server-enforced authorization result.
+Do not present USD 10 or any other amount as a permanent public rule. Tool
+reference pages reproduce the deployed confirmation fields, while user guides
+describe the configured threshold and follow Core's returned authorization
+status.
 
 The threshold page may link to the AgentBank platform, but it must not invent a
 settings menu name, URL path, default, minimum, maximum, or conversion formula
@@ -174,7 +175,8 @@ The public naming requested for the next AgentBank release is:
 - Prompt: `agentbank_routing_guide`
 - Fixed resource: `agentbank://guides/routing`
 - Journey template: `agentbank://instructions/{journey}`
-- Onboarding claim field: `agentbank_claimed`
+- Onboarding readiness fields: `privy_authorized`, `wallet_bound`, and
+  `authenticated`
 
 The existing MCP and skill still use `humanfx_*` compatibility identifiers in
 some places. Public guides use the AgentBank names. Exact legacy identifiers may
@@ -298,119 +300,9 @@ threshold and granted permissions.
 
 ## 7. Mintlify repository structure
 
-Create the documentation in `trunghuynh-humanfx/agentbank-docs` with this layout:
-
-```text
-.
-|-- docs.json
-|-- README.md
-|-- index.mdx
-|-- introduction/
-|   |-- overview.mdx
-|   |-- why-agentbank.mdx
-|   |-- architecture.mdx
-|   |-- core-concepts.mdx
-|-- getting-started/
-|   |-- quickstart.mdx
-|   |-- environment.mdx
-|   |-- connect-your-agent.mdx
-|   |-- authentication.mdx
-|   |-- install-the-skill.mdx
-|   |-- first-payment.mdx
-|-- money-in/
-|   |-- overview.mdx
-|   |-- add-money.mdx
-|   |-- collect-from-a-payer.mdx
-|   |-- receive-fiat-as-crypto.mdx
-|-- money-out/
-|   |-- overview.mdx
-|   |-- bank-payout.mdx
-|   |-- crypto-to-fiat.mdx
-|   |-- manage-recipients.mdx
-|-- exchange/
-|   |-- overview.mdx
-|   |-- quotes-and-rates.mdx
-|   |-- same-chain-swaps.mdx
-|   |-- fiat-to-fiat.mdx
-|-- payments/
-|   |-- overview.mdx
-|   |-- payment-lifecycle.mdx
-|   |-- track-payments.mdx
-|   |-- cancel-or-correct.mdx
-|   |-- recover-failures.mdx
-|-- autonomy/
-|   |-- overview.mdx
-|   |-- configure-thresholds.mdx
-|   |-- world-id-approval.mdx
-|   |-- kyc.mdx
-|   |-- agentkit-and-gas.mdx
-|-- ai-guides/
-|   |-- instructions-for-your-agent.mdx
-|   |-- payment-decision-guide.mdx
-|   |-- confirmation-rules.mdx
-|   |-- recipient-rules.mdx
-|   |-- routing-strategy.mdx
-|   |-- conversation-patterns.mdx
-|   |-- safety-and-recovery.mdx
-|-- reference/
-|   |-- mcp-overview.mdx
-|   |-- configuration.mdx
-|   |-- resources.mdx
-|   |-- tools/
-|   |   |-- overview.mdx
-|   |   |-- begin-agent-onboarding.mdx
-|   |   |-- wait-for-agent-onboarding.mdx
-|   |   |-- get-installation-status.mdx
-|   |   |-- revoke-agent.mdx
-|   |   |-- whoami.mdx
-|   |   |-- check-verification-status.mdx
-|   |   |-- do-kyc.mdx
-|   |   |-- get-verification-guidance.mdx
-|   |   |-- check-my-scopes.mdx
-|   |   |-- list-currencies.mdx
-|   |   |-- list-quote-book-pairs.mdx
-|   |   |-- browse-quote-book.mdx
-|   |   |-- get-ramp-quote.mdx
-|   |   |-- get-instructions.mdx
-|   |   |-- get-account-status.mdx
-|   |   |-- estimate-payment.mdx
-|   |   |-- create-payment.mdx
-|   |   |-- continue-payment.mdx
-|   |   |-- execute-payment-instruction.mdx
-|   |   |-- get-wallet-balances.mdx
-|   |   |-- get-token-allowance.mdx
-|   |   |-- approve-token.mdx
-|   |   |-- get-transaction-receipt.mdx
-|   |   |-- get-payment.mdx
-|   |   |-- list-payments.mdx
-|   |   |-- cancel-payment.mdx
-|   |   |-- correct-payment-recipient.mdx
-|   |   |-- list-recipients.mdx
-|   |   |-- get-recipient.mdx
-|   |   |-- create-recipient.mdx
-|   |   |-- update-recipient.mdx
-|   |   |-- list-wallets.mdx
-|   |   `-- verify-agent-kit.mdx
-|   |-- scopes.mdx
-|   |-- idempotency.mdx
-|   |-- errors.mdx
-|   |-- statuses.mdx
-|   |-- limitations.mdx
-|-- security/
-|   |-- security-model.mdx
-|   |-- account-revocation.mdx
-|   |-- responsible-agent-use.mdx
-|-- support/
-|   |-- troubleshooting.mdx
-|   |-- faq.mdx
-|   `-- contact.mdx
-|-- changelog.mdx
-|-- skills/
-|   |-- agentbank-pay/
-|       |-- SKILL.md
-|-- snippets/
-|-- images/
-```
+`docs.json` owns the current public navigation and page inventory. Do not
+maintain a second file tree in this specification; verify page paths and groups
+against that configuration.
 
 The public AgentBank skill is distributed from
 `https://github.com/theagentbank/skills` and from the stable protocol URL.
@@ -674,8 +566,7 @@ Required flow:
    access.
 6. The agent waits with `wait_for_agent_onboarding` using the same enrollment
    ID.
-7. The agent verifies `agentbank_claimed`, `privy_authorized`, `wallet_bound`,
-   and `authenticated`.
+7. The agent verifies `privy_authorized`, `wallet_bound`, and `authenticated`.
 8. The agent checks `whoami`, scopes, account status, and wallets.
 
 The page must explain that the user should not paste credentials, wallet keys,
@@ -853,11 +744,12 @@ plain language rather than calling prefixed names manually.
 
 Add an advanced page for users who run more than one local agent:
 
-- `HFX_MCP_PROFILE` selects the local credential profile.
+- `AGENTBANK_MCP_PROFILE` selects the stable local credential profile.
 - Default profile: `default`.
-- `HFX_AGENT_CREDENTIAL` may explicitly provide an installation credential.
-- Do not print, share, commit, or paste either credential value into support
-  messages.
+- Managed vault deployments may use `AGENTBANK_MCP_CREDENTIAL_STORE`,
+  `AGENTBANK_MCP_KEY_STORE_SECRET`, and `AGENTBANK_MCP_KEY_STORE_FILE`.
+- Do not print, share, commit, or paste credential or vault secrets into
+  support messages.
 - Prefer the MCP's secure local credential store rather than inline secrets.
 
 Do not suggest changing these variables for ordinary single-agent setup.
@@ -959,7 +851,7 @@ Keep four concepts separate:
 | --- | --- | --- |
 | Browser authorization | Connect an agent installation to an AgentBank account and wallet | Sign in and authorize |
 | KYC | Establish eligibility for supported fiat rails | Complete the hosted verification flow |
-| World ID payment attestation | Approve an above-threshold payment | Open the first-party action page and approve in World App |
+| World ID payment attestation | Approve a payment when Core returns `approval_required` | Open the first-party action page and approve in World App |
 | World AgentKit verification | Verify the bound agent wallet and support gas sponsorship eligibility | Open or scan the AgentKit verification request |
 
 Do not imply that any one mechanism substitutes for the others.
@@ -986,15 +878,17 @@ Document the current public statuses:
 - `approval_ready`
 - `funding_required`
 - `funding_detecting`
+- `processing`
 - `need_review`
 - `recipient_correction_required`
 - `completed`
 - `cancelled`
+- `expired`
+- `funding_timeout`
 - `failed`
 
-State transitions should be shown as a simple flow diagram. The public status
-model does not currently emit `expired`; an expired or rejected approval may
-appear as `failed`.
+State transitions should be shown as a simple flow diagram. `get_payment`
+remains authoritative for the aggregate state.
 
 ### 11.6 Request IDs
 
@@ -1020,7 +914,7 @@ Required workflow:
 4. Show source amount, destination amount, fees, wallet, route, and expiry.
 5. Obtain required confirmation.
 6. Create the durable payment.
-7. Complete World ID if required by the active threshold policy.
+7. Complete World ID if the payment returns `approval_required`.
 8. Continue the payment.
 9. Show the exact order-specific bank account, QR, or other fiat instruction.
 10. The payer completes the fiat payment.
@@ -1063,17 +957,20 @@ Present this as a specialized on-ramp guide:
 
 Required workflow:
 
-1. Resolve or create the fiat recipient.
-2. Ask only for fields required by the live rail schema.
-3. Estimate a crypto-to-fiat or two-hop route.
+1. Estimate a crypto-to-fiat or two-hop route without a recipient.
+2. Read the estimate's `recipient_requirements` and let the user choose one
+   supported payment instrument.
+3. Resolve or create the fiat recipient using only that instrument's required
+   fields.
 4. Show the full payment summary.
-5. Confirm and create the payment.
-6. Complete World ID if required.
+5. Confirm and create the payment from the unexpired estimate.
+6. Complete World ID only when the returned status requires it.
 7. Continue to the current crypto instruction.
-8. Check wallet balance.
-9. Execute only through `execute_payment_instruction` using the current
-   instruction and stable request ID.
-10. Poll the unified payment until terminal.
+8. On local stdio, check wallet balance and use
+   `execute_payment_instruction` with the current instruction and stable request
+   ID. On hosted OAuth, use manual card funding or a separately confirmed
+   compatible spending grant for a crypto deposit.
+9. Poll the unified payment until terminal.
 
 Do not report success based only on a transaction hash.
 
@@ -1092,7 +989,6 @@ The guide must emphasize the two-hop funding invariant:
 ### 12.6 Crypto swap
 
 - Use `estimate_payment` for crypto-to-crypto swaps.
-- Do not use `get_ramp_quote`.
 - The swap must be on a supported chain and route.
 - Show the source ceiling for exact-destination payments.
 - AgentBank Core checks and, if needed, submits an exact token approval.
@@ -1157,9 +1053,10 @@ Use this deterministic route guide:
 
 #### `confirmation-rules.mdx`
 
-Distinguish platform standing authorization, payment-summary confirmation,
-World ID payment authorization, wallet transaction confirmation, and browser
-fiat funding. Reproduce exact deployed confirmation flags in the tool table.
+Distinguish the platform threshold, explicit payment-summary confirmation,
+World ID payment authorization, wallet transaction confirmation, hosted
+spending-grant funding choice, and browser fiat funding. Reproduce exact
+deployed confirmation fields in the tool table.
 
 #### `recipient-rules.mdx`
 
@@ -1200,11 +1097,12 @@ Document the confirmed public behavior:
 - the owner configures the automatic transaction threshold at
   `https://app.agentbank.world`;
 - the threshold is not changed through an MCP tool;
-- payments below the threshold may execute automatically within the connected
-  agent's granted permissions;
-- payments above the threshold require World ID payment authorization;
+- the threshold contributes to the active payment-approval policy;
+- the agent still obtains explicit confirmation of the complete payment
+  summary before creation;
+- Core's returned status determines whether World ID authorization is required;
 - server validation, recipient validation, route locking, scopes, balance
-  checks, and idempotency still apply below the threshold;
+  checks, and idempotency always apply;
 - recipient correction, recipient update, agent revocation, and cancellation
   still require explicit user intent where the tool contract requires it.
 
@@ -1212,7 +1110,7 @@ The page should let an owner understand how to:
 
 - view the current threshold;
 - set a new threshold;
-- understand what the agent may do below the threshold;
+- understand how the threshold affects payment approval;
 - understand what still always requires confirmation;
 - lower or disable autonomous payment authority;
 - revoke the agent installation immediately.
@@ -1223,9 +1121,9 @@ default, allowed range, or currency-conversion formula.
 ### 13.2 MCP and skill alignment
 
 Reference pages must reproduce the exact deployed confirmation flags. Agent
-guides must explain that an agent may assert or continue an action only when
-the platform's standing authorization or a current user confirmation permits
-it. Do not preserve the old fixed USD 10 rule as public product behavior.
+guides must explain that an agent may assert a confirmation field only for the
+corresponding current user confirmation. Do not preserve a fixed USD 10 rule as
+public product behavior.
 
 The skill and MCP server must use the same policy language and enforcement.
 Documentation alone must never create or imply authorization.
@@ -1237,8 +1135,10 @@ Documentation alone must never create or imply authorization.
 The MCP overview must explain:
 
 - local stdio is the intended personal-agent transport;
+- hosted OAuth is the remote connection surface with embedded cards and
+  spending grants;
 - the npm package is `agent-bank-mcp`;
-- the binary exposes exactly 33 public tools;
+- available tools vary by connection surface and granted scopes;
 - tools, prompts, and resources are different MCP capabilities;
 - high-level payment tools replace legacy intent, route-agreement, approval,
   settlement, partner, and raw-swap mutations;
@@ -1246,15 +1146,10 @@ The MCP overview must explain:
 
 ### 14.2 Tool grouping
 
-Document every tool in one of these groups:
-
-| Group | Tools |
-| --- | --- |
-| Setup and identity | `begin_agent_onboarding`, `wait_for_agent_onboarding`, `get_installation_status`, `revoke_agent`, `whoami`, `check_verification_status`, `do_kyc`, `get_verification_guidance`, `check_my_scopes` |
-| Currency and quotes | `list_currencies`, `list_quote_book_pairs`, `browse_quote_book`, `get_ramp_quote` |
-| Payments | `get_instructions`, `get_account_status`, `estimate_payment`, `create_payment`, `continue_payment`, `get_payment`, `list_payments`, `cancel_payment`, `correct_payment_recipient` |
-| Recipients | `list_recipients`, `get_recipient`, `create_recipient`, `update_recipient` |
-| Wallet and EVM | `list_wallets`, `verify_agent_kit`, `get_wallet_balances`, `get_token_allowance`, `approve_token`, `execute_payment_instruction`, `get_transaction_receipt` |
+Group public tool pages by setup and identity, discovery, payments, payment
+plans, x402, hosted OAuth, recipients, and wallet operations. Treat `docs.json`
+and the live MCP surface as the discoverable inventory; do not duplicate a
+fixed count here.
 
 ### 14.3 Required fields for every tool page
 
@@ -1299,7 +1194,7 @@ Cover:
 - client restart or MCP reload;
 - wrong `APP_BASE_URL` environment;
 - unavailable tools after installation;
-- profile conflicts through `HFX_MCP_PROFILE`;
+- profile conflicts through `AGENTBANK_MCP_PROFILE`;
 - how to probe OpenClaw and verify the tool list in other clients.
 
 ### 15.2 Authorization problems
@@ -1432,7 +1327,7 @@ numbered setup sequence in the sidebar:
 
 1. MCP overview and configuration
 2. Resources and prompt
-3. Tool overview and all 33 tool pages
+3. Tool overview and public tool pages for both MCP surfaces
 4. Scopes, statuses, errors, idempotency, and limitations
 5. Troubleshooting, FAQ, contact, and changelog
 6. Mintlify build, link validation, and source-alignment report
@@ -1443,10 +1338,10 @@ numbered setup sequence in the sidebar:
 
 - Test every setup example in staging.
 - Test production configuration without initiating a real payment.
-- Verify the 33-tool list against the deployed package.
+- Verify local and hosted tool navigation against the deployed surfaces.
 - Verify all prompt, resource, template, and field names.
-- Verify `agentbank_claimed` and the AgentBank resource identifiers are
-  returned by the deployed MCP.
+- Verify the AgentBank resource identifiers and onboarding readiness fields
+  against the deployed MCP.
 - Verify the platform-configured threshold and MCP authorization behavior agree.
 - Verify a supported staging on-ramp automatically completes and credits mock
   tokens.
@@ -1496,13 +1391,13 @@ alignments rather than changing the documented product model:
 
 1. The deployed MCP and skill expose `agentbank_routing_guide`,
    `agentbank://guides/routing`,
-   `agentbank://instructions/{journey}`, and `agentbank_claimed`, or the exact
-   reference pages include a temporary legacy-compatibility note.
+   `agentbank://instructions/{journey}` and the current onboarding readiness
+   fields.
 2. The AgentBank platform at `https://app.agentbank.world` is the user-facing
    threshold configuration surface.
-3. The deployed threshold enforcement and confirmation flags support automatic
-   below-threshold execution and World ID authorization above the threshold,
-   with the exact boundary behavior matching the platform UI.
+3. The deployed threshold enforcement and confirmation flags agree with the
+   platform UI, and public guidance follows `approval_ready` or
+   `approval_required` rather than inferring a fixed boundary.
 4. A supported staging on-ramp automatically succeeds, credits mock tokens,
    and leaves the wallet ready for other supported staging intents.
 5. `theagentbank/skills` is publicly available before publishing the documented
