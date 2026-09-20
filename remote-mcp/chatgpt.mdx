@@ -1,0 +1,69 @@
+---
+title: "Connect ChatGPT"
+sidebarTitle: "ChatGPT"
+description: "Connect ChatGPT to AgentBank Remote MCP and authorize your account with OAuth."
+---
+
+Use AgentBank in ChatGPT through a custom MCP connection. This setup uses
+ChatGPT's developer mode; access depends on your account and workspace policy.
+
+## Add AgentBank
+
+<Steps>
+  <Step title="Enable developer mode">
+    In ChatGPT, open **Settings → Security and login** and turn on
+    **Developer mode**. If the option is unavailable, check your workspace's
+    policy or ask its administrator about custom MCP access.
+  </Step>
+  <Step title="Create the connection">
+    Open [ChatGPT Plugins](https://chatgpt.com/plugins) and select the plus
+    button. Enter **AgentBank** as the name and a description such as
+    “Collect payments, exchange currencies, and send money with AgentBank.”
+
+    Under **Connection**, enter the public MCP server URL:
+
+    ```text
+    https://plugin.agentbank.world/mcp
+    ```
+
+    Create the connection and review the tools ChatGPT discovers.
+  </Step>
+  <Step title="Sign in to AgentBank">
+    Complete the OAuth sign-in and authorization flow when prompted. Use the
+    AgentBank account you want ChatGPT to access and review the requested
+    permissions. Authorization happens in the browser.
+  </Step>
+  <Step title="Enable AgentBank in a conversation">
+    Start a new conversation and add the AgentBank connection from the tools
+    menu. Ask:
+
+    ```text
+    Check my AgentBank account, permissions, and wallet readiness. Do not create a payment.
+    ```
+
+    The assistant checks `whoami`, `check_my_scopes`, and `list_wallets`.
+    Confirm that the connected account is the one you intended to use.
+  </Step>
+</Steps>
+
+## Use AgentBank
+
+Describe the payment or collection you want. ChatGPT can show quotes, payment
+and plan approvals, funding instructions, progress, and spending-grant cards.
+Review the payment details before confirming, then follow the current card's
+action. See [Remote MCP](/getting-started/hosted-oauth) for example requests
+and the approval and funding flow.
+
+## Troubleshooting
+
+- **Connection fails:** check that the URL is exactly
+  `https://plugin.agentbank.world/mcp`, including `/mcp`.
+- **AgentBank is not available in chat:** enable the connection from the tools
+  menu in that conversation and complete OAuth if requested.
+- **Tools changed:** open the connection in ChatGPT Plugins, select **Refresh**,
+  and start a new conversation.
+- **An approval or funding card is missing:** ask the assistant to reopen the
+  existing payment's card. See [Hosted payment cards](/payments/hosted-payment-cards).
+
+For the current ChatGPT interface and account requirements, see OpenAI's
+[Connect and test your plugin](https://developers.openai.com/plugins/deploy/connect-chatgpt).

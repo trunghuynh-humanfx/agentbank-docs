@@ -1,11 +1,49 @@
 ---
-title: "Hosted OAuth"
-description: "Use AgentBank through an OAuth-connected agent with embedded payment cards."
+title: "Remote MCP"
+sidebarTitle: "Overview"
+description: "Use AgentBank in ChatGPT and Claude with OAuth sign-in and interactive payment cards."
 ---
 
-A hosted OAuth connection identifies the signed-in AgentBank user without a
-local installation credential. Connect AgentBank from the OAuth-capable host,
-complete the AgentBank authorization screen, and then begin with these checks:
+Connect AgentBank to ChatGPT or Claude to collect payments, exchange currencies,
+send money through supported routes, and track payments from your conversation.
+Describe what you want in plain language; the assistant selects the tools and
+asks you to confirm payment details before creating a payment.
+
+Remote MCP connects over HTTP and uses OAuth to identify your AgentBank account.
+Each connection is scoped to the person who signs in. It uses the same AgentBank
+account data, recipients, payment records, verification state, and payment rails
+as the local MCP, within the permissions granted to that connection.
+
+## Connect your account
+
+Use this Remote MCP server URL:
+
+```text
+https://plugin.agentbank.world/mcp
+```
+
+<CardGroup cols={2}>
+  <Card title="ChatGPT" href="/remote-mcp/chatgpt">
+    Add AgentBank as a custom MCP connection and sign in.
+  </Card>
+  <Card title="Claude" href="/remote-mcp/claude">
+    Add AgentBank as a custom connector and sign in.
+  </Card>
+</CardGroup>
+
+You do not need to run the local MCP package, configure a local credential
+profile, or use local agent onboarding for a Remote MCP connection. Follow the
+client guide to authorize AgentBank in your browser.
+
+## Verify the connection
+
+After signing in, ask:
+
+```text
+Check which AgentBank account is connected, what you can access, and whether my wallet is ready. Do not create a payment.
+```
+
+The assistant checks:
 
 <Steps>
   <Step title="Verify the identity">
@@ -18,16 +56,65 @@ complete the AgentBank authorization screen, and then begin with these checks:
     Call `list_wallets`. If the owner wallet is absent, finish the
     AgentBank/Privy wallet setup before attempting a wallet-funded payment.
   </Step>
-  <Step title="Use hosted payment cards">
-    Approval, funding, grant activation, and progress are displayed in
-    dedicated cards. Do not repeat card links in chat unless the user asks or
-    reports that a card is unavailable.
-  </Step>
 </Steps>
 
-Hosted OAuth does not expose `begin_agent_onboarding`, `relogin`,
-`revoke_agent`, or local wallet execution. Revoke a hosted connection from
-the connection settings in AgentBank.
+## What you can do
+
+| Task | What to expect |
+| --- | --- |
+| Preview a payment or exchange | A quote showing the amounts, fees, route, recipient outcome, and expiry before you confirm. An estimate does not reserve a rate or move money. |
+| Send or collect money | A payment approval when required, then the current bank, QR, or crypto funding instruction. |
+| Review several payments | A payment plan with every recipient, amount, fee, and total, followed by one combined World ID approval when required. |
+| Track a payment | A progress card after funds move, with the final outcome checked against AgentBank's payment record. |
+| Authorize limited crypto funding | An optional spending grant with limits you review and activate separately. |
+
+Supported clients can render embedded AgentBank cards for these steps. Complete
+World ID approval, wallet signing, and grant activation through the card or its
+first-party action page. Never paste wallet secrets, OAuth tokens, or World ID
+proofs into chat. If a card is unavailable, ask the assistant to reopen it or
+provide the available action link.
+
+## Try a request
+
+```text
+Show me the supported ways to collect a customer payment into my AgentBank wallet.
+```
+
+```text
+Estimate sending 100 USDC to my saved bank recipient. Show the recipient amount, fees, route, and expiry before I confirm.
+```
+
+```text
+Help me prepare a payment plan for my saved recipients. Review every payment and the totals with me before submission.
+```
+
+The assistant checks live routes and your account's readiness before proceeding.
+Availability depends on the currency, amount, destination, and verification state.
+
+## Approval and funding
+
+Review the source amount, destination amount, fees, route, recipient, and expiry
+before confirming a payment. For a plan, review and confirm all payments together.
+
+Opening a funding instruction with `continue_payment` does not move money.
+Complete the fiat instruction yourself, or explicitly authorize an eligible
+crypto funding action. An active spending grant still requires a separate choice
+to fund the current instruction; it cannot fund fiat instructions or swaps.
+
+The assistant uses `get_payment` as the source of truth. A transfer receipt,
+transaction hash, or card display alone does not prove completion: the payment
+must report `completed`.
+
+## Disconnect
+
+Revoke the hosted connection from AgentBank connection settings. You can also
+remove the plugin or connector from your AI client's settings. Remote MCP does
+not expose the local `begin_agent_onboarding`, `relogin`, `revoke_agent`, or
+local wallet-execution tools.
+
+For a device-based setup, see [Connection types](/getting-started/connection-types).
+To use AgentBank's own chat without an external AI client, open
+[app.agentbank.world](https://app.agentbank.world).
 
 <CardGroup cols={2}>
   <Card title="Hosted payment cards" href="/payments/hosted-payment-cards" />

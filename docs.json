@@ -39,10 +39,17 @@
               "getting-started/environment",
               "getting-started/connection-types",
               "getting-started/connect-your-agent",
-              "getting-started/hosted-oauth",
               "getting-started/authentication",
               "getting-started/install-the-skill",
               "getting-started/first-payment"
+            ]
+          },
+          {
+            "group": "Remote MCP",
+            "pages": [
+              "getting-started/hosted-oauth",
+              "remote-mcp/chatgpt",
+              "remote-mcp/claude"
             ]
           },
           {

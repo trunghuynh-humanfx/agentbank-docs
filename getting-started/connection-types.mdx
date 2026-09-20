@@ -7,9 +7,9 @@ AgentBank supports two MCP connection surfaces. Both use AgentBank Core for
 routes, approvals, payment instructions, and durable payment state, but their
 setup and wallet-execution experience differ.
 
-| | Local stdio MCP | Hosted OAuth MCP |
+| | Local stdio MCP | Remote HTTP MCP (hosted OAuth) |
 | --- | --- | --- |
-| Best for | Codex, Claude Code, Claude Desktop, OpenClaw, and Hermes on your device | An OAuth-capable hosted agent experience |
+| Best for | Codex, Claude Code, Claude Desktop, OpenClaw, and Hermes on your device | ChatGPT, Claude web, Claude Desktop remote connectors, and other OAuth-capable hosted clients |
 | Identity | One installation and local credential profile | The signed-in user's OAuth connection |
 | Setup signal | `begin_agent_onboarding` is available | `request_spending_grant` is available and local onboarding tools are absent |
 | Wallet action | `execute_payment_instruction` executes the current Core instruction | Embedded cards, owner signing, or an activated spending grant |
@@ -19,8 +19,8 @@ setup and wallet-execution experience differ.
   <Card title="Connect a local agent" href="/getting-started/connect-your-agent">
     Install the stdio MCP and authorize one local installation.
   </Card>
-  <Card title="Use hosted OAuth" href="/getting-started/hosted-oauth">
-    Verify the OAuth identity, wallet, scopes, and embedded-card workflow.
+  <Card title="Connect ChatGPT or Claude" href="/getting-started/hosted-oauth">
+    Use Remote MCP with OAuth sign-in and interactive payment cards.
   </Card>
 </CardGroup>
 

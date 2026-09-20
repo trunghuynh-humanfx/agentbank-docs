@@ -1,0 +1,82 @@
+---
+title: "Connect Claude"
+sidebarTitle: "Claude"
+description: "Add AgentBank as a Claude custom connector and authorize your account with OAuth."
+---
+
+Connect AgentBank to Claude using a remote custom connector. Claude connects
+through its cloud infrastructure; you do not need to run the local AgentBank
+MCP package on your computer.
+
+Claude supports custom remote connectors on Free, Pro, Max, Team, and Enterprise
+plans. Free accounts are limited to one custom connector. The individual setup
+steps below follow Claude's published Pro and Max instructions; Free users can
+check the [current connector guide](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp)
+for setup details available to their account.
+
+## Add AgentBank
+
+<Steps>
+  <Step title="Open connectors">
+    For an individual Pro or Max account, open **Customize → Connectors**,
+    select **+**, then **Add custom connector**.
+
+    For a Team or Enterprise workspace, an Owner first adds the connector in
+    **Organization settings → Connectors → Add → Custom → Web**. Members then
+    find AgentBank in **Customize → Connectors** and connect individually.
+  </Step>
+  <Step title="Enter the Remote MCP URL">
+    If your workspace Owner has already added AgentBank, skip this step and
+    proceed to **Connect your AgentBank account** below.
+
+    Name the connector **AgentBank** and enter:
+
+    ```text
+    https://plugin.agentbank.world/mcp
+    ```
+
+    Select **Add** to save the connector.
+  </Step>
+  <Step title="Connect your AgentBank account">
+    Select **Connect** and complete AgentBank's OAuth sign-in in the browser.
+    Choose the account you want Claude to access and review its permissions.
+    Each person authorizes their own AgentBank connection.
+  </Step>
+  <Step title="Enable AgentBank in a conversation">
+    Open a conversation, select **+ → Connectors**, and enable AgentBank.
+    Ask:
+
+    ```text
+    Check my AgentBank account, permissions, and wallet readiness. Do not create a payment.
+    ```
+
+    The assistant checks `whoami`, `check_my_scopes`, and `list_wallets`.
+    Confirm that the connected account is the one you intended to use.
+  </Step>
+</Steps>
+
+## Use AgentBank
+
+Ask Claude to preview a payment, prepare a payment plan, collect money, or
+track a payment. Supported clients can display AgentBank's interactive cards
+for review, approval, funding, and progress. See
+[Remote MCP](/getting-started/hosted-oauth) for example requests and the
+approval and funding flow.
+
+Claude Desktop also supports account-based remote connectors. This is separate
+from its local MCP configuration; follow [Connect your agent](/getting-started/connect-your-agent)
+if you want the local stdio setup instead.
+
+## Troubleshooting
+
+- **Cannot add a custom connector:** check your plan and workspace permissions.
+  Team and Enterprise Owners add connectors before members can connect.
+- **Connection fails:** verify the complete URL, including `/mcp`, and retry
+  the browser sign-in.
+- **AgentBank is not available in chat:** enable it under **+ → Connectors**
+  for that conversation.
+- **A card is missing:** ask Claude to reopen the existing payment's card or
+  provide the available action link.
+
+For current availability and interface details, see Claude's
+[custom connector guide](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp).
