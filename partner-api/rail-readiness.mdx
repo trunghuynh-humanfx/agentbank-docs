@@ -9,29 +9,9 @@ reconciles their result asynchronously.
 
 ## Readiness response
 
-`GET /v1/partner/end-users/:endUserId` includes:
-
-```json
-{
-  "end_user_id": "peu_...",
-  "status": "partially_available",
-  "kyc_version": "1",
-  "rail_readiness": [
-    {
-      "fiat_currency": "BRL",
-      "state": "available",
-      "reason_code": null,
-      "expires_at": null
-    },
-    {
-      "fiat_currency": "PHP",
-      "state": "pending",
-      "reason_code": null,
-      "expires_at": null
-    }
-  ]
-}
-```
+[Get end user](./reference/partner/get-end-user) returns `rail_readiness`
+entries with `fiat_currency`, `state`, `reason_code`, and `expires_at`.
+Use each currency's state to decide whether to offer the payment:
 
 | Rail state    | Meaning                                                  | Merchant action                                                 |
 | ------------- | -------------------------------------------------------- | --------------------------------------------------------------- |

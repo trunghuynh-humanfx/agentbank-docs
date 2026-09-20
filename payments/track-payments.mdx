@@ -1,26 +1,45 @@
 ---
-title: "Track payments"
-description: "Resume durable payments safely and report the authoritative state."
+title: "Payment status and tracking"
+description: "Understand your payment's progress, what needs action, and when it is complete."
 ---
 
-Use `get_payment` for one known payment and `list_payments` to find earlier
-payments visible to the current local installation or hosted OAuth connection.
+> “Has my payment to Linh arrived?”
 
-## Tracking rules
+Tell your assistant the payment reference if you have it, or describe the
+recipient, amount, and approximate date. It can find payments available to
+your connection. If several match, choose the correct one before proceeding.
 
-- Honor `next_action.poll_after_seconds` when returned.
-- Show the user the current status and required action.
-- Reuse the existing browser action while it remains current.
-- Do not create a replacement payment because funding or authorization is
-  pending.
-- A completed wallet transaction is not final completion.
-- For two-step routes, one completed step is not the completed payment.
+## From quote to completion
 
-Current payment statuses include `approval_required`, `approval_ready`,
-`funding_required`, `funding_detecting`, `processing`, `need_review`,
-`recipient_correction_required`, `completed`, `cancelled`, and `failed`.
+1. **Quote:** you review the amounts, fees, recipient, route, and expiry. No payment has been created and no money has moved.
+2. **Confirmation and approval:** you confirm the payment and complete World ID approval if required.
+3. **Funding:** you follow the bank instructions or separately authorize the wallet action. Opening an instruction or approving with World ID does not send money.
+4. **Processing:** AgentBank detects the funds and follows the payment through to its destination.
+5. **Result:** AgentBank reports completion or explains why the payment ended without completing.
 
-Terminal states also include `expired` and `funding_timeout`. On hosted OAuth,
-`get_payment` remains card-free: reopen a missed pre-funding instruction with
-`get_payment_instruction`, and display `show_payment_progress` only after funds
-move.
+## What the status means for you
+
+| What your assistant reports | What to do |
+| --- | --- |
+| Approval needed | Complete the current approval request. |
+| Ready to fund | Open the current instructions and follow them once. |
+| Detecting funds or processing | Keep tracking the existing payment; do not send again. |
+| Under review | Follow any requested action or wait for the review result. |
+| Recipient correction needed | Review and confirm the requested correction. |
+| Completed | AgentBank reports that the full payment completed. |
+| Cancelled, expired, timed out, or failed | Check the reason and whether funds moved before attempting a new payment. |
+
+Your assistant should explain the current status and any action you need to
+take. In ChatGPT or Claude, ask it to reopen a missing funding card before
+payment, or show progress after funds move.
+
+<Warning>
+A bank transfer confirmation, crypto transaction receipt, or one completed
+conversion is not proof that the full payment finished. Rely on AgentBank's
+reported payment result. Never create a replacement just because approval or
+funding detection is still pending.
+</Warning>
+
+Need help? See [Recover a payment](/payments/recover-failures) or
+[Cancel or correct a payment](/payments/cancel-or-correct).
+Builders: see the [status reference](/reference/statuses).

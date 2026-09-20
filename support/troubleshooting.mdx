@@ -1,61 +1,49 @@
 ---
 title: "Troubleshooting"
-description: "Resolve AgentBank connection, authorization, recipient, payment, and recovery issues."
+description: "Find the next step for connection, verification, and payment problems."
 ---
 
 <AccordionGroup>
-  <Accordion title="AgentBank tools are not visible">
-    Confirm Node.js and `npx` are available, validate the client configuration,
-    restart or reload the client. When using staging, verify `APP_BASE_URL`.
-    OpenClaw users can
-    run `openclaw mcp doctor agentbank --probe`.
+  <Accordion title="My assistant cannot find AgentBank">
+    In ChatGPT or Claude, check that AgentBank is connected and enabled in the
+    current conversation. For a local agent, check its configuration and
+    restart or reload the client. Follow your
+    [connection guide](/getting-started/quickstart).
   </Accordion>
-  <Accordion title="whoami returns MISSING_CREDENTIAL">
-    Call `begin_agent_onboarding` once, open the returned browser authorization
-    URL, and poll with the same enrollment ID.
+  <Accordion title="Sign-in or authorization is still pending">
+    Finish the AgentBank browser flow, then return to the same conversation.
+    Ask the agent to check the existing connection before starting setup again.
+    Never paste sign-in tokens into chat.
   </Accordion>
-  <Accordion title="Browser authorization is still pending">
-    Keep the same enrollment ID. Do not start a second onboarding flow.
+  <Accordion title="Identity verification is not ready">
+    Complete the requested browser checks and wait for the result.
+    A submitted identity check may still need review for the selected currency.
+    See [Identity verification](/autonomy/kyc).
   </Accordion>
-  <Accordion title="The local session expired">
-    Call `relogin` once and retry the original operation. Do not create a new
-    onboarding flow for `UNAUTHENTICATED` caused by session expiry.
+  <Accordion title="The recipient details are incomplete">
+    Provide the missing details requested by the agent and review the recipient
+    before confirming. For a screenshot containing only text, paste the bank
+    details as text; QR images must contain a readable QR code.
   </Accordion>
-  <Accordion title="The local credential vault cannot open">
-    Preserve the installation and follow the remediation returned for the
-    operating-system protector, vault file, or profile mismatch. Do not replace
-    the installation to work around a vault error.
+  <Accordion title="The quote changed or expired">
+    Ask for an updated quote and review the new amounts and fees before
+    confirming. If a payment already exists, ask the agent to check it first.
   </Accordion>
-  <Accordion title="KYC or the market is not ready">
-    Complete the hosted KYC flow and recheck readiness. For `rail_not_ready`, no
-    payment was created and no funds moved.
+  <Accordion title="I paid, but the payment is still pending">
+    Ask the agent to track the existing payment. Do not pay again just because
+    payment detection or delivery is pending. See
+    [Payment status and tracking](/payments/track-payments).
   </Accordion>
-  <Accordion title="The quote or authorization expired">
-    Obtain a new estimate and create a new payment after any required user
-    confirmation. In-place authorization refresh is not exposed.
+  <Accordion title="I cannot see the approval or funding card">
+    Ask the assistant to reopen the card for the existing payment or provide
+    the available action link. See [Payment cards](/payments/hosted-payment-cards).
   </Accordion>
-  <Accordion title="Creation returned QUOTE_EXPIRED or PRICE_MISMATCH">
-    Obtain one fresh estimate, show the changed terms, and get confirmation
-    again before creation. Do not silently substitute a different quote.
-  </Accordion>
-  <Accordion title="Recipient fields are missing">
-    Ask only for the fields listed by `create_recipient`. Use a new request ID
-    after changing the payload.
-  </Accordion>
-  <Accordion title="A transaction submitted but payment is incomplete">
-    Read `get_payment`. The on-chain receipt is not final aggregate completion.
-  </Accordion>
-  <Accordion title="Execution result is ambiguous">
-    On local stdio, retry `execute_payment_instruction` with the same request
-    ID. Do not submit a replacement transaction. Hosted swaps return to the
-    first-party signing action and then read `get_payment`.
-  </Accordion>
-  <Accordion title="Funds moved and the payment failed">
-    Do not improvise a recovery transfer. Contact support with the payment ID,
-    status, request ID, and transaction hash when available.
-  </Accordion>
-  <Accordion title="A hosted funding card is missing">
-    Call `get_payment_instruction` for the existing payment. Do not create a
-    duplicate payment or use `get_payment` to try to reopen the card.
+  <Accordion title="The payment failed or its approval expired">
+    Ask the agent to check whether funds moved and what recovery is available
+    before creating another payment. See [Recover a payment](/payments/recover-failures).
+    If you already paid, contact support before sending more money.
   </Accordion>
 </AccordionGroup>
+
+For local credential errors and tool-level recovery, see
+[MCP troubleshooting](/reference/troubleshooting).

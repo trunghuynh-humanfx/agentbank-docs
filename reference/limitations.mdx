@@ -15,7 +15,9 @@ description: "Understand the explicit non-capabilities of the current AgentBank 
 - Legacy low-level settlement workflows are outside the production surface.
 - A pending AgentKit verification session may need to be recreated after MCP
   restart.
-- Shareable single-payment links are coming soon.
+- Remote MCP can return a shareable action link with `get_payment_link` when
+  one is available for that payment. Do not assume every route or connection
+  offers one; use the returned bank or QR instructions when applicable.
 - The agent can track whether a collection was paid, not who paid it.
 - Spending grants apply only to hosted crypto-deposit funding; they cannot
   authorize fiat funding or swaps.

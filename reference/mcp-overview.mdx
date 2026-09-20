@@ -1,31 +1,43 @@
 ---
 title: "MCP overview"
-description: "Understand the AgentBank production MCP transport, package, tools, resources, and authority boundaries."
+description: "Find AgentBank tool contracts, connection boundaries, and agent integration guidance."
 ---
 
-- npm package: `agent-bank-mcp`
-- binary: `agent-bank-mcp`
-- local personal-agent transport: `stdio`
-- hosted connection: OAuth-authenticated remote MCP
+AgentBank MCP exposes payment tools, account state, and workflow guidance.
+The [AgentBank Pay skill](https://agentbank.world/SKILL.md) supplies operating
+instructions for agents. AgentBank Core enforces permissions, payment policy,
+instructions, and final status.
 
-The available tool surface depends on the connection:
+## Connection surfaces
 
-| Local stdio | Hosted OAuth |
-| --- | --- |
-| Local onboarding, session refresh, revocation, and current-instruction execution | OAuth identity, embedded payment cards, owner signing, and spending grants |
-| Credentials persist under a stable local profile | Identity and history are scoped to the OAuth connection |
+| | Local stdio | Remote HTTP |
+| --- | --- | --- |
+| Setup | [Local MCP package](/getting-started/connect-your-agent) | [ChatGPT or Claude OAuth connection](/getting-started/hosted-oauth) |
+| Identity | Per-installation credential and stable local profile | Signed-in user's OAuth connection |
+| Onboarding | Local enrollment tools | Client-managed browser authorization |
+| Crypto funding | Execute the current payment instruction after confirmation | Owner action or a separately chosen compatible spending grant |
+| Disconnect | Confirm and call `revoke_agent` | Revoke in AgentBank connection settings |
 
-Both surfaces expose high-level discovery, payment, plan, x402, recipient,
-wallet-read, tracking, and recovery capabilities. Use `check_my_scopes` and the
-client's live tool list instead of relying on a fixed tool count.
+Available tools depend on the connection and granted scopes. Inspect the live
+tool list and `check_my_scopes`; do not rely on a fixed tool count or attempt
+local onboarding on a remote connection.
 
-Legacy low-level intent, route-agreement, approval, settlement, partner, and
-raw-swap mutations are not part of the external contract.
+## Find the right reference
 
-AgentBank Core remains authoritative for scopes, route locking, payment
-instructions, transaction verification, idempotency, and durable payment state.
+<CardGroup cols={2}>
+  <Card title="Tool reference" href="/reference/tools/overview">
+    Inputs, authorization, confirmation, and retry behavior.
+  </Card>
+  <Card title="Configuration" href="/reference/configuration">
+    Local profiles, endpoints, and credential storage.
+  </Card>
+  <Card title="Agent instructions" href="/ai-guides/instructions-for-your-agent">
+    Setup, payment, routing, and recovery guidance.
+  </Card>
+  <Card title="Troubleshooting" href="/reference/troubleshooting">
+    Resolve connection and execution errors.
+  </Card>
+</CardGroup>
 
-<Note>
-MCP prompts and resources provide runtime guidance. They are separate from
-callable tools.
-</Note>
+MCP prompts and resources are guidance interfaces, separate from callable
+tools. See [Resources and prompt](/reference/resources).

@@ -1,45 +1,48 @@
 ---
 title: "Payment plans"
-description: "Group multiple independent payments under one review and one World ID approval."
+description: "Review several payments together, then fund and track each separately."
 ---
 
-Use a payment plan when one user wants to authorize several independently
-settled payments together. A plan does not combine recipients, balances, or
-funding instructions; every item remains a normal payment.
+Use a payment plan when you want to review and confirm several payments
+together, such as paying several recipients.
+
+> “Help me pay these three recipients as one plan. I have their bank details and the amounts each should receive.”
+
+## What to provide
+
+For each payment, give the recipient, destination currency, and either the
+amount you want to spend or the amount they should receive. Include the asset
+or currency you want to pay from and the network when relevant. Your assistant
+checks availability and asks for missing details for each item.
 
 <Steps>
-  <Step title="Create a draft plan">
-    Call `create_payment_plan` with a stable request ID and concise description.
+  <Step title="Review the complete plan">
+    Check every recipient, source and destination amount, fee and fee currency,
+    conversion route, expiry, and warning. Review the totals as well as each
+    individual payment. Make any changes before confirming.
   </Step>
-  <Step title="Estimate every item">
-    Create one recipient-free estimate per payment. Reuse each unexpired
-    result while its economic inputs are unchanged.
+  <Step title="Confirm once for the whole plan">
+    Explicitly confirm the complete reviewed list. Your assistant submits the
+    plan, which can no longer be edited. Complete one combined World ID
+    approval if it is required.
   </Step>
-  <Step title="Resolve every recipient">
-    For each fiat destination, choose one instrument from its estimate's
-    `recipient_requirements`, then select or create the final recipient.
+  <Step title="Fund each payment">
+    Follow each payment's own funding instructions. The plan does not combine
+    balances, recipients, or funding into one transfer. Crypto funding still
+    requires the appropriate explicit authorization or your wallet signature.
   </Step>
-  <Step title="Review the complete batch">
-    Show every recipient, source and destination amount, fee, route, expiry,
-    and material warning. Obtain one explicit confirmation for the complete
-    plan.
-  </Step>
-  <Step title="Add plan-bound payments">
-    Call `create_payment` once per item using the shared `plan_id`, a unique
-    `plan_position`, and a unique request ID. Do not set standalone
-    `confirmed_by_user` on a plan-bound item.
-  </Step>
-  <Step title="Review and submit">
-    Call `review_payment_plan`, verify all intended items and positions, then
-    call `submit_payment_plan` with `confirmed_by_user=true`.
-  </Step>
-  <Step title="Approve and continue each payment">
-    Complete the single plan approval when required. Then track and continue
-    every ready child payment independently.
+  <Step title="Track the individual results">
+    Ask your assistant which payments completed and which still need action.
+    Each settles independently; one completed payment does not mean the whole
+    plan succeeded.
   </Step>
 </Steps>
 
-Submission permanently seals the plan. Do not add, remove, or modify an item
-after submission. Cancel the plan before funds move if the user abandons it.
-A child payment can be continued concurrently, sequentially, or later, but
-its provider and wallet constraints still apply.
+## If you change your mind
+
+Ask your assistant whether the plan can be cancelled before funds move.
+Cancellation cannot reverse payments that have already been funded. If some
+payments are pending or have failed, check each one's status before creating
+replacements.
+
+Builders: see the [plan reference](/reference/tools/create-payment-plan).

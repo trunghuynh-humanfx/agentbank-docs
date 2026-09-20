@@ -14,6 +14,7 @@ Returns `agent_installation_id`, `owner_subject_id`, granted scopes, mode,
 actor type, and the linked account owner's live badges. The badges belong to
 the owner, not the agent.
 
-Call this first when beginning AgentBank work. If it returns
+Call this first when beginning AgentBank work. On local stdio, if it returns
 `MISSING_CREDENTIAL`, start browser authorization with
-`begin_agent_onboarding`.
+`begin_agent_onboarding`. Remote MCP uses the client's OAuth sign-in flow;
+do not run local onboarding on a remote connection.

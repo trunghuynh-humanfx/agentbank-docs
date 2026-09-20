@@ -1,34 +1,50 @@
 ---
 title: "Recover a payment"
-description: "Resume interrupted payments without duplicate funding or duplicate wallet execution."
+description: "Find the next safe step for an interrupted, expired, or failed payment."
 ---
 
+> “My payment seems stuck. I already sent the money—can you check what happened?”
+
+Tell your assistant which payment you mean, what you were doing when the
+problem happened, and whether you sent money or signed a wallet action. A
+payment reference or approximate date, amount, and recipient can help it find
+the right record.
+
 <Steps>
-  <Step title="Read durable state">
-    Call `get_payment` and inspect the current status, active instruction, and
-    next action.
+  <Step title="Check the existing payment">
+    Your assistant checks AgentBank's current status, the reason for the
+    problem, whether funds moved, and the next available action. It should
+    not start a replacement just because a screen closed or a response was lost.
   </Step>
   <Step title="Resume the current action">
-    Reuse the existing browser action, authorization, funding instruction, or
-    execution request when still valid.
-  </Step>
-  <Step title="Retry idempotently">
-    Reuse the same request ID only for the identical logical request and
-    payload. Changed details require a new ID.
+    Reopen the existing approval or funding instructions if they are still
+    valid. If a bank transfer or wallet action is unresolved, keep checking
+    it instead of sending again.
   </Step>
   <Step title="Correct or cancel when supported">
-    Obtain explicit user intent before either action.
+    If AgentBank requests corrected recipient details, review and confirm
+    them. If you want to stop, ask whether cancellation is still possible and
+    confirm before proceeding.
   </Step>
-  <Step title="Escalate after funds moved">
-    If automated recovery is unavailable, report `funds_moved`, payment ID,
-    status, and failure details to support.
+  <Step title="Get help when recovery is unavailable">
+    If funds moved and your assistant cannot resolve the problem, contact
+    support with the payment reference, current status, failure details, and
+    whether you already paid. Never send wallet secrets or login credentials.
   </Step>
 </Steps>
 
-Never rotate the request ID after an ambiguous on-chain submission. Never
-rebroadcast an unresolved aged submission with a replacement idempotency key.
+## Expired or timed-out payments
 
-For `expired` or `funding_timeout`, read `funds_moved` and the returned failure
-details before creating anything new. If funds did not move, obtain a fresh
-estimate and confirmation. If funds moved, continue tracking or escalate; do
-not duplicate funding.
+An expiry or timeout does not by itself prove that no money moved. Have your
+assistant check before trying again. If no funds moved and a new payment is
+needed, review a fresh quote and confirm its terms. If funds did move, continue
+tracking or contact support instead of funding a replacement.
+
+<Warning>
+Do not repeat a bank transfer, wallet action, or payment simply because its
+result is unclear. A second attempt could send money twice.
+</Warning>
+
+See [Contact support](/support/contact) and
+[Cancel or correct a payment](/payments/cancel-or-correct).
+Builders: see the [retry safety reference](/reference/idempotency).

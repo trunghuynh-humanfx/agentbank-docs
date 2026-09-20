@@ -8,9 +8,17 @@ Mintlify documentation for AgentBank.
 npx mintlify dev
 ```
 
-The documentation covers the AgentBank MCP, the `agentbank-pay` skill, local
-and hosted OAuth connections, payment journeys, autonomy controls, security,
-and the Partner API for merchant integrations.
+The site has three audience-specific tabs:
+
+- **AgentBank:** connection guides and user actions for payments, approvals,
+  and account security.
+- **MCP reference:** tool contracts, configuration, agent instructions, and
+  technical troubleshooting.
+- **Partner API:** merchant integration guides and endpoint references.
+
+`docs.json` owns current navigation and redirects. Keep user guides focused on
+what a person asks, reviews, and completes. Put execution details and schemas
+in the corresponding technical reference, and link to them from guides.
 
 ## Environments
 

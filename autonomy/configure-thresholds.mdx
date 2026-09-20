@@ -1,22 +1,33 @@
 ---
-title: "Configure the automatic transaction threshold"
-description: "Configure the amount threshold that contributes to AgentBank's payment-approval policy."
+title: "Set your approval threshold"
+description: "Choose when your connected agent should require additional World ID approval."
 ---
 
-Open [app.agentbank.world](https://app.agentbank.world) to view or change the
-automatic transaction threshold for your connected agent.
+Open [app.agentbank.world](https://app.agentbank.world) to view or change your
+connected agent's payment-approval threshold.
 
-- The threshold contributes to the active payment-approval policy.
-- `approval_ready` means the current payment can continue without another
-  World ID action.
-- `approval_required` means the current payment needs payment-specific World ID
-  authorization.
-- Changing the threshold does not bypass account readiness, scopes, recipient
-  validation, balance checks, route locking, or idempotency.
-- You can lower the threshold or revoke the connected agent from the platform.
+The threshold helps determine which payments can proceed without an additional
+World ID action. AgentBank may still require approval based on the current
+payment and account policy. Follow the approval request shown for that payment.
 
-<Note>
-The platform is the configuration surface. AgentBank MCP does not expose a tool
-for changing the threshold. Do not infer the result from a fixed amount;
-follow the payment status returned by Core.
-</Note>
+## Change it through a local agent
+
+Local MCP connections also let you ask the agent to read or change its threshold:
+
+```text
+Show me this agent's current payment-approval threshold.
+```
+
+```text
+I want to change this agent's payment-approval threshold. Show me the proposed change before applying it.
+```
+
+Confirm the new threshold before the agent updates it. These policy tools are
+specific to local MCP connections; do not assume they are available in
+ChatGPT or Claude's remote connection.
+
+Changing the threshold does not replace payment review, verification, or a
+separate wallet-funding confirmation. See [World ID approval](/autonomy/world-id-approval)
+and [Spending grants](/autonomy/spending-grants).
+
+For tool details, see [Local approval policy](/reference/approval-policy).

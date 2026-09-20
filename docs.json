@@ -21,27 +21,19 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["index"]
-          },
-          {
-            "group": "Overview",
             "pages": [
-              "introduction/overview",
-              "introduction/why-agentbank",
-              "introduction/architecture",
-              "introduction/core-concepts"
+              "index"
             ]
           },
           {
             "group": "Getting started",
             "pages": [
               "getting-started/quickstart",
-              "getting-started/environment",
-              "getting-started/connection-types",
               "getting-started/connect-your-agent",
-              "getting-started/authentication",
               "getting-started/install-the-skill",
-              "getting-started/first-payment"
+              "getting-started/first-payment",
+              "getting-started/environment",
+              "ai-guides/conversation-patterns"
             ]
           },
           {
@@ -57,8 +49,7 @@
             "pages": [
               "money-in/overview",
               "money-in/add-money",
-              "money-in/collect-from-a-payer",
-              "money-in/receive-fiat-as-crypto"
+              "money-in/collect-from-a-payer"
             ]
           },
           {
@@ -66,7 +57,6 @@
             "pages": [
               "money-out/overview",
               "money-out/bank-payout",
-              "money-out/crypto-to-fiat",
               "money-out/manage-recipients"
             ]
           },
@@ -83,10 +73,8 @@
             "group": "Payments",
             "pages": [
               "payments/overview",
-              "payments/payment-lifecycle",
               "payments/hosted-payment-cards",
               "payments/payment-plans",
-              "payments/x402-payments",
               "payments/track-payments",
               "payments/cancel-or-correct",
               "payments/recover-failures"
@@ -104,23 +92,48 @@
             ]
           },
           {
-            "group": "AI guides",
+            "group": "Security",
             "pages": [
-              "ai-guides/instructions-for-your-agent",
-              "ai-guides/payment-decision-guide",
-              "ai-guides/confirmation-rules",
-              "ai-guides/recipient-rules",
-              "ai-guides/routing-strategy",
-              "ai-guides/conversation-patterns",
-              "ai-guides/safety-and-recovery"
+              "security/security-model",
+              "security/account-revocation"
             ]
           },
           {
-            "group": "MCP reference",
+            "group": "Support",
+            "pages": [
+              "support/troubleshooting",
+              "support/faq",
+              "support/contact",
+              "changelog"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "MCP reference",
+        "icon": "terminal",
+        "groups": [
+          {
+            "group": "Overview",
             "pages": [
               "reference/mcp-overview",
+              "introduction/core-concepts",
+              "introduction/architecture"
+            ]
+          },
+          {
+            "group": "Setup and configuration",
+            "pages": [
               "reference/configuration",
+              "getting-started/authentication",
               "reference/resources",
+              "reference/scopes",
+              "reference/approval-policy"
+            ]
+          },
+          {
+            "group": "Tool reference",
+            "pages": [
               "reference/tools/overview",
               {
                 "group": "Setup and identity tools",
@@ -213,29 +226,34 @@
                   "reference/tools/execute-payment-instruction",
                   "reference/tools/get-transaction-receipt"
                 ]
-              },
-              "reference/scopes",
+              }
+            ]
+          },
+          {
+            "group": "Agent guides",
+            "pages": [
+              "ai-guides/instructions-for-your-agent",
+              "ai-guides/payment-decision-guide",
+              "ai-guides/confirmation-rules",
+              "ai-guides/recipient-rules",
+              "ai-guides/routing-strategy",
+              "ai-guides/safety-and-recovery"
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
+              "payments/x402-payments",
               "reference/statuses",
-              "reference/errors",
               "reference/idempotency",
               "reference/limitations"
             ]
           },
           {
-            "group": "Security",
+            "group": "Troubleshooting",
             "pages": [
-              "security/security-model",
-              "security/account-revocation",
-              "security/responsible-agent-use"
-            ]
-          },
-          {
-            "group": "Support",
-            "pages": [
-              "support/troubleshooting",
-              "support/faq",
-              "support/contact",
-              "changelog"
+              "reference/troubleshooting",
+              "reference/errors"
             ]
           }
         ]
@@ -246,7 +264,9 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["partner-api/index"]
+            "pages": [
+              "partner-api/index"
+            ]
           },
           {
             "group": "Getting started",
@@ -260,7 +280,6 @@
           {
             "group": "Integration guides",
             "pages": [
-              "partner-api/workflows/integration",
               "partner-api/end-user-kyc",
               "partner-api/rail-readiness",
               "partner-api/payments",
@@ -333,5 +352,39 @@
       "label": "Open AgentBank",
       "href": "https://app.agentbank.world"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/introduction/overview",
+      "destination": "/"
+    },
+    {
+      "source": "/introduction/why-agentbank",
+      "destination": "/"
+    },
+    {
+      "source": "/getting-started/connection-types",
+      "destination": "/getting-started/quickstart"
+    },
+    {
+      "source": "/money-in/receive-fiat-as-crypto",
+      "destination": "/money-in/add-money"
+    },
+    {
+      "source": "/money-out/crypto-to-fiat",
+      "destination": "/money-out/bank-payout"
+    },
+    {
+      "source": "/payments/payment-lifecycle",
+      "destination": "/payments/track-payments"
+    },
+    {
+      "source": "/security/responsible-agent-use",
+      "destination": "/security/security-model"
+    },
+    {
+      "source": "/partner-api/workflows/integration",
+      "destination": "/partner-api/quickstart"
+    }
+  ]
 }

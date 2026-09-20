@@ -1,46 +1,42 @@
 ---
 title: "Quickstart"
-description: "Choose a connection, authorize AgentBank, install the skill when needed, and verify readiness."
+description: "Choose how you want to use AgentBank, connect your account, and make your first request."
 ---
 
-Using ChatGPT or Claude's remote connectors? Follow the
-[Remote MCP setup](/getting-started/hosted-oauth) to connect with OAuth.
+## Choose how to use AgentBank
 
-<Steps>
-  <Step title="Choose an environment">
-    Use [staging](/getting-started/environment#staging) for mock tokens or
-    [production](/getting-started/environment#production) for live routes.
-  </Step>
-  <Step title="Choose a connection type">
-    Use [local stdio](/getting-started/connect-your-agent) for an agent running
-    on your device, or [hosted OAuth](/getting-started/hosted-oauth) in a
-    supported OAuth-capable host.
-  </Step>
-  <Step title="Install the AgentBank Pay skill">
-    Install from `theagentbank/skills` or load the canonical skill URL.
-  </Step>
-  <Step title="Check readiness">
-    Ask your agent:
+| Use AgentBank with | What to set up |
+| --- | --- |
+| [AgentBank's own chat](https://app.agentbank.world) | Sign in and start chatting. No external agent or installation needed. |
+| [ChatGPT](/remote-mcp/chatgpt) | Add the Remote MCP connection and sign in to AgentBank. |
+| [Claude](/remote-mcp/claude) | Add the remote connector and sign in to AgentBank. |
+| [Your own agent](/getting-started/connect-your-agent) | Connect the local MCP and install the AgentBank skill for Codex, Claude Code, Claude Desktop, OpenClaw, or Hermes. |
 
-    ```text
-    Check my AgentBank connection, account readiness, and wallet. Do not create a payment.
-    ```
-  </Step>
-  <Step title="Complete authorization">
-    A local installation with missing credentials returns **Connect to your
-    AgentBank Account**. A hosted connection uses its OAuth authorization flow.
-  </Step>
-  <Step title="Verify the account">
-    Your agent calls `whoami`, checks scopes, and reads `list_wallets`. Local
-    installations also check account and installation readiness.
-  </Step>
-</Steps>
+Claude Desktop supports both a remote connector and a local MCP setup.
+Choose the remote connector for the browser-based sign-in flow; use the local
+setup when you want an installation managed on your device.
 
-<CardGroup cols={2}>
-  <Card title="Fund staging" href="/getting-started/environment#staging">
-    Run a supported on-ramp that automatically credits mock tokens.
-  </Card>
-  <Card title="Prepare production" href="/getting-started/environment#production">
-    Review live-value safeguards before creating a payment.
-  </Card>
-</CardGroup>
+## Make your first request
+
+Once connected, ask:
+
+```text
+Check my AgentBank account and wallet. Tell me if I need to finish any setup before making a payment.
+```
+
+Confirm that the connected account is yours. If verification or wallet setup
+is needed, follow the browser instructions provided by AgentBank.
+
+Then ask for an estimate, for example:
+
+```text
+I'd like to send money to a bank account. Help me check the available options and fees before I confirm.
+```
+
+Follow [Your first payment](/getting-started/first-payment) for the review,
+approval, and funding steps, or browse [Example prompts](/ai-guides/conversation-patterns).
+
+## Try it with mock tokens
+
+Use [Environment](/getting-started/environment) to try staging before moving
+real money. The standard local installation defaults to production.

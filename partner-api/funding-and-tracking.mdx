@@ -21,6 +21,8 @@ user or execute it from your merchant-controlled funding wallet.
 | `crypto_deposit` | Send only the stated asset/amount on the stated chain to the exact address; honor memo and calldata when supplied |
 
 Never change the amount, token, chain, address, memo, reference, or expiry.
+Preserve the full `pay_to` object, including token contract and token decimals
+when supplied alongside crypto memo or calldata.
 For a two-hop fiat-to-fiat payment, fund only the first visible instruction.
 The intermediate crypto delivery is internal to AgentBank.
 

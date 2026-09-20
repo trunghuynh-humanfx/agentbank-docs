@@ -1,158 +1,129 @@
 ---
 title: "Quickstart"
-description: "From merchant registration to a completed payment."
+description: "The end-to-end path from merchant provisioning to a completed payment."
 ---
 
-This path uses placeholder values. Do not put production KYC, private keys, or
-webhook secrets into examples, tickets, or logs.
+Use this sequence to integrate the Partner API. Endpoint links provide the
+request and response examples; the steps below explain when to call them.
+Keep KYC bytes, private keys, QR payloads, and webhook secrets out of prompts,
+client logs, and telemetry.
 
-## Select an environment
+## 1. Provision the merchant and authenticate
 
-```bash
-# Sandbox: development and integration testing
-export AGENTBANK_BASE_URL="https://staging-protocol.agentbank.world"
+Choose the [Sandbox base URL](./environments) and use that environment
+consistently for all credentials and resources. Complete [Onboarding](./onboarding):
+generate an Ed25519 key pair in your backend, share only its public PEM with
+AgentBank, and securely store the returned merchant ID and portal credentials.
 
-# Production: live traffic only
-# export AGENTBANK_BASE_URL="https://protocol.agentbank.world"
-```
+Implement [request signing](./authentication) before calling `/v1/partner/*`.
+Sign the exact bytes you send and use a fresh nonce for every request, including
+signed reads. Keep the private key in your server-side secret manager.
 
-Use one environment consistently for the merchant ID, Ed25519 key, portal
-credentials, webhook endpoints, end users, and payments. These resources are
-not shared between Sandbox and Production.
+## 2. Register a webhook
 
-## 1. Complete merchant onboarding
+[Log in to the portal](./reference/portal/login), then use its `access_token` to
+[register a public HTTPS endpoint](./reference/portal/create-webhook). Store the
+returned `signing_secret` immediately: it is shown only once.
 
-Generate an Ed25519 key pair in your backend. Give the **public** PEM to
-AgentBank through the approved onboarding channel. AgentBank provides:
+Implement [delivery verification and deduplication](./portal-and-webhooks)
+before creating KYC records or payments. Portal JWTs manage webhooks and read
+payment history; they do not authorize Partner API writes.
 
-* `merchant_partner_id`, for example `mp_...`; send this as
-  `x-agentbank-partner-id`
-* a portal username and password through a secure out-of-band channel
+## 3. Discover available assets and recipient forms
 
-Keep the corresponding private PEM in your server-side secret manager. See
-[Onboarding](./onboarding) for the exact admin contract.
+Before rendering a payment form, read the public discovery APIs:
 
-## 2. Log in and register a webhook
+1. [List currencies](./reference/discovery/currencies) for active symbols and decimals.
+2. [List fiat payment capabilities](./reference/discovery/fiat-payment-capabilities)
+   for live directions and final fiat-recipient instruments. Only `off_ramp`
+   entries carry those recipient fields; an on-ramp ends at a crypto address.
+3. [Get payment instrument schemas](./reference/discovery/payment-instrument-schemas)
+   for QR, direct bank-transfer, and mobile-money fields.
+4. [List supported bank names](./reference/discovery/supported-bank-names)
+   when the customer selects direct bank transfer.
 
-```bash
-curl -sS -X POST "$AGENTBANK_BASE_URL/v1/merchant/auth/login" \
-  -H 'Content-Type: application/json' \
-  -d '{"username":"example_merchant","password":"replace-with-secret"}'
-```
+Discovery is form metadata, not proof of an end user's readiness or a guarantee
+that a quote will remain available.
 
-Use the returned `access_token` to register a public HTTPS callback:
+## 4. Create or refresh the end user
 
-```bash
-curl -sS -X POST "$AGENTBANK_BASE_URL/v1/merchant/webhooks" \
-  -H "Authorization: Bearer $PORTAL_JWT" \
-  -H 'Content-Type: application/json' \
-  -d '{"url":"https://merchant.example/webhooks/agentbank"}'
-```
+Call [Create end user](./reference/partner/create-end-user) with a complete
+`partner_end_user_kyc_v1` record and inline artifacts. Follow the required
+fields and artifact rules in [End-user KYC](./end-user-kyc). Do not send an
+end-user ID, merchant KYC reference, or provider user ID.
 
-The response includes `signing_secret` exactly once. Store it immediately and
-verify every delivery before accepting it. See [Portal and webhooks](./portal-and-webhooks).
+Persist the returned `end_user_id`. For a correction, read the end user and
+[update KYC](./reference/partner/update-end-user-kyc) with the latest
+`base_kyc_version`. Do not create a second end user merely because a request
+timed out; follow [KYC retry guidance](./errors-and-idempotency#kyc-retries-and-versions).
 
-## 3. Create a verified end user
+## 5. Wait for the required fiat rails
 
-Send a **signed** `POST /v1/partner/end-users` with a complete
-`partner_end_user_kyc_v1` object. This abbreviated example omits real artifact
-bytes:
+Poll [Get end user](./reference/partner/get-end-user) or process
+`end_user.rail_readiness.updated`. Continue only when the fiat currencies
+required by the payment have `rail_readiness[].state: "available"`.
 
-```json
-{
-  "kyc": {
-    "schema_version": "partner_end_user_kyc_v1",
-    "attestation": {
-      "collected_at": "2026-08-14T08:00:00Z",
-      "verified_at": "2026-08-14T08:05:00Z"
-    },
-    "person": {
-      "first_name": "Example",
-      "last_name": "Person",
-      "date_of_birth": "1990-01-02",
-      "gender": "female",
-      "nationality": "VN",
-      "country_of_residence": "VN",
-      "occupation": "employed"
-    },
-    "contact": {"email":"example@example.test","phone_e164":"+84912345678"},
-    "residential_address": {"line1":"1 Example Street"},
-    "identity_document": {
-      "type":"national_id", "number":"TEST-DOCUMENT-ONLY",
-      "issuing_country":"VN", "issued_on":"2021-01-01", "expires_on":"2031-01-01"
-    },
-    "artifacts": {
-      "document_front": {"content_type":"image/jpeg","sha256":"<sha256>","data_base64":"<base64>"},
-      "document_back_not_applicable": true,
-      "selfie_with_document": {"content_type":"image/jpeg","sha256":"<sha256>","data_base64":"<base64>"},
-      "kyc_report_pdf": {"content_type":"application/pdf","sha256":"<sha256>","data_base64":"<base64>"}
-    }
-  }
-}
-```
+KYC acceptance alone is insufficient: provider forwarding is asynchronous, and
+an end user can be ready for one currency but not another. See
+[Rail readiness](./rail-readiness) for pending, unavailable, and expired states.
 
-AgentBank returns its generated `end_user_id`, a KYC version, and initially
-empty or pending rail readiness. Do not send an end-user ID or a merchant KYC
-reference in this request.
+## 6. Preflight the final fiat recipient
 
-## 4. Wait for rail readiness
+Skip this step for an on-ramp whose final recipient is a crypto address.
 
-Poll the signed end-user read endpoint or process the readiness webhook:
+* For a QR payout, call [Parse QR recipient](./reference/partner/parse-qr-recipient)
+  with `qr_content`. Do not send `rail` or `end_user_id`. Supply `country` only
+  as an independent constraint; a mismatch with the detected country is rejected.
+* For a direct bank payout, call [Verify bank recipient](./reference/partner/verify-bank-recipient)
+  with `end_user_id`, `country`, and the required bank details. Do not send `rail`.
 
-```text
-GET /v1/partner/end-users/peu_...
-```
+Use the returned canonical `recipient_fields` unchanged, including resolved
+recipient details. Preflight does not store a recipient, reserve liquidity, or
+move funds. QR parsing does not replace the end-user readiness check.
 
-Only create a payment when the required fiat rail is `available`. Provider
-forwarding is asynchronous, so a newly accepted KYC record can be
-`provider_processing` before it becomes `verified` or `partially_available`.
+## 7. Estimate immediately before checkout
 
-## 5. Preflight a final fiat recipient
+Call [Estimate payment](./reference/partner/estimate-payment) with the same
+end user and economic direction. The endpoint supports `on_ramp` and `off_ramp`
+estimates and filters out rails that are not ready for that end user.
 
-For a fiat destination, resolve the final payout recipient before creating the
-payment. This does not store the recipient or reserve liquidity:
+An estimate is non-binding: it neither reserves liquidity nor authorizes
+settlement. See [Payments](./payments) for the supported payment shapes.
 
-* QR recipient: `POST /v1/partner/recipients/parse-qr`
-* Direct bank recipient: `POST /v1/partner/recipients/verify-bank`
+## 8. Create one payment when the customer commits
 
-Both are signed requests. QR parsing takes `qr_content` only: it does not use
-`end_user_id` or a client-selected rail, because Core determines the QR country
-and derives the route. Direct bank verification does use `end_user_id`, country,
-and bank details, but likewise has no rail parameter. Preserve the returned
-`recipient_fields` and use them unchanged in the eventual payment. For an
-on-ramp to a crypto address, this step is not needed.
+Call [Create payment](./reference/partner/create-payment) with the end user,
+source and destination assets, amount mode, and final `recipient_fields`.
+For fiat-to-fiat, supply only the final fiat recipient, never a crypto bridge
+address or a recipient for an internal hop.
 
-## 6. Create a payment
+Use one durable `merchant_payment_reference` per commercial order. If a request
+times out, reuse the identical body and reference with a fresh signature and
+nonce; changing the body under the same reference causes an idempotency
+conflict. See [Errors and idempotency](./errors-and-idempotency).
 
-Create requests are semantic: state what the user pays, receives, amount mode,
-and final recipient. Do not create intents, route agreements, or hop records.
+Do not request identical source and destination assets or create parallel
+active payments for one end user. Complete, cancel, or wait for the existing
+payment to become terminal before starting another.
 
-```json
-{
-  "request_id": "checkout-1042",
-  "end_user_id": "peu_...",
-  "merchant_payment_reference": "invoice-1042",
-  "source": {"asset":{"type":"fiat","symbol":"PHP"},"amount":"2000"},
-  "destination": {"asset":{"type":"crypto","ticker":"USDC","chain":"worldchain"}},
-  "amount_mode": "exact_source",
-  "routing_preference": "balanced",
-  "recipient_fields": {"address":"0x0123456789abcdef0123456789abcdef01234567"}
-}
-```
+## 9. Fund only as instructed
 
-For an off-ramp, `recipient_fields` is the final fiat payout instrument. For a
-fiat-to-fiat payment, it is still only the final payout recipient. AgentBank
-derives the internal first-hop recipient.
+Read `next_action` and `payment_instruction` from the response. When instructed
+to fund, display or execute exactly the issued asset, amount, account/address,
+chain, memo, reference, QR, calldata, and expiry. Do not reconstruct an
+instruction from a quote or substitute a familiar account.
 
-## 7. Fund and track
+When `next_action.type` is `wait`, do not ask the payer to pay again. For
+fiat-to-fiat, fund only the first visible instruction; AgentBank handles the
+intermediate transfer. See [Funding and tracking](./funding-and-tracking).
 
-The create response can contain `payment_instruction` for either a fiat payment
-or a crypto deposit. Present and execute only the server-generated instruction,
-including its amount, asset, destination, memo, calldata, and expiry.
+## 10. Track to a terminal outcome
 
-Poll `GET /v1/partner/payments/:paymentId` or use its portal-JWT equivalent.
-Webhooks carry lifecycle and timeline updates; duplicate delivery is expected,
-so deduplicate by delivery ID.
+Consume verified webhooks, deduplicate by `x-agentbank-delivery-id`, and use
+[Get payment](./reference/partner/get-payment) for recovery. Render `timeline`
+as observed history grouped by `hop_index`; use `next_action` for what the
+customer should do now, not a prior timeline item or an inferred future event.
 
-Continue with the numbered [integration workflow](./workflows/integration),
-[Payments](./payments), and [Funding and tracking](./funding-and-tracking).
+Close the order only when `terminal` is `true`. A completed payment with
+`successful: true` is a successful finish. A terminal failure with
+`funds_moved: true` needs support or recovery, not automatic recreation.

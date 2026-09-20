@@ -1,0 +1,21 @@
+---
+title: "Local approval policy"
+description: "Read and update a local agent's World ID approval threshold."
+---
+
+These tools are available on the local stdio MCP connection:
+
+| Tool | Purpose | Confirmation |
+| --- | --- | --- |
+| `get_payment_approval_policy` | Read this agent's World ID approval threshold. | Read-only. |
+| `update_payment_approval_policy` | Change this agent's threshold. | Obtain explicit confirmation of the proposed change first. |
+
+Use the tool schema exposed by the connected server for exact input fields.
+The threshold contributes to the current approval policy; it does not replace
+payment review, account readiness, or a separate funding authorization.
+Follow the payment's returned approval status.
+
+These tools are not part of the Remote MCP surface. Users can also manage
+their threshold on [the AgentBank platform](https://app.agentbank.world).
+See [Set your approval threshold](/autonomy/configure-thresholds) for the
+user-facing instructions.

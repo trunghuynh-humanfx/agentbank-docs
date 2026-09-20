@@ -1,88 +1,50 @@
 ---
 title: "Environment"
-description: "Choose AgentBank staging for mock-token workflows or production for live payment routes."
+description: "Try AgentBank with mock tokens in staging or use real funds in production."
 ---
 
-AgentBank has separate staging and production app environments. The published
-MCP package defaults to production. Override `APP_BASE_URL` only when using the
-supported staging experience.
-
-| Environment | `APP_BASE_URL` | Funds |
+| Environment | App | Funds |
 | --- | --- | --- |
-| Staging | `https://staging.agentbank.world` | Mock tokens with no real-world monetary value |
-| Production | `https://app.agentbank.world` | Real value through supported routes; MCP default |
+| Staging | [staging.agentbank.world](https://staging.agentbank.world) | Mock tokens with no real-world monetary value |
+| Production | [app.agentbank.world](https://app.agentbank.world) | Real value through supported payment routes |
 
 ## Staging
 
-Use staging to fund an AgentBank wallet with mock tokens and try supported
-payment intents without moving real value.
-
-### Connect staging
-
-```bash
-codex mcp add agentbank \
-  --env PROTOCOL_BASE_URL=https://protocol.agentbank.world \
-  --env APP_BASE_URL=https://staging.agentbank.world \
-  -- npx -y agent-bank-mcp@latest
-```
-
-Other clients use the same environment values. See
-[Connect your agent](/getting-started/connect-your-agent).
-
-### Get mock tokens
-
-Ask your agent:
+Use staging to practice adding money, sending payments, and exchanging supported
+assets. Ask your agent:
 
 ```text
-Find a supported AgentBank staging on-ramp, create it for my AgentBank wallet, and track it until the mock tokens arrive.
+Help me add mock tokens to my AgentBank staging wallet, then show me the balance.
 ```
 
-<Steps>
-  <Step title="Discover a supported on-ramp">
-    The agent checks currencies, live pairs, account readiness, and the bound
-    wallet.
-  </Step>
-  <Step title="Estimate and create the payment">
-    The agent uses the normal payment workflow and applies the staging account's
-    authorization policy.
-  </Step>
-  <Step title="Staging completes the on-ramp">
-    No payer, bank transfer, QR payment, or faucet is required. The supported
-    staging on-ramp automatically succeeds.
-  </Step>
-  <Step title="Verify the mock balance">
-    The agent polls `get_payment`, then reads the wallet balance.
-  </Step>
-</Steps>
+Your agent finds a supported fiat-to-crypto route and presents it for review.
+Once created, the supported staging on-ramp completes automatically.
+No real bank transfer, QR payment, or faucet is required.
 
-You can now start another on-ramp or use any other intent currently supported
-by the staging environment.
+After the mock tokens arrive, you can try other supported staging payments.
+
+<Accordion title="Connect a local MCP client to staging">
+  For Codex, use:
+
+  ```bash
+  codex mcp add agentbank \
+    --env PROTOCOL_BASE_URL=https://protocol.agentbank.world \
+    --env APP_BASE_URL=https://staging.agentbank.world \
+    -- npx -y agent-bank-mcp@latest
+  ```
+
+  Other local clients use the same environment values. See
+  [Connect your agent](/getting-started/connect-your-agent).
+  These settings apply to the local MCP package.
+</Accordion>
 
 ## Production
 
-Production can move real value through supported routes. Review the complete
-payment details and required safeguards before creating a live payment.
+The standard [local MCP installation](/getting-started/connect-your-agent)
+defaults to production. Production payments use real funds and may become
+irreversible after funding.
 
-### Connect production
-
-```bash
-codex mcp add agentbank -- npx -y agent-bank-mcp@latest
-```
-
-<Warning>
-Production payments may become irreversible. Confirm the environment, full
-recipient, source and destination assets, amount mode, fees, route, and expiry.
-</Warning>
-
-### Before the first live payment
-
-1. Complete browser authorization.
-2. Confirm the connected account and wallet.
-3. Configure your automatic transaction threshold at
-   [app.agentbank.world](https://app.agentbank.world).
-4. Complete KYC when a selected fiat market requires it.
-5. Ask the agent to estimate and show the complete route before creation.
-
-The threshold is one input to AgentBank's active authorization policy. Follow
-the payment status returned by Core rather than inferring approval from the
-amount alone.
+Before your first payment, confirm your account and wallet, review your
+[approval threshold](/autonomy/configure-thresholds), and complete any required
+identity checks. Review the recipient, amounts, fees, and expiry before
+confirming. Follow [Your first payment](/getting-started/first-payment).

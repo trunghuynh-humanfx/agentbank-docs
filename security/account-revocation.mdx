@@ -1,20 +1,31 @@
 ---
-title: "Revoke a connected agent"
-description: "Disconnect a lost, compromised, or no-longer-needed AgentBank agent installation."
+title: "Disconnect an agent"
+description: "Remove access for a lost, compromised, or no-longer-needed agent."
 ---
 
-Use `revoke_agent` when a local stdio device or connected agent is compromised,
-lost, or no longer authorized.
+Disconnect an agent when you no longer want it to use your AgentBank account.
 
-Before calling it, explain that revocation:
+## ChatGPT and Claude remote connections
 
-- invalidates the installation credential;
-- invalidates its sessions and wallet authorization;
-- clears local AgentBank credentials for that profile;
-- prevents further use by that connected agent.
+Revoke the connection from AgentBank connection settings. You can also remove
+the plugin or connector from the AI client's settings.
 
-The tool requires `confirm=true` after explicit user confirmation. After
-revocation, reconnect through a new browser authorization flow if needed.
+## Local agents
 
-For hosted OAuth, revoke the connection from AgentBank connection settings. Do
-not call the local revocation tool.
+Ask the connected agent:
+
+```text
+Disconnect this agent from AgentBank. Explain the effect and ask me to confirm before revoking access.
+```
+
+After confirmation, revocation invalidates that installation's access and wallet
+authorization and clears its locally stored AgentBank credentials. Reconnecting
+requires a new browser authorization.
+
+If the device is lost or the agent is unavailable, use
+[app.agentbank.world](https://app.agentbank.world) to manage access or
+[contact support](/support/contact).
+
+Revocation stops that agent's access; it is not a cancellation or refund for a
+payment already funded. Check [Payment status and tracking](/payments/track-payments)
+for any payment in progress.

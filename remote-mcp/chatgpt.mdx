@@ -1,69 +1,57 @@
 ---
 title: "Connect ChatGPT"
 sidebarTitle: "ChatGPT"
-description: "Connect ChatGPT to AgentBank Remote MCP and authorize your account with OAuth."
+description: "Add AgentBank to ChatGPT and sign in to your account."
 ---
 
-Use AgentBank in ChatGPT through a custom MCP connection. This setup uses
-ChatGPT's developer mode; access depends on your account and workspace policy.
-
-## Add AgentBank
+This setup uses ChatGPT's custom MCP connection. Developer mode availability
+depends on your account and workspace policy.
 
 <Steps>
   <Step title="Enable developer mode">
-    In ChatGPT, open **Settings → Security and login** and turn on
-    **Developer mode**. If the option is unavailable, check your workspace's
-    policy or ask its administrator about custom MCP access.
+    Open **Settings → Security and login** in ChatGPT and turn on
+    **Developer mode**.
   </Step>
-  <Step title="Create the connection">
-    Open [ChatGPT Plugins](https://chatgpt.com/plugins) and select the plus
-    button. Enter **AgentBank** as the name and a description such as
+  <Step title="Add AgentBank">
+    Open [ChatGPT Plugins](https://chatgpt.com/plugins), select the plus button,
+    and enter **AgentBank** as the name. Add a short description such as
     “Collect payments, exchange currencies, and send money with AgentBank.”
 
-    Under **Connection**, enter the public MCP server URL:
+    Under **Connection**, enter:
 
     ```text
     https://plugin.agentbank.world/mcp
     ```
 
-    Create the connection and review the tools ChatGPT discovers.
+    Create the connection and review the available tools.
   </Step>
-  <Step title="Sign in to AgentBank">
-    Complete the OAuth sign-in and authorization flow when prompted. Use the
-    AgentBank account you want ChatGPT to access and review the requested
-    permissions. Authorization happens in the browser.
+  <Step title="Sign in">
+    Complete AgentBank's browser sign-in when prompted. Choose your account
+    and review the requested permissions.
   </Step>
-  <Step title="Enable AgentBank in a conversation">
-    Start a new conversation and add the AgentBank connection from the tools
-    menu. Ask:
+  <Step title="Start a conversation">
+    Start a new chat and add AgentBank from the tools menu. Ask:
 
     ```text
-    Check my AgentBank account, permissions, and wallet readiness. Do not create a payment.
+    Check my AgentBank account and wallet. Tell me if any setup is still needed.
     ```
 
-    The assistant checks `whoami`, `check_my_scopes`, and `list_wallets`.
-    Confirm that the connected account is the one you intended to use.
+    Confirm that the connected account is yours.
   </Step>
 </Steps>
 
-## Use AgentBank
+Continue with [Your first payment](/getting-started/first-payment) or
+[Example prompts](/ai-guides/conversation-patterns).
 
-Describe the payment or collection you want. ChatGPT can show quotes, payment
-and plan approvals, funding instructions, progress, and spending-grant cards.
-Review the payment details before confirming, then follow the current card's
-action. See [Remote MCP](/getting-started/hosted-oauth) for example requests
-and the approval and funding flow.
+<Accordion title="Connection troubleshooting">
+  If developer mode is unavailable, check your account or workspace policy.
+  Verify the full server URL, including `/mcp`, and ensure AgentBank is
+  enabled in the current conversation.
 
-## Troubleshooting
+  If the available tools have changed, open the connection in ChatGPT Plugins,
+  select **Refresh**, and start a new conversation. For a missing payment card,
+  ask the assistant to reopen it.
+</Accordion>
 
-- **Connection fails:** check that the URL is exactly
-  `https://plugin.agentbank.world/mcp`, including `/mcp`.
-- **AgentBank is not available in chat:** enable the connection from the tools
-  menu in that conversation and complete OAuth if requested.
-- **Tools changed:** open the connection in ChatGPT Plugins, select **Refresh**,
-  and start a new conversation.
-- **An approval or funding card is missing:** ask the assistant to reopen the
-  existing payment's card. See [Hosted payment cards](/payments/hosted-payment-cards).
-
-For the current ChatGPT interface and account requirements, see OpenAI's
-[Connect and test your plugin](https://developers.openai.com/plugins/deploy/connect-chatgpt).
+See OpenAI's [connection guide](https://developers.openai.com/plugins/deploy/connect-chatgpt)
+for the current interface and access requirements.

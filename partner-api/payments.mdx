@@ -1,199 +1,88 @@
 ---
 title: "Payments"
-description: "Estimate, create, read, list, and cancel merchant payments without exposing primitive routing layers."
+description: "Choose a payment shape, estimate at checkout, and create one merchant order."
 ---
 
-The Partner API is semantic. You tell AgentBank what your end user pays, what
-they receive, the amount mode, and the final recipient. AgentBank creates the
-intent, selects and locks the route, opens settlement, and derives any internal
-two-hop recipient.
+The Partner API is semantic: specify what the end user pays and receives,
+the amount mode, and the final recipient. AgentBank owns routing and any
+intermediate transfers. Follow the [Quickstart](./quickstart) for the full
+integration sequence.
 
-Do not send an intent ID, quote ID, route agreement ID, hop list, callback URL,
-registered-recipient ID, or a recipient for an internal hop.
+Do not send intent IDs, quote IDs, route agreement IDs, hop lists, callback
+URLs, registered-recipient IDs, or recipients for internal hops.
 
-## Preflight the final fiat recipient
+## Choose the payment shape
 
-Before creating a fiat-destination payment, use the signed recipient preview
-that matches the selected instrument:
+| Shape | Final recipient |
+| ----- | --------------- |
+| On-ramp: fiat to crypto | A crypto address on the destination chain |
+| Off-ramp: crypto to fiat | A supported fiat payout instrument, such as a QR or bank account |
+| Fiat-to-fiat: `on_ramp -> off_ramp` | Only the final fiat recipient; AgentBank supplies the intermediate crypto recipient |
 
-| Instrument           | Endpoint                                  | Result                                                      |
-| -------------------- | ----------------------------------------- | ----------------------------------------------------------- |
-| QR                   | `POST /v1/partner/recipients/parse-qr`    | Resolves and validates QR content without storage.          |
-| Direct bank transfer | `POST /v1/partner/recipients/verify-bank` | Resolves and validates bank account fields without storage. |
+For an on-ramp, put the crypto address in `recipient_fields.address`.
 
-Both calls use the same provider-aware validation flow as payment creation. Use
-their returned `recipient_fields` in the payment request. Discover the
-currently live country/instrument choices first with
-`GET /api/payment-capabilities`; do not build a payout form from a static
-currency list alone. QR preview takes `qr_content` only and derives country and
-rail internally; `country` is an optional mismatch-checked constraint. Direct
-bank preview takes `end_user_id`, `country`, and bank details, and also derives
-the rail internally.
+Fiat-to-fiat supports this two-hop shape only. Do not create a separate merchant
+payment for the intermediate transfer or request identical source and destination
+assets.
 
-## Estimate
+Discover live instruments through
+[List fiat payment capabilities](./reference/discovery/fiat-payment-capabilities),
+not a static currency list alone. Before a fiat payout, use
+[Parse QR recipient](./reference/partner/parse-qr-recipient) or
+[Verify bank recipient](./reference/partner/verify-bank-recipient), as applicable,
+and carry the returned canonical `recipient_fields` into payment creation.
 
-```text
-POST /v1/partner/payments/estimate
-```
+## Estimate before commitment
 
-An estimate is a readiness-filtered, non-binding quote preview. It uses the
-quote shape plus `end_user_id`:
+[Estimate payment](./reference/partner/estimate-payment) owns the quote request
+and response examples, including `preferred_rails`. Send the end user and the
+supported `on_ramp` or `off_ramp` direction with exactly one of `amount_in` or
+`amount_out`.
 
-```json
-{
-  "end_user_id": "peu_...",
-  "direction": "off_ramp",
-  "token_in": {"type":"crypto","ticker":"USDC","chain":"worldchain"},
-  "token_out": {"type":"fiat","symbol":"BRL"},
-  "amount_in": "6",
-  "preferred_rails": ["offramp"]
-}
-```
+An estimate filters by end-user readiness but is non-binding. It does not
+reserve a route or authorize funds to move. Request it near checkout, then
+create the payment when the customer commits.
 
-The quote is not an authorization to move funds and does not reserve a route.
-Create the payment only when the user is ready to fund it.
+## Create one commercial order
 
-## Create a payment
+[Create payment](./reference/partner/create-payment) owns the complete request
+and response contract. Supply the merchant end user, your request correlation
+ID, durable `merchant_payment_reference`, source and destination assets, amount
+mode, and final recipient.
 
-```text
-POST /v1/partner/payments
-```
+Choose `exact_source` when the payer fixes how much to spend; put that amount in
+`source`. Choose `exact_destination` when the customer fixes how much must
+arrive; put that amount in `destination`. Amounts are strings.
 
-```json
-{
-  "request_id": "checkout-1042",
-  "end_user_id": "peu_...",
-  "merchant_payment_reference": "invoice-1042",
-  "source": {
-    "asset": {"type":"crypto","ticker":"USDC","chain":"worldchain"},
-    "amount": "6"
-  },
-  "destination": {"asset":{"type":"fiat","symbol":"BRL"}},
-  "amount_mode": "exact_source",
-  "routing_preference": "balanced",
-  "recipient_fields": {
-    "payment_instrument": "qr",
-    "qr_content": "provider-approved-qr-content"
-  }
-}
-```
+For a QR recipient, country is normally derived from `qr_content`; an optional
+country constraint must match. A direct bank recipient requires `country`.
+Never add a client-selected internal rail. Recipient validation happens again
+when the payment is created, without using a saved recipient book.
 
-| Field                        | Description                                                                                                                                    |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `request_id`                 | Your request correlation ID, up to 128 characters                                                                                              |
-| `end_user_id`                | Core-issued merchant end-user ID                                                                                                               |
-| `merchant_payment_reference` | Your durable idempotency reference, up to 160 characters                                                                                       |
-| `source`                     | Asset and amount for `exact_source`                                                                                                            |
-| `destination`                | Asset and amount for `exact_destination`                                                                                                       |
-| `amount_mode`                | `exact_source` or `exact_destination`                                                                                                          |
-| `routing_preference`         | Optional; defaults to `balanced`                                                                                                               |
-| `recipient_fields`           | Final recipient only. QR country is normally derived from `qr_content`; direct bank recipients require `country`. Never send an internal rail. |
+Use one payment reference per economic order and reuse the same body and
+reference after an uncertain request. See
+[Payment idempotency](./errors-and-idempotency#payment-idempotency).
 
-The recipient is validated against the selected final route when the payment is
-created. AgentBank never uses a saved recipient book for B2B payments.
+## Follow the returned payment
 
-### One-hop examples
+The server-generated `payment_instruction` is the funding authority;
+`next_action` tells the customer whether to fund or wait. Preserve the issued
+amount, asset, destination, chain, memo, reference, calldata, and expiry.
+[Funding and tracking](./funding-and-tracking) explains how to present the
+instruction and reconcile webhooks with current payment state.
 
-**On-ramp: PHP to USDC on World Chain.** The final recipient is a crypto
-address:
+Use [Get payment](./reference/partner/get-payment) for the full current view
+and [List payments](./reference/partner/list-payments) for merchant history and
+its supported filters. Portal JWT holders can also
+[read](./reference/portal/get-payment) and [list](./reference/portal/list-payments)
+payments, but cannot create or cancel them.
 
-```json
-{
-  "source": {"asset":{"type":"fiat","symbol":"PHP"},"amount":"2000"},
-  "destination": {"asset":{"type":"crypto","ticker":"USDC","chain":"worldchain"}},
-  "amount_mode": "exact_source",
-  "recipient_fields": {"address":"0x0123456789abcdef0123456789abcdef01234567"}
-}
-```
+## Cancellation and active-payment limits
 
-**Off-ramp: USDC on World Chain to BRL.** The final recipient is the provider
-approved fiat payout instrument, such as a PIX QR payload:
+[Cancel payment](./reference/partner/cancel-payment) applies before funding
+where the current settlement state permits it. Do not report success until
+the returned or subsequently read payment is terminal with `status: "cancelled"`.
 
-```json
-{
-  "source": {"asset":{"type":"crypto","ticker":"USDC","chain":"worldchain"},"amount":"6"},
-  "destination": {"asset":{"type":"fiat","symbol":"BRL"}},
-  "amount_mode": "exact_source",
-  "recipient_fields": {
-    "payment_instrument":"qr",
-    "qr_content":"provider-approved-qr-content"
-  }
-}
-```
-
-### Two-hop fiat-to-fiat
-
-Fiat-to-fiat supports exactly one shape: `on_ramp -> off_ramp`, through a
-crypto intermediate asset. For a PHP-to-BRL payment, provide the PHP source
-and BRL final recipient exactly as above. Do not provide the USDC bridge
-address: AgentBank derives it from the downstream route agreement and keeps it
-internal.
-
-## Create response
-
-The returned payment is an aggregate view. Key fields include:
-
-```json
-{
-  "payment_id": "pay_...",
-  "merchant_payment_reference": "invoice-1042",
-  "end_user_id": "peu_...",
-  "status": "funding_required",
-  "terminal": false,
-  "successful": false,
-  "payment_instruction": {
-    "instruction_id": "payment:pay_...:hop:0",
-    "type": "crypto_deposit",
-    "amount": "6",
-    "asset": "USDC",
-    "pay_to": {"chain":"worldchain","address":"0x..."},
-    "expires_at": "..."
-  },
-  "funds_moved": false,
-  "next_action": {"type":"fund","instruction":"Follow the server-generated funding instruction before it expires."},
-  "hops": [{"index":0,"type":"off_ramp","status":"in_progress"}],
-  "timeline": []
-}
-```
-
-The `payment_instruction` is the only source of truth for funding. It can be a
-bank transfer, QR, payment link, mobile-money instruction, or crypto deposit.
-Its `pay_to` object can include a crypto memo, calldata, token contract, and
-token decimals. Preserve it exactly; do not substitute a familiar address or
-amount.
-
-## Read and list payments
-
-Both of these routes use a signed Partner API request:
-
-| Method | Path                              | Result                              |
-| ------ | --------------------------------- | ----------------------------------- |
-| `GET`  | `/v1/partner/payments/:paymentId` | Full payment aggregate and timeline |
-| `GET`  | `/v1/partner/payments`            | Merchant-owned payments only        |
-
-List accepts `status` (comma-separated), `state` (`all`, `active`, `completed`,
-`pending`, or `failed`), `created_after` (ISO timestamp), `limit` (1-100), and
-`offset`. Portal JWT holders can use the same read-only endpoints at
-`/v1/merchant/payments` and `/v1/merchant/payments/:paymentId`.
-
-## Cancel a payment
-
-```text
-POST /v1/partner/payments/:paymentId/cancel
-```
-
-```json
-{"reason":"customer_changed_mind"}
-```
-
-Cancellation is for pre-funding payments and is subject to the current
-settlement state. Never tell an end user a cancellation succeeded until the
-returned payment state is `cancelled`.
-
-## One active payment per end user
-
-Each partner end user may have only one non-terminal B2B payment at a time,
-regardless of direction or hop count. Complete, cancel, or let that payment
-reach a terminal state before creating another. This lock is on the outer
-payment; the internal two-hop settlements do not count as separate merchant
-orders.
+Each end user may have only one non-terminal B2B payment, regardless of direction
+or hop count. Complete, cancel, or let it reach a terminal state before creating
+another. Internal fiat-to-fiat hops are not separate merchant orders.

@@ -1,26 +1,21 @@
 ---
 title: "Overview"
-description: "Understand connected-agent permissions, payment thresholds, World ID authorization, and hosted spending grants."
+description: "Understand what your agent can do and when AgentBank asks you to act."
 ---
 
-```mermaid
-flowchart TD
-    R["Agent prepares payment"] --> V["Core evaluates active approval policy"]
-    V -->|"approval_ready"| A["Continue payment"]
-    V -->|"approval_required"| W["World ID payment authorization"]
-    W --> H["User authorizes"]
-    H --> C["Agent continues the same payment"]
-```
+You choose which agents can access your account and set your payment-approval
+threshold. Before a payment, review its recipient, amounts, and fees.
 
-Connected-agent authorization grants capabilities. The account owner's
-platform threshold contributes to the active approval policy, while Core's
-returned payment status determines whether the payment may continue or needs
-payment-specific World ID authorization.
+| Control | What it does |
+| --- | --- |
+| [Approval threshold](/autonomy/configure-thresholds) | Helps determine whether a payment requires World ID approval. |
+| [World ID approval](/autonomy/world-id-approval) | Lets you authorize a payment when AgentBank requests it. |
+| [Spending grant](/autonomy/spending-grants) | Gives a remote connection limited permission to fund eligible crypto payments after you choose grant funding. |
+| [Identity verification](/autonomy/kyc) | Establishes eligibility for payment routes that require KYC. |
+| [Agent verification and gas](/autonomy/agentkit-and-gas) | Verifies the linked wallet for AgentKit and may enable sponsored gas. |
 
-Hosted spending grants are a separate wallet-funding permission. They do not
-replace payment review or World ID approval and require a new explicit choice
-for the current crypto-deposit instruction.
+These controls serve different purposes. Signing in does not approve every
+payment, and approving a payment does not automatically fund it.
 
-KYC controls market eligibility. AgentKit verifies the agent wallet and may
-enable sponsored gas. Neither replaces the payment threshold or World ID
-authorization.
+You can [disconnect an agent](/security/account-revocation) when you no longer
+want it to have access.

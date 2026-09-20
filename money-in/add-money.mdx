@@ -1,39 +1,51 @@
 ---
 title: "Add money to your wallet"
-description: "Use a supported fiat on-ramp to fund the AgentBank wallet."
+description: "Pay in a supported local currency and receive crypto in your AgentBank wallet."
 ---
 
-Use this journey when the account owner wants to convert supported fiat into a
-crypto asset held by the bound AgentBank wallet.
+Ask your assistant to turn money from your bank into a supported crypto asset
+in your linked AgentBank wallet.
+
+> “I want to add money to my AgentBank wallet using PHP and receive USDC. What will it cost?”
+
+## What to provide
+
+- The currency you will pay in.
+- Either the amount you want to spend or the amount of crypto you want to receive.
+- The crypto asset and network you want to use. If you are unsure, ask your assistant to explain the available choices.
+
+Your assistant checks your linked wallet, account readiness, and currently
+available conversions. Availability depends on the currency, asset, network,
+amount, and any required verification.
 
 <Steps>
-  <Step title="Check the wallet and account">
-    Call `get_account_status` and `list_wallets`. Use the wallet returned by
-    AgentBank; never infer or request a private key.
+  <Step title="Review the quote">
+    Check what you will pay, what your wallet will receive, all fees and their
+    currencies, the wallet and network, the conversion route, and the expiry.
+    A quote does not reserve a rate or move money.
   </Step>
-  <Step title="Find a live on-ramp">
-    Use `list_currencies` and `list_quote_book_pairs` to select a supported
-    fiat-to-crypto pair.
+  <Step title="Confirm the payment">
+    Confirm the reviewed details. Complete World ID approval if requested.
+    Your assistant then helps you open the payment instructions.
   </Step>
-  <Step title="Estimate the payment">
-    Call `estimate_payment` without a recipient. If the user creates the
-    reviewed on-ramp, use the active bound wallet as the destination in
-    `create_payment`.
+  <Step title="Pay using the current instructions">
+    Follow the bank or QR instructions provided for this payment, including
+    the exact amount and any required reference. Opening instructions or
+    approving the payment does not itself send money.
   </Step>
-  <Step title="Create and authorize">
-    Apply the configured threshold policy, then call `create_payment` with the
-    reviewed route and stable request ID.
-  </Step>
-  <Step title="Continue and fund">
-    In production, give the payer the returned order-specific bank or QR
-    instruction. In staging, the supported on-ramp completes automatically.
-  </Step>
-  <Step title="Track and verify balance">
-    Poll `get_payment` until terminal, then call `get_wallet_balances`.
+  <Step title="Check the result">
+    Ask your assistant to track the payment until AgentBank reports it
+    completed. On a local connection, you can also ask to see your updated
+    wallet balance.
   </Step>
 </Steps>
 
 <Warning>
-Do not create another on-ramp merely because payment detection is pending.
-Resume the existing durable payment.
+If your bank payment is still being detected, keep tracking the existing
+payment. Do not send the money again or start another payment.
 </Warning>
+
+Trying AgentBank without real money? See [Environment](/getting-started/environment).
+If someone else will pay, use [Collect from another payer](/money-in/collect-from-a-payer).
+
+Building an integration? See the [payment reference](/reference/tools/create-payment).

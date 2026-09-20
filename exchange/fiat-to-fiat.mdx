@@ -1,23 +1,35 @@
 ---
-title: "Fiat to fiat"
-description: "Convert one fiat currency to another through an explicit settlement asset."
+title: "Send between currencies"
+description: "Pay in one local currency and deliver another to a supported recipient."
 ---
 
-```mermaid
-flowchart LR
-    A["Source fiat"] --> S["Settlement asset"] --> B["Destination fiat recipient"]
-```
+> “I want to pay in PHP so my recipient receives 10,000,000 VND. What is the total cost?”
 
-The agent must:
+## What to provide
 
-1. Discover relevant live on-ramp and off-ramp pairs.
-2. Find one common active crypto asset on one supported chain.
-3. Pass that asset explicitly as the route's intermediate asset.
-4. Estimate without a recipient and read the returned recipient requirements.
-5. Collect or select one compatible final fiat recipient before creation.
-6. Preserve exact-source or exact-destination intent.
-7. Present both route steps before durable creation.
+Tell your assistant the currency you will pay in, the destination currency and
+country, and either your spending amount or the exact amount the recipient
+should receive. Choose a saved recipient or provide the requested payment details.
 
-AgentBank opens and binds the downstream off-ramp first. The source on-ramp
-sends its crypto output directly there. The payer funds only the upstream fiat
-instruction—never fund the downstream step separately.
+## Review and pay
+
+Your assistant checks whether a supported conversion is currently available.
+This journey uses crypto between the two local currencies; you should see that
+conversion in the quote, together with both amounts, all fees and their
+currencies, the full recipient details, and the expiry.
+
+Confirm the complete payment and finish World ID approval if required. Then
+follow the bank or other fiat payment instructions shown for this payment.
+You do not need to send a separate crypto transfer to complete the conversion.
+
+Ask your assistant to track the payment until AgentBank reports completion.
+Finishing the first conversion or sending the bank transfer does not by itself
+mean the recipient has been paid.
+
+<Warning>
+Fund only the current fiat instruction, once. Do not separately fund the
+recipient-side payout or send again while payment detection is pending.
+</Warning>
+
+See [Payment status and tracking](/payments/track-payments) for the next step.
+Builders: see the [route reference](/reference/tools/estimate-payment).

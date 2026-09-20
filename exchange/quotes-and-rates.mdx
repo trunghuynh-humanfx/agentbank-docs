@@ -1,26 +1,32 @@
 ---
 title: "Quotes and rates"
-description: "Compare anonymous offers using complete executable outcomes, not headline rates alone."
+description: "Understand what you will pay and receive before deciding to proceed."
 ---
 
-Use `list_quote_book_pairs` as the live source of direct corridors and
-`browse_quote_book` for rough anonymous bands.
+> “Compare the available options for sending 1,000 PHP to VND. Which gives my recipient the most after fees?”
 
-When comparing routes, evaluate:
+Tell your assistant the source and destination currencies or crypto assets,
+any relevant network, and either how much you want to spend or exactly how
+much you want the recipient to receive. You can also state a preference, such
+as the lowest total cost.
 
-- source and destination amounts;
-- percentage and flat fees;
-- each fee currency;
-- effective output;
-- expiry;
-- rail and eligibility requirements;
-- route steps;
-- the user's routing preference.
+## Compare the complete quote
 
-Partner identity is intentionally omitted. Do not ask the agent to expose or
-choose a partner by name.
+- What you will pay and what the recipient or wallet will receive.
+- Every percentage or flat fee, including which currency it is charged in.
+- The full conversion route, including any additional conversion.
+- The payment method and any verification or eligibility requirements.
+- The expiry: the time by which the quoted terms need to be used.
+
+A broad rate comparison is only indicative. Ask for an amount-specific quote
+before deciding to pay. Providers are not identified by name; compare the
+available payment outcomes rather than requesting a named provider.
 
 <Note>
-Use `estimate_payment` for the complete amount-specific route. Reuse an
-unexpired result when the economic inputs are unchanged.
+A quote is information, not a reservation, payment, or guarantee. If it expires
+or your payment details change, review a fresh quote. Your assistant must show
+the final recipient and complete terms and get your explicit confirmation
+before creating the payment.
 </Note>
+
+Builders: see the [quote reference](/reference/tools/estimate-payment).

@@ -1,38 +1,39 @@
 ---
-title: "Hosted spending grants"
-description: "Authorize bounded automatic funding for hosted crypto-deposit instructions."
+title: "Spending grants"
+description: "Set limits for eligible crypto funding through a remote AgentBank connection."
 ---
 
-A spending grant is a Privy wallet permission scoped to the hosted OAuth
-connection. It can fund only the current immutable AgentBank crypto-deposit
-instruction within the grant's asset, chain, amount, rolling-window, and
-expiry limits.
+A spending grant is a limited Privy wallet permission for your
+[Remote MCP connection](/getting-started/hosted-oauth). It lets the assistant
+fund an eligible crypto payment within limits you approve.
 
-## Activation
+## Set up a grant
 
-1. Review the requested asset and chain scope, per-transaction limit, rolling
-   limit, window, and expiry.
-2. Call `request_spending_grant` only after the owner confirms those limits.
-3. The owner activates the pending grant through its card.
-4. Use `show_spending_grant` only to display or reopen the selected grant's
-   activation card.
+<Steps>
+  <Step title="Review the limits">
+    Ask the assistant to propose a grant. Review its assets and chains,
+    per-payment limit, total limit over a rolling period, and expiry.
+  </Step>
+  <Step title="Confirm and activate">
+    Confirm the proposed limits, then complete activation through the
+    AgentBank card. A proposed grant cannot spend until you activate it.
+  </Step>
+  <Step title="Choose funding for a payment">
+    After the assistant displays a payment's funding instruction, explicitly
+    choose whether to pay manually or use a compatible active grant.
+  </Step>
+</Steps>
 
-## Funding a payment
+```text
+For this payment, I want to use an active spending grant if one fits its funding requirements.
+```
 
-After `continue_payment` displays a crypto-deposit instruction, stop and ask
-whether the user wants manual card funding or automatic grant funding. Only a
-new response choosing automatic funding authorizes the agent to:
+A grant applies only to the current eligible crypto-deposit instruction.
+It cannot fund bank, QR, mobile-money, payment-link instructions, or swaps.
+Payment review and any World ID approval still apply.
 
-1. call `list_spending_grants` and select an active compatible grant;
-2. call `list_wallets` for the hosted wallet ID;
-3. call `fund_payment_with_grant` with the current payment and instruction IDs,
-   stable request ID, and `confirmed_by_user=true`.
+If no compatible grant is available, you can use the payment's manual funding
+option. Activating a grant is not permission to fund every future payment.
 
-If no active compatible grant exists, manual funding remains available. Do not
-describe the payment as blocked.
-
-<Warning>
-A spending grant cannot fund fiat, QR, mobile-money, or payment-link
-instructions and must not be used for swaps. Never inspect, request, or use a
-grant in the same turn that displays the funding instruction.
-</Warning>
+Builders can find the exact workflow in
+[Confirmation and authorization rules](/ai-guides/confirmation-rules).

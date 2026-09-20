@@ -33,9 +33,11 @@ POST /v1/partner/payments
 | Field                        | Required | Description                                                                                            |
 | ---------------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
 | `request_id`                 | Yes      | Merchant correlation ID, maximum 128 characters.                                                       |
+| `end_user_id`                | Yes      | AgentBank-issued end-user ID owned by the authenticated merchant.                                       |
 | `merchant_payment_reference` | Yes      | Durable idempotency key, maximum 160 characters.                                                       |
 | `source` / `destination`     | Yes      | Requested assets plus source amount for `exact_source`, or destination amount for `exact_destination`. |
 | `amount_mode`                | Yes      | `exact_source` or `exact_destination`.                                                                 |
+| `routing_preference`         | No       | Defaults to `balanced`.                                                                                |
 | `recipient_fields`           | Yes      | Final payout recipient only. For fiat-to-fiat, never supply an internal bridge recipient.              |
 
 For a QR payout, send the QR payload and omit `rail`; Core derives the country

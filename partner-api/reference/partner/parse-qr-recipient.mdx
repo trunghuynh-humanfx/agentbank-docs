@@ -48,16 +48,7 @@ not a user KYC or payment-readiness check.
 
 ## Country detection and routing
 
-Core determines the country before it selects the fiat route:
-
-1. It first reads top-level EMVCo tag `58` when present, for example
-   `5802PH`, `5802ID`, `5802NG`, `5802VN`, `5802BR`, or `5802AR`.
-2. If that tag is absent or unusable, it tries the configured QR decoders in
-   order until one identifies a country.
-3. The detected country is mapped to the supported fiat currency and then the
-   selected route owner parses and validates the complete QR payload.
-
-Tag `58` is only a routing hint; it never bypasses recipient validation. If
+AgentBank detects the country and validates the complete QR payload. If
 `country` is supplied and differs from the detected country, the request fails
 with `400 RECIPIENT_COUNTRY_MISMATCH`. A QR with no detectable supported country
 also fails instead of guessing a route.

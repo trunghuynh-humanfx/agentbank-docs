@@ -4,69 +4,58 @@ title: "AgentBank"
 
 Collect payments, exchange currencies, and send money to bank accounts worldwide.
 
+AgentBank connects AI agents to supported fiat and crypto payment routes.
+Tell the agent what you want to do, review the amounts and fees, and complete
+any required approval or funding step.
+
 ## Use the hosted AgentBank agent
 
-You do not need to connect your own AI agent to use AgentBank. Open the
-AgentBank web app, sign in, and chat directly with the hosted AgentBank agent
-about what you want to do. No external AI client, MCP configuration, or skill
-installation is required.
+Open [app.agentbank.world](https://app.agentbank.world), sign in, and chat
+directly with AgentBank's agent. You do not need another AI agent, an MCP
+connection, or a skill installation.
 
-<Card title="Chat with the AgentBank agent" href="https://app.agentbank.world">
-  Use AgentBank directly in your browser at `app.agentbank.world`.
+<Card title="Open AgentBank" href="https://app.agentbank.world">
+  Start a conversation with the AgentBank agent.
 </Card>
 
+Prefer your own assistant? [Connect ChatGPT, Claude, or a local agent](/getting-started/quickstart).
+
+## What you can do
+
 <CardGroup cols={2}>
-  <Card title="Connect your own agent" href="/getting-started/quickstart">
-    Connect an agent, authorize your account, and verify wallet readiness.
-  </Card>
-  <Card title="Use ChatGPT or Claude" href="/getting-started/hosted-oauth">
-    Connect AgentBank through Remote MCP with OAuth and interactive payment cards.
-  </Card>
   <Card title="Add or collect money" href="/money-in/overview">
-    Fund your AgentBank wallet or let another payer complete a fiat collection.
+    Add funds to your wallet or collect a payment from someone else.
   </Card>
   <Card title="Send money" href="/money-out/overview">
-    Pay supported bank recipients from crypto through an AgentBank route.
+    Send supported crypto value to a bank recipient.
   </Card>
-  <Card title="MCP reference" href="/reference/mcp-overview">
-    Explore local and hosted tools, resources, statuses, and retry rules.
+  <Card title="Exchange currencies" href="/exchange/overview">
+    Swap supported crypto or convert between fiat currencies.
   </Card>
-  <Card title="Build with the Partner API" href="/partner-api">
-    Add on-ramp, off-ramp, and fiat-to-fiat payments for your verified end users.
+  <Card title="Prepare a payment plan" href="/payments/payment-plans">
+    Review several payments together and track each one separately.
   </Card>
 </CardGroup>
 
-## MCP, skill, and Core
-
-AgentBank separates tools, operating guidance, and durable execution:
-
-- **AgentBank MCP** gives an agent authenticated tools and live account state.
-- **AgentBank Pay skill** teaches the agent safe workflow order, confirmation,
-  routing, tracking, and recovery.
-- **AgentBank Core** authorizes the connected agent, locks payment routes,
-  issues current payment instructions, verifies transactions, and stores
-  durable payment state.
+Availability depends on the currencies, amount, destination, and your account's
+verification. Your agent checks the available route and presents a quote before
+you confirm.
 
 ## You remain in control
 
-Your AgentBank wallet is tied to your login and uses Privy wallet
-infrastructure. Only you and an agent you authorize can operate it through
-AgentBank. Configure an automatic transaction threshold at
-[app.agentbank.world](https://app.agentbank.world). The returned payment status
-is authoritative: some payments can continue under the active policy, while
-others require payment-specific World ID authorization.
+Your wallet is tied to your login and uses Privy wallet infrastructure. You
+authorize which agents can use it and set your payment-approval threshold.
+Some payments require an additional World ID approval; crypto funding can
+require a separate confirmation.
 
-<Note>
 AgentBank does not take custody of your wallet funds. Payment and banking
 partners may receive or process funds while completing a supported route.
-</Note>
 
-## Start safely in staging
+Read [Autonomy and human control](/autonomy/overview) to understand approvals,
+or [Your first payment](/getting-started/first-payment) to get started.
+You can also [try staging with mock tokens](/getting-started/environment#staging).
 
-Staging uses mock tokens. Create a supported on-ramp and AgentBank completes it
-automatically, credits the mock tokens, and leaves the wallet ready for other
-supported staging intents.
+## For builders
 
-<Card title="Use AgentBank staging" href="/getting-started/environment#staging">
-  Connect to `https://staging.agentbank.world` and fund your mock wallet.
-</Card>
+Use the [MCP reference](/reference/mcp-overview) to integrate AgentBank with an
+agent, or the [Partner API](/partner-api) to build payments for your own end users.

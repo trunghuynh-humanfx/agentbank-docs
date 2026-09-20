@@ -1,42 +1,40 @@
 ---
-title: "4. Your first payment"
-description: "Learn the universal AgentBank payment sequence without committing to a specific corridor."
+title: "Your first payment"
+description: "Ask for a payment, review the quote, approve it, and track the result."
 ---
 
+Start in [AgentBank chat](https://app.agentbank.world) or with a
+[connected assistant](/getting-started/quickstart).
+
+```text
+Help me send money to a bank account. Show me how much I will pay, how much they will receive, and all fees before I confirm.
+```
+
 <Steps>
-  <Step title="Check readiness">
-    Confirm the connected agent, scopes, verification, market readiness, and
-    wallet.
+  <Step title="Describe the payment">
+    Tell the agent the currencies, amount, and destination country. Say whether
+    you want to send a specific amount or have the recipient receive a specific
+    amount. The agent checks availability and asks for any missing details.
   </Step>
-  <Step title="Discover supported assets and routes">
-    Use live currencies and quote-book pairs. Never assume a route exists.
+  <Step title="Review and confirm">
+    Choose a saved recipient or provide the requested bank, wallet, or QR
+    details. Review the recipient, amount sent, amount received, fees, payment
+    route, and quote expiry. An estimate does not move money.
   </Step>
-  <Step title="Estimate the complete payment">
-    Choose exact source or exact destination and include an explicit settlement
-    asset for a two-step route. Estimates do not accept recipients.
+  <Step title="Approve and fund">
+    Complete World ID approval if requested. Then follow the payment's funding
+    instructions or confirm the supported wallet action. Opening an instruction
+    or approving a payment does not by itself fund it.
   </Step>
-  <Step title="Resolve the recipient">
-    For a fiat destination, choose one instrument from the estimate's
-    `recipient_requirements`, then select or create the final recipient.
-  </Step>
-  <Step title="Review material details">
-    Show the full recipient, source and destination amounts, all fees and fee
-    currencies, route, expiry, and expected browser action.
-  </Step>
-  <Step title="Apply authorization policy">
-    Follow `approval_ready` or `approval_required` as returned. Never infer a
-    fixed threshold from the amount.
-  </Step>
-  <Step title="Create and continue one durable payment">
-    Use stable request IDs and follow only the current Core-owned instruction.
-  </Step>
-  <Step title="Track final status">
-    Poll `get_payment` until `completed`, `cancelled`, `expired`,
-    `funding_timeout`, or `failed`.
+  <Step title="Check the result">
+    Ask the agent to track the payment until AgentBank confirms completion.
+    If the payment is still pending, continue tracking the same payment.
   </Step>
 </Steps>
 
-<Warning>
-Do not treat an estimate ID as durable—estimates have no ID. Do not treat a
-transaction hash as final payment completion.
-</Warning>
+If the quote changes or expires, review the new amounts and fees before
+confirming again. Bank transfers and crypto transactions may become
+irreversible after funds move.
+
+See [Payment status and tracking](/payments/track-payments) for pending payments,
+or [Cancel or correct a payment](/payments/cancel-or-correct) if details need to change.

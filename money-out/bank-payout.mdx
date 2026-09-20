@@ -1,32 +1,52 @@
 ---
-title: "Send a bank payout"
-description: "Convert supported crypto into fiat for a validated bank recipient."
+title: "Send money to a bank account"
+description: "Use supported crypto to pay a bank recipient in local currency."
 ---
 
+> “Send my saved recipient enough USDC for them to receive 1,000,000 VND in their bank account.”
+
+## What to provide
+
+- The crypto asset and network you want to pay from.
+- Either your spending amount or the exact amount the recipient should receive.
+- The destination currency and country.
+- A saved recipient, bank details, or a supported payment QR code.
+
+Your assistant checks the available conversion and asks for any missing
+recipient information. If several saved recipients match, choose the right
+one before continuing.
+
 <Steps>
-  <Step title="Find a direct off-ramp">
-    Check live quote-book pairs for the source crypto and destination fiat.
+  <Step title="Review the full cost and destination">
+    Check both amounts, every fee and its currency, the bank recipient,
+    conversion route, network, and expiry. Some crypto assets need an additional
+    conversion before they can be paid out. That conversion and its costs must
+    be included in your review. If no supported route is available, the
+    payment cannot proceed.
   </Step>
-  <Step title="Estimate the outcome">
-    Estimate without a recipient. Read the returned `recipient_requirements`.
+  <Step title="Confirm and approve">
+    Confirm the complete payment. Complete World ID approval if requested.
+    Your assistant must not silently change your asset, network, recipient,
+    or the amount you chose to spend or receive.
   </Step>
-  <Step title="Resolve the recipient">
-    Let the user choose a supported instrument, then search saved recipients or
-    create one using its required fields. Use AgentBank's canonical result.
-  </Step>
-  <Step title="Create and authorize">
-    Show the complete recipient, amounts, fees, route, and expiry. Follow the
-    returned approval status.
-  </Step>
-  <Step title="Execute the current instruction">
-    Call `continue_payment`. Local stdio checks the wallet balance and uses
-    `execute_payment_instruction`; hosted OAuth uses manual card funding or a
-    separately confirmed compatible spending grant for a crypto deposit.
+  <Step title="Fund the payment">
+    Follow the current wallet instruction. A local assistant asks for explicit
+    confirmation before sending crypto. In a hosted client, use the funding or
+    signing experience shown; eligible crypto deposits may also offer a
+    separately confirmed spending grant.
   </Step>
   <Step title="Track delivery">
-    Poll `get_payment`. A transaction receipt alone is not bank delivery.
+    Ask your assistant to track the payment until AgentBank reports completion.
+    A successful crypto transfer alone does not mean the bank recipient was paid.
   </Step>
 </Steps>
 
-Never construct calldata, choose a different spender, or substitute a recipient
-after payment creation.
+<Warning>
+Check the bank details carefully: a funded transfer may be irreversible. If
+the route includes an additional conversion, follow only the current funding
+instruction; do not send a second transfer to fund the payout separately.
+</Warning>
+
+See [Manage recipients](/money-out/manage-recipients) or
+[Cancel or correct a payment](/payments/cancel-or-correct) if details are wrong.
+Builders can find route mechanics in the [quote reference](/reference/tools/estimate-payment).

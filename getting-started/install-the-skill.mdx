@@ -1,11 +1,10 @@
 ---
-title: "3. Install the AgentBank Pay skill"
-description: "Give your agent the workflow and safety guidance that complements AgentBank MCP."
+title: "Install skill"
+description: "Give your agent the instructions for setting up and using AgentBank."
 ---
 
-The MCP is the **what**: tools, authentication, and current server state. The
-skill is the **how**: setup order, routing, confirmation, wallet execution,
-tracking, and recovery.
+The AgentBank skill teaches your agent how to use AgentBank's tools. Use it
+with your [local agent setup](/getting-started/connect-your-agent).
 
 ## Install skill
 
@@ -13,20 +12,18 @@ tracking, and recovery.
 npx skills add theagentbank/skills
 ```
 
-## Load the canonical URL
-
-Agents that can read a remote skill may use:
+## Or ask your agent to read it
 
 ```text
 Read https://agentbank.world/SKILL.md and follow instructions to setup and use AgentBank
 ```
 
-Remote reading may be temporary unless the client persists the skill.
+An agent may read the skill only for the current session unless its client
+saves it. The skill provides instructions; the MCP connection and browser
+sign-in give the agent access to your account.
 
-## Verify both parts
+After setup, ask:
 
-Ask the agent to summarize the skill's safety rules, then verify that
-`whoami` and `get_instructions` are available. A local stdio connection also
-exposes `begin_agent_onboarding`; a hosted OAuth connection exposes hosted card
-and spending-grant tools instead. The recommended experience requires both the
-skill and MCP.
+```text
+Check that AgentBank is connected and ready to use.
+```

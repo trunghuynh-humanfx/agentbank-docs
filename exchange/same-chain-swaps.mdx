@@ -1,31 +1,37 @@
 ---
-title: "Same-chain swaps"
-description: "Swap supported crypto assets on one chain through a Core-generated instruction."
+title: "Swap crypto"
+description: "Exchange supported crypto assets on the same network."
 ---
 
-Both assets must be supported on the same chain. Use canonical asset objects
-and `estimate_payment`.
+> “What would I receive if I swapped 100 USDC for another supported token on the same network?”
+
+Tell your assistant which asset you want to spend, which asset you want to
+receive, the network, and your amount. Both assets must be supported on the
+same network; this journey does not move assets between networks.
 
 <Steps>
-  <Step title="Estimate">
-    Confirm the source amount or source ceiling, destination amount, fees,
-    chain, and expiry. The estimate is recipient-free; a pure swap uses the
-    connection's bound wallet internally.
+  <Step title="Review the swap">
+    Check the amount you will spend or its maximum, the amount you will
+    receive, all fees and their currencies, your linked wallet, the network,
+    and the expiry. A quote does not move money or reserve a rate.
   </Step>
-  <Step title="Create and continue">
-    Create one durable payment, satisfy the active authorization policy, and
-    request its current instruction.
+  <Step title="Confirm and approve">
+    Confirm the reviewed swap. Complete World ID approval if required, then
+    follow the current signing instruction.
   </Step>
-  <Step title="Execute">
-    Local stdio uses `execute_payment_instruction`; Core checks allowance and
-    submits an exact token approval only when required. Hosted OAuth opens the
-    returned `transaction_signing_url` for owner signing through Privy. Do not
-    use a spending grant for a swap.
+  <Step title="Authorize the wallet action">
+    A local assistant asks you to explicitly confirm the crypto action. In a
+    hosted client, you sign through the first-party Privy page that opens.
+    Spending grants cannot fund swaps.
   </Step>
-  <Step title="Track">
-    For local execution, retry an ambiguous result with the same request ID.
-    Poll `get_payment` until terminal on either surface.
+  <Step title="Check completion">
+    Ask your assistant to track the existing payment until AgentBank reports
+    completion. A wallet receipt alone is not the final payment result.
   </Step>
 </Steps>
 
-Never construct calldata or select an arbitrary token contract or spender.
+If signing or submission appears interrupted, ask your assistant to check the
+existing payment before trying again. Do not start another swap while its
+outcome is uncertain.
+
+Builders: see the [wallet execution reference](/reference/tools/execute-payment-instruction).

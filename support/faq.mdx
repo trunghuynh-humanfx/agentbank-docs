@@ -1,58 +1,44 @@
 ---
 title: "FAQ"
-description: "Answers about custody, wallets, identity, autonomy, staging, collections, and payment status."
+description: "Quick answers about AgentBank wallets, approvals, collections, and payment status."
 ---
 
 <AccordionGroup>
-  <Accordion title="Does AgentBank custody my funds?">
-    AgentBank does not take custody of the user's AgentBank wallet funds. Privy
-    provides wallet infrastructure. Payment partners may process funds during a
-    supported route.
+  <Accordion title="Do I need my own AI agent?">
+    No. Sign in at [app.agentbank.world](https://app.agentbank.world) and use
+    AgentBank's own chat. You can also [connect another assistant](/getting-started/quickstart).
   </Accordion>
-  <Accordion title="Who controls the wallet?">
-    The wallet is tied to the user's login. The user and a connected agent
-    authorized by that user can operate it through granted AgentBank workflows.
+  <Accordion title="Does AgentBank hold my wallet funds?">
+    AgentBank does not take custody of your wallet funds. Privy provides the
+    wallet infrastructure; payment partners may process funds during a payment.
+    See [Security and wallet control](/security/security-model).
   </Accordion>
   <Accordion title="Can my agent transact automatically?">
-    AgentBank applies the threshold configured at `app.agentbank.world` with
-    the connection's permissions and current payment policy. Follow
-    `approval_ready` or `approval_required` for the actual payment; do not infer
-    the result from a fixed amount.
+    Your threshold and the current payment policy determine whether World ID
+    approval is needed. Separate funding confirmation may still apply.
+    See [Autonomy and human control](/autonomy/overview).
   </Accordion>
-  <Accordion title="What is a spending grant?">
-    It is a bounded Privy permission for a hosted OAuth wallet. After a new
-    explicit funding choice, it can fund the current compatible crypto-deposit
-    instruction. It cannot fund fiat instructions or swaps.
-  </Accordion>
-  <Accordion title="How do I disconnect hosted OAuth?">
-    Revoke the connection in AgentBank connection settings. `revoke_agent`
-    applies only to a local stdio installation.
-  </Accordion>
-  <Accordion title="How does staging work?">
-    Create a supported staging on-ramp. It automatically succeeds and credits
-    mock tokens; no faucet or real bank action is required.
-  </Accordion>
-  <Accordion title="Can another person pay a collection?">
-    Yes. Give the payer the order-specific bank account or QR instructions.
-  </Accordion>
-  <Accordion title="Can the agent see who paid?">
-    No. The current agent-facing state shows whether the order was paid, not
-    payer identity.
+  <Accordion title="Can someone else pay a collection?">
+    Yes. Share the order-specific bank or QR instructions, or a shareable link
+    when the remote connection offers one. AgentBank can track whether the
+    payment was paid, but cannot identify who paid it.
   </Accordion>
   <Accordion title="Are payment links available?">
-    Shareable single-payment links are coming soon. They are not currently part
-    of the public tool surface.
+    Remote MCP can return a shareable action link when one is available for
+    the payment. Otherwise, use the returned bank or QR instructions.
+    Do not assume every payment supports a public link.
   </Accordion>
-  <Accordion title="Is a transaction hash final completion?">
-    No. Use `get_payment` for the authoritative aggregate payment state.
+  <Accordion title="Does a bank receipt or transaction hash mean the payment finished?">
+    No. Ask your agent to check the final AgentBank payment status.
+    See [Payment status and tracking](/payments/track-payments).
   </Accordion>
   <Accordion title="Can I approve several payments together?">
-    Yes. A payment plan groups independently settled child payments under one
-    consolidated review and one World ID approval.
+    Yes. A [payment plan](/payments/payment-plans) provides one consolidated
+    review and one World ID approval when required. Payments are funded and
+    settled individually.
   </Accordion>
-  <Accordion title="Can AgentBank pay an x402 resource?">
-    Yes, when the external URL returns a supported x402 challenge and a live
-    fiat on-ramp is available. The current public flow does not offer direct
-    USDC funding.
+  <Accordion title="Can I try AgentBank without real funds?">
+    Yes. [Staging](/getting-started/environment#staging) uses mock tokens.
+    A supported staging on-ramp completes automatically.
   </Accordion>
 </AccordionGroup>

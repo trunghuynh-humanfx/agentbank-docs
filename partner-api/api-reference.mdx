@@ -3,31 +3,13 @@ title: "API reference"
 description: "Endpoint-by-endpoint reference for discovery, signed partner, and merchant portal APIs."
 ---
 
-Set `AGENTBANK_BASE_URL` to the intended environment. Signed partner and portal
-routes live directly under `/v1/*`; public shared discovery routes use `/api/*`.
-
-| Environment | `AGENTBANK_BASE_URL`                       |
-| ----------- | ------------------------------------------ |
-| Sandbox     | `https://staging-protocol.agentbank.world` |
-| Production  | `https://protocol.agentbank.world`         |
-
-For example:
-
-```text
-https://staging-protocol.agentbank.world/v1/partner/end-users
-https://protocol.agentbank.world/v1/merchant/auth/login
-https://staging-protocol.agentbank.world/api/currencies
-```
-
-Never use Sandbox credentials, merchant IDs, webhook secrets, end-user IDs, or
-payment IDs against Production, or the reverse.
+Set `AGENTBANK_BASE_URL` using [Environments](./environments). All endpoint
+paths are relative to that host; credentials and resources are isolated by environment.
 
 ## Use the workflow first
 
-For an integration, begin with the numbered
-[integration workflow](./workflows/integration). It explains the safe
-order: discover, prepare the recipient, wait for end-user readiness, estimate,
-create, then follow the server-generated instruction and timeline.
+Begin with the [Quickstart](./quickstart) for the complete integration sequence,
+then use these endpoint pages for request and response details.
 
 ## Endpoint groups
 

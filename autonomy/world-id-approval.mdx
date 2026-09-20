@@ -1,26 +1,27 @@
 ---
-title: "World ID payment authorization"
-description: "Authorize a payment when AgentBank returns approval_required without sharing a World ID proof with the agent."
+title: "World ID approval"
+description: "Complete an additional human approval when AgentBank requests it for a payment."
 ---
 
-When a payment returns `approval_required`, local clients use the returned
-first-party AgentBank action URL. Hosted OAuth calls `show_payment_approval` to
-display the embedded approval card and does not repeat the URL unless requested
-or the card is unavailable.
+If a payment needs World ID approval, your agent shows an AgentBank approval
+link or card.
 
 <Steps>
-  <Step title="Open the AgentBank action">
-    Use the local action URL or hosted approval card. Sign in as the payment
-    owner; AgentBank reveals the World ID request only after authentication.
+  <Step title="Open the approval">
+    Open the AgentBank link or card and sign in as the payment owner.
   </Step>
-  <Step title="Authorize in World App">
-    Complete the payment-specific authorization before its expiry.
+  <Step title="Approve in World App">
+    Review the payment and complete its World ID approval before it expires.
   </Step>
-  <Step title="Resume the same payment">
-    The agent polls `get_payment` and continues when it reaches
-    `approval_ready`.
+  <Step title="Return to the payment">
+    Your agent checks the approval and shows the next funding step.
+    Continue the same payment.
   </Step>
 </Steps>
 
-Never paste, print, reconstruct, or send a World ID proof or raw verification
-request in chat. A World ID badge check does not replace payment authorization.
+A World ID badge on your account does not replace an approval requested for a
+specific payment. Never paste a World ID proof into chat; complete verification
+through the approval flow.
+
+For a [payment plan](/payments/payment-plans), one combined approval covers
+the reviewed plan when required.

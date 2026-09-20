@@ -1,23 +1,38 @@
 ---
-title: "Security model"
-description: "Understand AgentBank credential, wallet, scope, instruction, and payment-state boundaries."
+title: "Security and wallet control"
+description: "Understand wallet custody, agent permissions, and how to protect your account."
 ---
 
-- Local browser authorization binds one installation to the user's account;
-  hosted OAuth binds a durable remote connection.
-- Scopes restrict the operations available to that installation.
-- Privy supplies wallet infrastructure without exposing keys through MCP.
-- Core pins the wallet and route for payment execution.
-- Only a current Core-owned instruction can be executed.
-- Exact token approval is submitted only when required.
-- Stable request IDs protect against duplicate logical actions.
-- Sensitive credentials and World ID proofs are omitted from tool results.
-- Partner identity is intentionally hidden.
-- `get_payment` is the durable source of truth.
-- Local credentials stay in an OS-user-scoped vault under a stable
-  `AGENTBANK_MCP_PROFILE`; hosted connections do not expose a local credential.
-- Hosted spending grants are bounded Privy permissions and can fund only the
-  current immutable crypto-deposit instruction within their enforced limits.
+## Who controls your wallet?
 
-AgentBank does not take custody of the user's wallet funds. Payment and banking
-partners may process funds while completing supported routes.
+Your AgentBank wallet is tied to your login and uses Privy wallet infrastructure.
+You and the agents you authorize can operate it through the permissions granted
+to them.
+
+AgentBank does not take custody of your wallet funds. Payment and banking
+partners may receive or process funds while completing a supported payment.
+
+## Control agent access
+
+Connect only the agents you want to use and review the permissions requested
+during sign-in. Set an [approval threshold](/autonomy/configure-thresholds)
+appropriate for that agent, and [disconnect unused or compromised agents](/security/account-revocation).
+
+For ChatGPT and Claude, [spending grants](/autonomy/spending-grants) are a
+separate, limited crypto-funding permission. Review their scope, limits, and expiry.
+
+## Protect your payments
+
+Review the recipient, currencies, amounts, and fees before confirming.
+Use the funding instructions for that specific payment and ask for its status
+if anything is unclear. A pending payment should be tracked rather than paid again.
+
+Keep wallet keys, seed phrases, sign-in tokens, and World ID proofs out of
+chat and support messages. Complete sign-in, identity checks, and wallet
+approval through the browser flow provided by AgentBank.
+
+If funds have moved and a payment fails, [contact support](/support/contact)
+before attempting another transfer.
+
+Builders can read [MCP configuration](/reference/configuration) for local
+credential storage and profile isolation.

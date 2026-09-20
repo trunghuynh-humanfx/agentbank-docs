@@ -1,73 +1,59 @@
 ---
-title: "Hosted payment cards"
-description: "Keep approval, funding, signing, and progress actions in their dedicated hosted OAuth cards."
+title: "Payment cards in chat"
+description: "Review, approve, fund, and track payments in ChatGPT or Claude."
 ---
 
-Hosted OAuth separates payment actions into cards so the user can approve and
-fund through first-party AgentBank and Privy experiences.
-Connect from [ChatGPT or Claude](/getting-started/hosted-oauth) to use this flow.
+When you [connect from ChatGPT or Claude](/getting-started/hosted-oauth),
+AgentBank can display payment cards inside your conversation. Cards keep
+approval, funding, and progress in the appropriate AgentBank or Privy experience.
 
 ## Quote preview
 
-`estimate_payment` provides a live preview before payment creation. Review the
-source and destination amounts, fees, route, recipient outcome, and expiry.
-The estimate is informational: it does not reserve a rate or move money.
-
-## Payment journey
-
-```mermaid
-flowchart LR
-    C["Create payment"] --> A{"Approval required?"}
-    A -->|"Yes"| AC["Approval card"]
-    A -->|"No"| F["Continue payment"]
-    AC --> F
-    F --> FC["Funding or signing card"]
-    FC --> M["Funds move"]
-    M --> PC["Progress card"]
-```
+Check both amounts, all fees and their currencies, the conversion route, the
+recipient, and the expiry before confirming. This preview does not reserve a
+rate or move money.
 
 ## Approval
 
-When `create_payment` returns `approval_required`, call
-`show_payment_approval` with that payment ID. Do not also paste the approval
-URL unless the user asks for it or the card is unavailable.
+If World ID approval is required, complete it in the approval card. If you
+cannot find the card, ask: “Show the approval for my payment again.” Never
+paste World ID proofs or raw approval QR data into chat.
 
 ## Payment plans
 
-Review every payment and the totals before confirming a
-[payment plan](/payments/payment-plans). After submission, use
-`show_payment_plan_approval` to reopen the single World ID approval card when
-approval is required. Each child payment retains its own funding instruction
-and settlement status.
+For a [payment plan](/payments/payment-plans), review every payment and the
+totals together. When World ID is required, one approval covers the submitted
+plan. Each payment still has its own funding instruction and result.
 
 ## Funding instruction
 
-`continue_payment` displays the current funding card. Reopen a missed card
-with `get_payment_instruction`; `get_payment` reads state but does not reopen
-the card.
+Ask: “Show me how to fund this payment.” If you closed or missed the card,
+your assistant can reopen the current instructions for the existing payment.
 
-Fiat bank, QR, mobile-money, and payment-link instructions are completed
-through the card. A crypto-deposit card can be funded manually or, after a new
-explicit user choice, with a compatible spending grant.
+Follow the displayed bank, QR, mobile-money, or other supported instructions.
+For an eligible crypto deposit, you can fund manually or explicitly choose an
+active, compatible [spending grant](/autonomy/spending-grants).
 
-`get_payment_link` retrieves a shareable public action link when one is
-available for the payment. Use the returned link rather than constructing one.
-Opening a card or link does not itself fund the payment. For collections from
-another payer, see [Collect from a payer](/money-in/collect-from-a-payer).
+You can also ask for a shareable payment link when one is available. Links are
+not available for every payment. For someone else to pay, see
+[Collect from another payer](/money-in/collect-from-a-payer).
 
 ## Swap signing
 
-For hosted swaps, open the returned `transaction_signing_url`. The owner signs
-through the first-party Privy page. A spending grant must not be used for a
-swap.
+For a crypto swap, follow the signing page opened by your assistant and sign
+through Privy yourself. Spending grants cannot be used for swaps.
 
 ## Progress
 
-Call `get_payment` to read authoritative state. Before funds move, refer the
-user to the existing funding card. After funds move, call
-`show_payment_progress`. The funding card and progress card remain separate.
+After you send funds, ask: “Show the progress of my payment.” Your assistant
+can display a progress card and check AgentBank's recorded status. Treat the
+payment as complete only when AgentBank reports completion, not merely when
+you finish a bank transfer or wallet action.
 
 <Warning>
-Showing or approving a payment is not wallet-funding authorization. Wait for a
-new user response before using a spending grant for the current instruction.
+Opening a card or link, or completing World ID approval, does not fund the
+payment. Your assistant must wait for your separate, explicit choice before
+using a spending grant for the current payment instruction.
 </Warning>
+
+Builders: see the [hosted connection reference](/reference/mcp-overview).

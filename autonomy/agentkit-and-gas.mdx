@@ -1,17 +1,18 @@
 ---
-title: "AgentKit verification and sponsored gas"
-description: "Verify the bound agent wallet and understand sponsored gas eligibility."
+title: "Agent verification and gas"
+description: "Verify your linked wallet and learn when transaction gas may be sponsored."
 ---
 
-AgentKit verification is separate from KYC, World ID badges, the payment
-threshold, and payment-specific authorization. The `verify_agent_kit` workflow
-applies to the local stdio wallet surface.
+AgentKit verification can make your linked AgentBank wallet eligible for
+sponsored transaction gas where supported.
 
-1. Call `verify_agent_kit` without supplying a wallet ID or address.
-2. Show the returned verification URL to the user.
-3. Open or scan it in World App.
-4. Call `verify_agent_kit` again until it returns verified status.
+```text
+Check whether my AgentBank wallet needs AgentKit verification and help me complete it.
+```
 
-Do not run the AgentKit CLI manually and do not ask for a World ID proof. A
-verified agent may receive sponsored gas where supported, but sponsorship is
-not guaranteed for every operation.
+Open the verification link your agent provides and complete the requested
+action in World App. Return to the conversation so the agent can check the result.
+
+Verification does not guarantee free gas for every transaction. It is separate
+from identity verification, your approval threshold, and payment-specific
+World ID approval.

@@ -1,0 +1,46 @@
+---
+title: "MCP troubleshooting"
+description: "Diagnose local enrollment, credential, and payment-execution failures."
+---
+
+For user-facing next steps, see [Troubleshooting](/support/troubleshooting).
+These diagnostics are for agents and integration builders.
+
+## Local connection and credentials
+
+| Condition | Action |
+| --- | --- |
+| Tools absent | Check Node.js, `npx`, and client configuration, then reload the client. OpenClaw can run `openclaw mcp doctor agentbank --probe`. |
+| `MISSING_CREDENTIAL` | Begin local onboarding once and wait with the returned enrollment ID. |
+| Enrollment pending or wait timeout | Resume the same enrollment ID while valid; do not create a second flow. |
+| Expired local session | Call `relogin` once, then retry the original operation. |
+| `CREDENTIAL_PROTECTOR_LOCKED`, `CREDENTIAL_STORE_CORRUPT`, or `CREDENTIAL_PROFILE_MISMATCH` | Preserve the installation and follow the returned OS, vault, or profile remediation. |
+
+Use [Local authorization flow](/getting-started/authentication) for enrollment
+sequencing. Remote MCP uses OAuth in the host client instead of these local
+enrollment or session tools.
+
+## Payment recovery
+
+Read `get_payment` before taking recovery action. Preserve the current payment
+and instruction while they remain valid.
+
+- On `QUOTE_EXPIRED` or `PRICE_MISMATCH`, obtain a fresh estimate and reconfirm
+  the changed terms before creation.
+- For `rail_not_ready` with `payment_created=false`, wait for approved readiness;
+  no payment was created. Reuse a request ID only for an identical payload.
+- For missing recipient fields, collect only those requested and use a new
+  request ID when the payload changes.
+- After ambiguous local execution, reuse the same execution request ID. Never
+  rebroadcast an unresolved submission with a replacement idempotency key.
+- For a hosted swap, return to the first-party signing action and read payment
+  state. Do not substitute local wallet execution or a spending grant.
+- Reopen a missing funding card with `get_payment_instruction`. Once funds
+  moved, use `show_payment_progress` for the progress card.
+
+Expired or rejected approval cannot be refreshed in place. Before replacing
+an expired payment, read `funds_moved` and the failure guidance. If funds moved,
+continue tracking or escalate instead of funding a new payment.
+
+See [Errors](/reference/errors), [Idempotency](/reference/idempotency), and
+[Payment statuses](/reference/statuses) for the detailed contracts.

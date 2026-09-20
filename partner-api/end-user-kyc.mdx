@@ -59,24 +59,12 @@ needed. There is no separate artifact-upload API.
 
 ## Create response
 
-```json
-{
-  "end_user_id": "peu_...",
-  "status": "provider_processing",
-  "kyc_version": "1",
-  "kyc_summary": {
-    "schema_version": "partner_end_user_kyc_v1",
-    "nationality": "VN",
-    "country_of_residence": "VN",
-    "identity_document_type": "national_id"
-  },
-  "rail_readiness": [],
-  "updated_at": "..."
-}
-```
+The [Create end user reference](./reference/partner/create-end-user) contains
+the complete request and response example. Save its generated `end_user_id`
+and current `kyc_version`; use [Rail readiness](./rail-readiness) to decide
+when that end user can make a payment.
 
-Raw KYC, document numbers, and artifact bytes are never returned. Save the
-Core-issued end-user ID and use it for all subsequent operations.
+Raw KYC, document numbers, and artifact bytes are never returned.
 
 ## Update KYC
 
@@ -112,8 +100,6 @@ Use it rather than keeping a local copy of raw KYC data.
 
 ## Identity and provider handling
 
-AgentBank identifies a merchant-scoped real person from the verified identity
-document and connects provider records through canonical provider-user links.
-If a provider reports an already registered customer, AgentBank resolves that
-canonical provider user before linking it to the merchant end user. The
-merchant never submits provider identity keys or provider customer IDs.
+Use the AgentBank-issued end-user ID for subsequent operations. Provider
+identity resolution is handled by AgentBank; never submit provider identity
+keys or provider customer IDs.

@@ -1,23 +1,39 @@
 ---
 title: "Cancel or correct a payment"
-description: "Use the supported intervention path for a cancellable or recipient-paused payment."
+description: "Ask to stop an unfunded payment or fix recipient details when allowed."
 ---
 
 ## Cancel a payment
 
-Obtain explicit user confirmation before `cancel_payment`, even though the tool
-does not include a separate confirmation boolean. Cancellation is valid only
-in supported states; do not promise that an executing or irreversible transfer
-can be stopped.
+> “Can I cancel the payment I just started?”
+
+Tell your assistant which payment you mean. It checks the current status and
+whether cancellation is available, then asks you to confirm before cancelling.
+Ask it to check the result afterward; requesting cancellation is not proof
+that the payment stopped.
+
+Cancellation is available only before funds move and in supported payment
+states. It cannot reverse a funded transfer. If you already sent money, tell
+your assistant before doing anything else and use
+[payment recovery](/payments/recover-failures).
 
 ## Correct a recipient
 
-Use `correct_payment_recipient` only when the durable payment is paused in
-`recipient_correction_required`. Collect canonical replacement details, show
-them to the user, obtain confirmation, and resume from the returned state.
+> “The recipient details on this payment are wrong. What can I do?”
+
+Your assistant can correct an existing payment only when AgentBank has paused
+it specifically to request recipient correction. Provide the requested details,
+review the corrected recipient, and confirm the change. Your assistant then
+checks what the payment needs next.
+
+Changing a [saved recipient](/money-out/manage-recipients) does not change a
+payment already in progress. If correction is not offered, ask whether the
+payment can be cancelled or needs support.
 
 <Warning>
-Do not create a second payment as a substitute for correcting a paused
-recipient unless the original payment has reached a terminal state and a new
-route is explicitly required.
+Do not start or fund a replacement while the original payment is unresolved.
+Check that it has ended and whether any funds moved before deciding to try again.
 </Warning>
+
+Builders: see the [cancellation](/reference/tools/cancel-payment) and
+[recipient correction](/reference/tools/correct-payment-recipient) references.

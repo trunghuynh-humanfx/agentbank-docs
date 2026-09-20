@@ -4,7 +4,7 @@ description: "Start or refresh AgentKit verification for the single bound AgentB
 ---
 
 **Authentication:** `agent_wallet:use`  
-**Surface:** Local stdio only
+**Surface:** Local stdio and Remote MCP
 
 **Mutates state:** May start a verification session
 
@@ -18,4 +18,4 @@ World App, then the agent calls this tool again until
 `agentkit_verified=true`.
 
 This is separate from KYC, the owner's World ID badge, and payment-specific
-World ID authorization. The local subprocess exposes no wallet secret.
+World ID authorization. The tool exposes no wallet secret.

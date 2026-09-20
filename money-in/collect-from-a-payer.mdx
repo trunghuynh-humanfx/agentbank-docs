@@ -3,25 +3,35 @@ title: "Collect from another payer"
 description: "Create and track a one-time collection that someone else can pay."
 ---
 
-The payer may be different from the AgentBank account owner. The connected
-agent creates and tracks the payment for the owner, while the payer completes
-the fiat instruction.
+Use this when someone else will pay in a supported local currency and you want
+to receive crypto in your linked AgentBank wallet.
 
-## Current flow
+> “I need to collect 2,000 PHP from a customer and receive USDC in my AgentBank wallet.”
 
-1. Select the destination AgentBank wallet and crypto asset.
-2. Estimate the fiat-to-crypto amount and fees.
-3. Create one durable payment.
-4. Continue it to obtain the current fiat instruction.
-5. Share only the order-specific bank account or QR instructions with the payer.
-6. Poll `get_payment` and report whether it was paid.
+## What to provide
+
+Tell your assistant the payer's currency, the amount to collect or the amount
+you want to receive, and your chosen crypto asset and network. Your assistant
+checks which options are currently available.
+
+## Review, share, and track
+
+1. Review the payer's amount, the crypto you will receive, all fees and their currencies, your destination wallet, the route, and the expiry.
+2. Confirm the collection and complete World ID approval if required.
+3. In a hosted connection such as ChatGPT or Claude, ask for a shareable payment link if one is available. Otherwise, or on a local connection, share the bank or QR instructions provided for this specific payment.
+4. Have the payer follow those instructions. A link or instruction does not itself move money.
+5. Ask your assistant to track the collection. Treat it as complete only when AgentBank reports completion.
+
+Links are not available for every payment. Do not reuse an old payment's bank
+details or QR code for a new collection, and do not ask the payer to pay again
+just because detection is pending.
 
 <Warning>
-Paid status does not verify payer identity. Do not claim to know who paid, and
-do not treat the result as customer identity verification.
+AgentBank can report whether the collection was paid, but your assistant
+cannot identify who paid it. A paid collection is not customer identity
+verification.
 </Warning>
 
-## Coming soon
-
-AgentBank plans shareable, single-payment links. Until they are released, do
-not promise reusable links, invoices, payer analytics, or public payment pages.
+See [Payment status and tracking](/payments/track-payments) for pending payments.
+Builders can find the connection-specific capabilities in the
+[MCP reference](/reference/mcp-overview).

@@ -1,31 +1,37 @@
 ---
 title: "Manage recipients"
-description: "Select, create, and replace validated bank or crypto recipients."
+description: "Choose a saved recipient or safely add new bank, QR, or wallet details."
 ---
 
-## Select a saved recipient
+> “Show my saved recipients so I can choose who to pay.”
 
-Use `list_recipients` and `get_recipient`. If several records match the user's
-description, ask the user to choose; never guess.
+## Choose someone you have paid before
 
-## Create a recipient
+Ask your assistant to find a saved recipient by name or familiar details.
+Review the destination before using it. If more than one record matches,
+your assistant should ask you to choose rather than guess.
 
-`create_recipient` accepts one or more supported input forms:
+## Add a new recipient
 
-- canonical fields;
-- structured bank information;
-- labeled pasted text;
-- raw QR content;
-- a QR image.
+Provide the bank or wallet details your assistant requests, paste labeled bank
+information, or share a supported payment QR code or QR image. The required
+details depend on the available payment method. Your assistant checks the
+details and asks for anything missing or invalid.
 
-Local stdio clients may provide an absolute image path. Remote clients provide
-base64 image data. The image must contain machine-readable QR content; AgentBank
-does not OCR text-only screenshots.
+A QR image must contain a readable QR code; a text-only screenshot cannot be
+read as bank details. Paste the text instead. Before paying, review the
+validated recipient along with the quote. Saving a recipient does not send money.
 
-If the tool returns missing or invalid fields, ask only for those fields. When
-the payload changes, use a new request ID.
+## Change saved details
 
-## Replace a recipient
+> “My recipient has a new bank account. Help me replace their saved details.”
 
-`update_recipient` registers a replacement record. It does not mutate or revoke
-the old record. Obtain explicit user confirmation before replacement.
+Your assistant shows the replacement details and asks for your confirmation.
+The replacement is a new saved record; the old record is not automatically
+removed or disabled. Check which record you select for future payments.
+
+Changing a saved recipient does not correct a payment already in progress.
+See [Cancel or correct a payment](/payments/cancel-or-correct) for the supported
+options.
+
+Builders: see the [recipient reference](/reference/tools/create-recipient).

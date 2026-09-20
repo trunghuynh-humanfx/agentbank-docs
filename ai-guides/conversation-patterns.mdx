@@ -1,55 +1,65 @@
 ---
-title: "Conversation patterns"
-description: "Use clear task prompts for common AgentBank workflows."
+title: "Example prompts"
+description: "Tell your assistant what you want to do in everyday language."
 ---
 
-## Check connection
+Start with your goal. Your assistant should ask for missing details, check
+available options, and show you the complete payment for confirmation before
+proceeding. You do not need to know the names of tools or how payments are routed.
 
-```text
-Check whether AgentBank is connected, show account and wallet readiness, and do not create a payment.
-```
+## Check your connection
 
-## Fund staging
+> “Is my AgentBank account connected and ready to use?”
 
-```text
-Find a supported staging on-ramp, complete it for mock tokens, and show my resulting wallet balance.
-```
+## Try a payment without real money
 
-## Collect fiat from another payer
+> “Help me try a payment in AgentBank staging using mock tokens.”
 
-```text
-Create a one-time fiat collection into my AgentBank wallet. Show me the complete amount, fees, and expiry before creation, then give me the order-specific bank or QR instructions to share with the payer.
-```
+See [Environment](/getting-started/environment).
+
+## Add money to your wallet
+
+> “I want to pay in PHP and receive USDC in my AgentBank wallet. What are my options?”
+
+## Collect from someone else
+
+> “Help me collect 2,000 PHP from a customer into my AgentBank wallet. Can I share a payment link?”
+
+If a link is not available, your assistant can provide the bank or QR
+instructions for that payment. It can track whether the collection was paid,
+but cannot identify who paid it.
 
 ## Pay a bank recipient
 
-```text
-Pay my saved recipient in VND from supported crypto. Estimate the route, show all material details, apply my authorization threshold, and track final delivery.
-```
+> “Send my saved recipient enough USDC for them to receive 1,000,000 VND.”
 
-## Track or recover
+## Compare conversion costs
 
-```text
-Read the current durable state of payment pay_..., tell me the next safe action, and do not create a duplicate payment.
-```
+> “How much PHP would I need to pay for my recipient to receive 10,000,000 VND, including fees?”
+
+## Track or recover a payment
+
+> “Has my payment to Linh completed?”
+
+> “I already sent the money, but the payment still looks pending. What should I do?”
 
 ## Create a payment plan
 
-```text
-Group these payments into one AgentBank payment plan. Estimate each item, show one consolidated review, ask me to confirm once, and do not submit the plan until I approve the complete list.
-```
+> “I need to pay these three recipients. Help me review them together as a payment plan.”
 
-## Pay an x402 resource
+## Reopen a payment card
 
-```text
-Open this x402 URL, estimate the exact supported fiat funding amount, show the external USDC requirement and fees, and wait for my confirmation before funding it.
-```
+> “I closed the payment card. Show me the current instructions again.”
 
-## Use hosted automatic funding
+## Explore wallet funding options
 
-```text
-For this current crypto-deposit instruction, check whether an active compatible spending grant can fund it. Do not request or use a grant until I explicitly choose automatic funding.
-```
+> “Can I use a spending grant for this payment? Explain the limits before I decide.”
 
-These patterns show observable goals and actions. They do not expose or request
-hidden chain-of-thought.
+Spending grants are available for eligible hosted crypto deposits, not fiat
+payments or swaps. Asking about a grant does not authorize its use.
+
+## Pay for an x402-protected resource
+
+> “This service asks for an x402 payment. Can you show me what it costs to access it?”
+
+This is a specialized developer workflow; see [x402 payments](/payments/x402-payments).

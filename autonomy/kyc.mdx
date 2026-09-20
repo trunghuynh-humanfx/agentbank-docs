@@ -1,18 +1,18 @@
 ---
-title: "KYC and market readiness"
-description: "Complete identity verification when a supported fiat market requires it."
+title: "Identity verification"
+description: "Complete identity checks when they are required for your payment route."
 ---
 
-Use `check_verification_status` to read KYC state and owner badges. Its market
-result describes provider readiness; use quote-book tools separately for live
-corridors.
+Some fiat payment routes require identity verification, also called KYC.
+Ask your agent to check whether your account is ready for the payment you want.
 
-`do_kyc` either reports that verification is already complete or starts a
-hosted Didit session. Open the returned URL, complete verification in the
-browser, and call `check_verification_status` again before retrying a gated
-payment.
+If verification is needed, the agent provides a browser link. Complete the
+identity checks there, then return to the conversation and ask the agent to
+check the result.
 
-If `create_payment` returns `need_review` with `reason=rail_not_ready`, no
-payment was created and no funds moved. Wait for approved readiness. Retry the
-same request ID only if the payload remains identical; refresh and reconfirm an
-expired quote.
+A submitted verification may still be under review, and approval for one
+currency does not guarantee access to every route. Wait until the intended
+route is available before continuing.
+
+You complete identity verification yourself. It is separate from
+[World ID payment approval](/autonomy/world-id-approval).
