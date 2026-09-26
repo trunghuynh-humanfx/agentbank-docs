@@ -1,11 +1,11 @@
 ---
 name: agentbank-pay
-description: Use AgentBank, banking for AI agents, to send, collect, convert and track money through the AgentBank MCP. This entry points to the canonical skill; fetch and follow https://protocol.agentbank.world/SKILL.md.
+description: Use AgentBank, banking for AI agents, to send, collect, convert and track money through the AgentBank MCP. This entry points to the canonical skill; fetch and follow https://useagentbank.com/SKILL.md.
 ---
 
 # AgentBank Pay
 
-The canonical, always-current skill is https://protocol.agentbank.world/SKILL.md. Fetch it and follow it. Do not take tool names or procedures from this page.
+The canonical, always-current skill is https://useagentbank.com/SKILL.md. Fetch it and follow it. Do not take tool names or procedures from this page.
 
 ## Connect
 
