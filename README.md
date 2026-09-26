@@ -26,7 +26,16 @@ in the corresponding technical reference, and link to them from guides.
 - Production: `https://app.agentbank.world`
 - Partner API Sandbox: `https://staging-protocol.agentbank.world`
 - Partner API Production: `https://protocol.agentbank.world`
-- Skill: `https://agentbank.world/SKILL.md`
+- Skill: `https://protocol.agentbank.world/SKILL.md`
+- Remote MCP: `https://plugin.agentbank.world/mcp`
+- Marketing site: `https://useagentbank.com`
+
+## Agent discovery
+
+The root `skill.md` overrides Mintlify's generated agent skill and must stay a
+pointer to `https://protocol.agentbank.world/SKILL.md` with no procedures or
+tool names; the `/.well-known/mcp.json` on this host is Mintlify's
+documentation-search server, not the AgentBank MCP.
 
 ## Content sources
 
