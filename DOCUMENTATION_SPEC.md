@@ -36,7 +36,7 @@ the official MCP contract.
 When sources disagree, documentation writers must use this order:
 
 1. Deployed AgentBank behavior in the selected environment.
-2. The canonical skill at `https://protocol.agentbank.world/SKILL.md` for the
+2. The canonical skill at `https://useagentbank.com/SKILL.md` for the
    current agent workflow and safety behavior.
 3. The deployed MCP tool schemas for the callable contract.
 4. This documentation specification for structure, positioning, and planned
@@ -334,7 +334,7 @@ tooling. It must include:
 - navigation in the order above;
 - staging link `https://staging.agentbank.world`;
 - production link `https://app.agentbank.world`;
-- skill link `https://protocol.agentbank.world/SKILL.md`;
+- skill link `https://useagentbank.com/SKILL.md`;
 - GitHub link `https://github.com/theagentbank/skills`;
 - email and Telegram support links;
 - search and code-copy behavior where supported;
@@ -761,13 +761,13 @@ Do not suggest changing these variables for ordinary single-agent setup.
 Public skill URL:
 
 ```text
-https://protocol.agentbank.world/SKILL.md
+https://useagentbank.com/SKILL.md
 ```
 
 For clients that can read a skill from a URL, users may instruct the agent:
 
 ```text
-Read https://protocol.agentbank.world/SKILL.md and follow instructions to setup and use AgentBank
+Read https://useagentbank.com/SKILL.md and follow instructions to setup and use AgentBank
 ```
 
 The docs must warn that reading a remote skill is temporary unless the client
