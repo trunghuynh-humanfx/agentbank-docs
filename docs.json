@@ -350,7 +350,7 @@
     "primary": {
       "type": "button",
       "label": "Open AgentBank",
-      "href": "https://app.agentbank.world"
+      "href": "https://app.useagentbank.com"
     }
   },
   "redirects": [
