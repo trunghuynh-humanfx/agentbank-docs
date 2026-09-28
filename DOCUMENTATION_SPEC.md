@@ -67,11 +67,11 @@ amount conventions, tool names, or custody language into AgentBank docs.
 
 | Environment | App URL | Protocol URL | Funding model |
 | --- | --- | --- | --- |
-| Staging | `https://staging.useagentbank.com` | `https://protocol.useagentbank.com` | A supported on-ramp automatically succeeds and credits mock tokens |
+| Staging | `https://staging.agentbank.world` | `https://staging-protocol.agentbank.world` | A supported on-ramp automatically succeeds and credits mock tokens |
 | Production | `https://app.useagentbank.com` | `https://protocol.useagentbank.com` | Live supported payment routes |
 
 The production package defaults to `https://app.useagentbank.com`. Staging uses
-an explicit `APP_BASE_URL=https://staging.useagentbank.com` override. Do not use
+an explicit `APP_BASE_URL=https://staging.agentbank.world` override. Do not use
 "switch to test mode" language.
 
 The staging funding flow is:
@@ -332,7 +332,7 @@ tooling. It must include:
 - product name `AgentBank`;
 - site title `AgentBank Docs`;
 - navigation in the order above;
-- staging link `https://staging.useagentbank.com`;
+- staging link `https://staging.agentbank.world`;
 - production link `https://app.useagentbank.com`;
 - skill link `https://useagentbank.com/SKILL.md`;
 - GitHub link `https://github.com/theagentbank/skills`;
@@ -527,7 +527,7 @@ Estimate a payment, show me the complete amount, fees, route, recipient, and exp
 
 State clearly:
 
-- staging URL: `https://staging.useagentbank.com`;
+- staging URL: `https://staging.agentbank.world`;
 - staging uses the same protocol base URL as the supplied MCP command;
 - users obtain mock tokens through a currently supported on-ramp;
 - the staging on-ramp automatically succeeds and credits the wallet;
@@ -594,8 +594,8 @@ Staging:
 
 ```bash
 codex mcp add agentbank \
-  --env PROTOCOL_BASE_URL=https://protocol.useagentbank.com \
-  --env APP_BASE_URL=https://staging.useagentbank.com \
+  --env PROTOCOL_BASE_URL=https://staging-protocol.agentbank.world \
+  --env APP_BASE_URL=https://staging.agentbank.world \
   -- npx -y agent-bank-mcp@latest
 ```
 
@@ -617,8 +617,8 @@ Staging:
 
 ```bash
 claude mcp add -s user agentbank \
-  -e PROTOCOL_BASE_URL=https://protocol.useagentbank.com \
-  -e APP_BASE_URL=https://staging.useagentbank.com \
+  -e PROTOCOL_BASE_URL=https://staging-protocol.agentbank.world \
+  -e APP_BASE_URL=https://staging.agentbank.world \
   -- npx -y agent-bank-mcp@latest
 ```
 
@@ -652,8 +652,8 @@ Staging configuration:
       "command": "npx",
       "args": ["-y", "agent-bank-mcp@latest"],
       "env": {
-        "PROTOCOL_BASE_URL": "https://protocol.useagentbank.com",
-        "APP_BASE_URL": "https://staging.useagentbank.com"
+        "PROTOCOL_BASE_URL": "https://staging-protocol.agentbank.world",
+        "APP_BASE_URL": "https://staging.agentbank.world"
       }
     }
   }
@@ -689,8 +689,8 @@ Staging:
         command: "npx",
         args: ["-y", "agent-bank-mcp@latest"],
         env: {
-          PROTOCOL_BASE_URL: "https://protocol.useagentbank.com",
-          APP_BASE_URL: "https://staging.useagentbank.com",
+          PROTOCOL_BASE_URL: "https://staging-protocol.agentbank.world",
+          APP_BASE_URL: "https://staging.agentbank.world",
         },
       },
     },
@@ -725,8 +725,8 @@ mcp_servers:
     command: "npx"
     args: ["-y", "agent-bank-mcp@latest"]
     env:
-      PROTOCOL_BASE_URL: "https://protocol.useagentbank.com"
-      APP_BASE_URL: "https://staging.useagentbank.com"
+      PROTOCOL_BASE_URL: "https://staging-protocol.agentbank.world"
+      APP_BASE_URL: "https://staging.agentbank.world"
 ```
 
 Production uses:
