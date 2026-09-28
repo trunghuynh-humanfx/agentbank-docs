@@ -67,11 +67,11 @@ amount conventions, tool names, or custody language into AgentBank docs.
 
 | Environment | App URL | Protocol URL | Funding model |
 | --- | --- | --- | --- |
-| Staging | `https://staging.agentbank.world` | `https://protocol.agentbank.world` | A supported on-ramp automatically succeeds and credits mock tokens |
-| Production | `https://app.agentbank.world` | `https://protocol.agentbank.world` | Live supported payment routes |
+| Staging | `https://staging.useagentbank.com` | `https://protocol.useagentbank.com` | A supported on-ramp automatically succeeds and credits mock tokens |
+| Production | `https://app.useagentbank.com` | `https://protocol.useagentbank.com` | Live supported payment routes |
 
-The production package defaults to `https://app.agentbank.world`. Staging uses
-an explicit `APP_BASE_URL=https://staging.agentbank.world` override. Do not use
+The production package defaults to `https://app.useagentbank.com`. Staging uses
+an explicit `APP_BASE_URL=https://staging.useagentbank.com` override. Do not use
 "switch to test mode" language.
 
 The staging funding flow is:
@@ -89,7 +89,7 @@ simulation control. The normal on-ramp flow is the staging funding mechanism.
 
 ### 3.3 Hosted AgentBank agent
 
-- Users can open `https://app.agentbank.world`, sign in, and chat directly with
+- Users can open `https://app.useagentbank.com`, sign in, and chat directly with
   the AgentBank-hosted agent.
 - The hosted flow does not require the user to connect an external AI agent,
   configure MCP, or install the AgentBank Pay skill.
@@ -137,7 +137,7 @@ describe them as an available tool or current workflow.
 
 ### 3.7 Support
 
-- Email: `support@agentbank.world`
+- Email: `support@useagentbank.com`
 - Telegram: `https://t.me/+MxUewVNlzSplY2Y1`
 
 ## 4. Confirmed naming and autonomy behavior
@@ -147,7 +147,7 @@ describe them as an available tool or current workflow.
 The confirmed product policy is:
 
 - The account owner configures the threshold on
-  `https://app.agentbank.world`.
+  `https://app.useagentbank.com`.
 - The threshold is a platform setting, not an MCP configuration command.
 - The threshold contributes to AgentBank's active payment-approval policy.
 - The agent still obtains the explicit payment-summary confirmation required
@@ -332,8 +332,8 @@ tooling. It must include:
 - product name `AgentBank`;
 - site title `AgentBank Docs`;
 - navigation in the order above;
-- staging link `https://staging.agentbank.world`;
-- production link `https://app.agentbank.world`;
+- staging link `https://staging.useagentbank.com`;
+- production link `https://app.useagentbank.com`;
 - skill link `https://useagentbank.com/SKILL.md`;
 - GitHub link `https://github.com/theagentbank/skills`;
 - email and Telegram support links;
@@ -527,7 +527,7 @@ Estimate a payment, show me the complete amount, fees, route, recipient, and exp
 
 State clearly:
 
-- staging URL: `https://staging.agentbank.world`;
+- staging URL: `https://staging.useagentbank.com`;
 - staging uses the same protocol base URL as the supplied MCP command;
 - users obtain mock tokens through a currently supported on-ramp;
 - the staging on-ramp automatically succeeds and credits the wallet;
@@ -594,8 +594,8 @@ Staging:
 
 ```bash
 codex mcp add agentbank \
-  --env PROTOCOL_BASE_URL=https://protocol.agentbank.world \
-  --env APP_BASE_URL=https://staging.agentbank.world \
+  --env PROTOCOL_BASE_URL=https://protocol.useagentbank.com \
+  --env APP_BASE_URL=https://staging.useagentbank.com \
   -- npx -y agent-bank-mcp@latest
 ```
 
@@ -603,8 +603,8 @@ Production:
 
 ```bash
 codex mcp add agentbank \
-  --env PROTOCOL_BASE_URL=https://protocol.agentbank.world \
-  --env APP_BASE_URL=https://app.agentbank.world \
+  --env PROTOCOL_BASE_URL=https://protocol.useagentbank.com \
+  --env APP_BASE_URL=https://app.useagentbank.com \
   -- npx -y agent-bank-mcp@latest
 ```
 
@@ -617,8 +617,8 @@ Staging:
 
 ```bash
 claude mcp add -s user agentbank \
-  -e PROTOCOL_BASE_URL=https://protocol.agentbank.world \
-  -e APP_BASE_URL=https://staging.agentbank.world \
+  -e PROTOCOL_BASE_URL=https://protocol.useagentbank.com \
+  -e APP_BASE_URL=https://staging.useagentbank.com \
   -- npx -y agent-bank-mcp@latest
 ```
 
@@ -626,8 +626,8 @@ Production:
 
 ```bash
 claude mcp add -s user agentbank \
-  -e PROTOCOL_BASE_URL=https://protocol.agentbank.world \
-  -e APP_BASE_URL=https://app.agentbank.world \
+  -e PROTOCOL_BASE_URL=https://protocol.useagentbank.com \
+  -e APP_BASE_URL=https://app.useagentbank.com \
   -- npx -y agent-bank-mcp@latest
 ```
 
@@ -652,8 +652,8 @@ Staging configuration:
       "command": "npx",
       "args": ["-y", "agent-bank-mcp@latest"],
       "env": {
-        "PROTOCOL_BASE_URL": "https://protocol.agentbank.world",
-        "APP_BASE_URL": "https://staging.agentbank.world"
+        "PROTOCOL_BASE_URL": "https://protocol.useagentbank.com",
+        "APP_BASE_URL": "https://staging.useagentbank.com"
       }
     }
   }
@@ -663,7 +663,7 @@ Staging configuration:
 Production uses the same configuration with:
 
 ```json
-"APP_BASE_URL": "https://app.agentbank.world"
+"APP_BASE_URL": "https://app.useagentbank.com"
 ```
 
 Tell the user to preserve existing `mcpServers` entries, save valid JSON, fully
@@ -689,8 +689,8 @@ Staging:
         command: "npx",
         args: ["-y", "agent-bank-mcp@latest"],
         env: {
-          PROTOCOL_BASE_URL: "https://protocol.agentbank.world",
-          APP_BASE_URL: "https://staging.agentbank.world",
+          PROTOCOL_BASE_URL: "https://protocol.useagentbank.com",
+          APP_BASE_URL: "https://staging.useagentbank.com",
         },
       },
     },
@@ -701,7 +701,7 @@ Staging:
 Production uses:
 
 ```json5
-APP_BASE_URL: "https://app.agentbank.world"
+APP_BASE_URL: "https://app.useagentbank.com"
 ```
 
 Verify with:
@@ -725,14 +725,14 @@ mcp_servers:
     command: "npx"
     args: ["-y", "agent-bank-mcp@latest"]
     env:
-      PROTOCOL_BASE_URL: "https://protocol.agentbank.world"
-      APP_BASE_URL: "https://staging.agentbank.world"
+      PROTOCOL_BASE_URL: "https://protocol.useagentbank.com"
+      APP_BASE_URL: "https://staging.useagentbank.com"
 ```
 
 Production uses:
 
 ```yaml
-APP_BASE_URL: "https://app.agentbank.world"
+APP_BASE_URL: "https://app.useagentbank.com"
 ```
 
 Restart Hermes after changing the configuration. AgentBank tools are
@@ -1095,7 +1095,7 @@ Create one central page used by all financial guides.
 Document the confirmed public behavior:
 
 - the owner configures the automatic transaction threshold at
-  `https://app.agentbank.world`;
+  `https://app.useagentbank.com`;
 - the threshold is not changed through an MCP tool;
 - the threshold contributes to the active payment-approval policy;
 - the agent still obtains explicit confirmation of the complete payment
@@ -1247,7 +1247,7 @@ The FAQ must answer:
 
 The Contact page must show:
 
-- email: `support@agentbank.world`;
+- email: `support@useagentbank.com`;
 - Telegram: `https://t.me/+MxUewVNlzSplY2Y1`;
 - safe diagnostic fields: payment ID, installation ID when available, request
   ID, transaction hash, current status, timestamp, and redacted screenshot;
@@ -1393,7 +1393,7 @@ alignments rather than changing the documented product model:
    `agentbank://guides/routing`,
    `agentbank://instructions/{journey}` and the current onboarding readiness
    fields.
-2. The AgentBank platform at `https://app.agentbank.world` is the user-facing
+2. The AgentBank platform at `https://app.useagentbank.com` is the user-facing
    threshold configuration surface.
 3. The deployed threshold enforcement and confirmation flags agree with the
    platform UI, and public guidance follows `approval_ready` or

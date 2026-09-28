@@ -5,8 +5,8 @@ description: "Try AgentBank with mock tokens in staging or use real funds in pro
 
 | Environment | App | Funds |
 | --- | --- | --- |
-| Staging | [staging.agentbank.world](https://staging.agentbank.world) | Mock tokens with no real-world monetary value |
-| Production | [app.agentbank.world](https://app.agentbank.world) | Real value through supported payment routes |
+| Staging | [staging.useagentbank.com](https://staging.useagentbank.com) | Mock tokens with no real-world monetary value |
+| Production | [app.useagentbank.com](https://app.useagentbank.com) | Real value through supported payment routes |
 
 ## Staging
 
@@ -28,8 +28,8 @@ After the mock tokens arrive, you can try other supported staging payments.
 
   ```bash
   codex mcp add agentbank \
-    --env PROTOCOL_BASE_URL=https://protocol.agentbank.world \
-    --env APP_BASE_URL=https://staging.agentbank.world \
+    --env PROTOCOL_BASE_URL=https://protocol.useagentbank.com \
+    --env APP_BASE_URL=https://staging.useagentbank.com \
     -- npx -y agent-bank-mcp@latest
   ```
 

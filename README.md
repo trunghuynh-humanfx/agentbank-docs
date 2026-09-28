@@ -22,12 +22,12 @@ in the corresponding technical reference, and link to them from guides.
 
 ## Environments
 
-- Staging: `https://staging.agentbank.world`
-- Production: `https://app.agentbank.world`
-- Partner API Sandbox: `https://staging-protocol.agentbank.world`
-- Partner API Production: `https://protocol.agentbank.world`
+- Staging: `https://staging.useagentbank.com`
+- Production: `https://app.useagentbank.com`
+- Partner API Sandbox: `https://staging-protocol.useagentbank.com`
+- Partner API Production: `https://protocol.useagentbank.com`
 - Skill: `https://useagentbank.com/SKILL.md`
-- Remote MCP: `https://plugin.agentbank.world/mcp`
+- Remote MCP: `https://plugin.useagentbank.com/mcp`
 - Marketing site: `https://useagentbank.com`
 
 ## Agent discovery
