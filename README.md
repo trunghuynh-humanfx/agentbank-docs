@@ -27,7 +27,7 @@ in the corresponding technical reference, and link to them from guides.
 - Partner API Sandbox: `https://staging-protocol.useagentbank.com`
 - Partner API Production: `https://protocol.useagentbank.com`
 - Skill: `https://useagentbank.com/SKILL.md`
-- Remote MCP: `https://mcp.agentbank.world`
+- Remote MCP: `https://mcp.useagentbank.com`
 - Marketing site: `https://useagentbank.com`
 
 ## Agent discovery
