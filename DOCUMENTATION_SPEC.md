@@ -969,7 +969,7 @@ Required workflow:
 8. On local stdio, check wallet balance and use
    `execute_payment_instruction` with the current instruction and stable request
    ID. On hosted OAuth, use manual card funding or a separately confirmed
-   compatible spending grant for a crypto deposit.
+   compatible spending limit for a crypto deposit.
 9. Poll the unified payment until terminal.
 
 Do not report success based only on a transaction hash.
@@ -1055,7 +1055,7 @@ Use this deterministic route guide:
 
 Distinguish the platform threshold, explicit payment-summary confirmation,
 World ID payment authorization, wallet transaction confirmation, hosted
-spending-grant funding choice, and browser fiat funding. Reproduce exact
+spending-limit funding choice, and browser fiat funding. Reproduce exact
 deployed confirmation fields in the tool table.
 
 #### `recipient-rules.mdx`
@@ -1136,7 +1136,7 @@ The MCP overview must explain:
 
 - local stdio is the intended personal-agent transport;
 - hosted OAuth is the remote connection surface with embedded cards and
-  spending grants;
+  spending limits;
 - the npm package is `agent-bank-mcp`;
 - available tools vary by connection surface and granted scopes;
 - tools, prompts, and resources are different MCP capabilities;

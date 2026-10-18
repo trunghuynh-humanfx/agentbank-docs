@@ -34,7 +34,7 @@ and instruction while they remain valid.
 - After ambiguous local execution, reuse the same execution request ID. Never
   rebroadcast an unresolved submission with a replacement idempotency key.
 - For a hosted swap, return to the first-party signing action and read payment
-  state. Do not substitute local wallet execution or a spending grant.
+  state. Do not substitute local wallet execution or a spending limit.
 - Reopen a missing funding card with `get_payment_instruction`. Once funds
   moved, use `show_payment_progress` for the progress card.
 
