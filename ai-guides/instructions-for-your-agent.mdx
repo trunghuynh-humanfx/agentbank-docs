@@ -10,7 +10,7 @@ for the complete workflow. The following is a readable summary.
 Before AgentBank work, inspect the available MCP surface and call whoami first.
 If local onboarding tools are present and credentials are missing, begin
 onboarding once, show the browser authorization URL, and wait with the same
-enrollment ID. If hosted spending-grant tools are present, use OAuth identity
+enrollment ID. If hosted spending-limit tools are present, use OAuth identity
 and never run local onboarding.
 
 Use AgentBank MCP tools rather than direct HTTP requests or hand-built payment
@@ -25,7 +25,7 @@ and expiry. Follow the returned approval status; do not infer a fixed threshold.
 Use stable request IDs for identical logical retries. Execute only the current
 Core-owned instruction. A transaction receipt is not final payment completion;
 trust get_payment. On hosted OAuth, keep approval, funding, and progress cards
-separate, and require a new user choice before spending-grant funding. Never
+separate, and require a new user choice before spending-limit funding. Never
 expose partner identity, secrets, Privy tokens, wallet keys, or World ID proofs.
 ```
 

@@ -85,7 +85,7 @@
             "pages": [
               "autonomy/overview",
               "autonomy/configure-thresholds",
-              "autonomy/spending-grants",
+              "autonomy/spending-limits",
               "autonomy/world-id-approval",
               "autonomy/kyc",
               "autonomy/agentkit-and-gas"
@@ -385,6 +385,10 @@
     {
       "source": "/partner-api/workflows/integration",
       "destination": "/partner-api/quickstart"
+    },
+    {
+      "source": "/autonomy/spending-grants",
+      "destination": "/autonomy/spending-limits"
     }
   ]
 }
